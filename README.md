@@ -1,6 +1,4 @@
-# ēkhos - Gerenciador de Coleção de Discos
-
-**ēkhos** é uma aplicação web simples, desenvolvida em PHP e MongoDB, para catalogar e gerenciar uma coleção pessoal de álbuns musicais (CDs e Vinis). A interface permite visualizar, buscar, adicionar e editar álbuns de forma intuitiva.
+# ēkhos - Gerenciador de Loja de Discos e CDs
 
 ## Funcionalidades
 
