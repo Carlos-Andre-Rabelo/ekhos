@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para abrir o modal
     const openModal = (card) => {
+        // Adiciona a classe ao body para aplicar o blur no fundo
+        document.body.classList.add('modal-open');
+        // Define a imagem de fundo do modal
+        modal.querySelector('.modal-content').style.setProperty('--modal-bg-image', `url('${card.dataset.capa}')`);
         // Preencher dados do modal
         document.getElementById('modal-capa').src = card.dataset.capa;
         document.getElementById('modal-capa').alt = `Capa do álbum ${card.dataset.titulo}`;
@@ -78,6 +82,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para fechar o modal
     const closeModal = () => {
+        // Remove a classe do body para remover o blur
+        document.body.classList.remove('modal-open');
         modal.style.opacity = '0';
         modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
         setTimeout(() => {

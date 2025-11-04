@@ -110,6 +110,9 @@ try {
         <div class="search-container">
             <input type="search" id="search-bar" placeholder="Buscar por álbum, artista ou gênero...">
         </div>
+        <div class="header-actions" style="margin-top: 1.5rem;">
+            <a href="add_album.php" class="edit-link" style="padding: 0.8rem 1.5rem; font-size: 1rem;">+ Adicionar Novo Álbum</a>
+        </div>
     </header>
 
     <main>

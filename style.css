@@ -32,6 +32,13 @@ body {
     line-height: 1.6;
 }
 
+/* Estilo para desfocar o fundo quando o modal está aberto */
+body.modal-open > header,
+body.modal-open > main,
+body.modal-open > footer {
+    filter: blur(5px);
+    transition: filter 0.3s ease-in-out;
+}
 /* Cabeçalho e Pesquisa */
 header {
     padding: 2rem 5%;
@@ -93,6 +100,8 @@ main {
 .album-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    /* Mostra as ações do card no hover */
+    .card-actions { opacity: 1; }
 }
 
 .album-card img {
@@ -123,6 +132,9 @@ main {
 .card-actions {
     margin-top: 1rem;
     text-align: right;
+    /* Oculta por padrão e adiciona transição suave */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .edit-link {
@@ -179,14 +191,38 @@ main {
 .modal-content {
     background-color: var(--cor-superficie);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 16px; /* Cantos mais arredondados */
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    z-index: 1; /* Garante que o conteúdo fique acima dos pseudo-elementos */
     transform: scale(0.9);
     transition: transform 0.3s ease;
+    overflow: hidden; /* Essencial para conter os pseudo-elementos */
+}
+
+/* Pseudo-elemento para o fundo desfocado com a imagem do álbum */
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* A imagem será definida via JS */
+    background-image: var(--modal-bg-image);
+    background-size: cover;
+    background-position: center;
+    /* Desfoque forte */
+    filter: blur(100px);
+    /* Overlay preto com transparência */
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: overlay;
+    z-index: -1;
+    /* Aumenta a escala para evitar bordas vazias causadas pelo blur */
+    transform: scale(1.1);
 }
 
 .modal-close {
@@ -212,16 +248,26 @@ main {
     width: 300px;
     height: 300px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 12px; /* Cantos mais arredondados */
 }
 
-.modal-details h2 { color: var(--cor-primaria); margin-bottom: 0.5rem; }
+.modal-details h2 { color: var(--cor-texto-principal); margin-bottom: 0.5rem; }
 .modal-details p { color: var(--cor-texto-secundario); margin-bottom: 1.5rem; font-size: 1.2rem; }
 .modal-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-.modal-meta span { background-color: var(--cor-fundo); padding: 0.3rem 0.7rem; border-radius: 4px; font-size: 0.9rem; }
+.modal-meta > span { /* Usando seletor de filho direto para evitar sobreposição */
+    background-color: rgba(0, 0, 0, 0.2); /* Fundo preto com 20% de opacidade */
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
 .modal-details h3 { margin-bottom: 1rem; border-bottom: 1px solid var(--cor-borda); padding-bottom: 0.5rem; }
 #modal-exemplares { list-style-type: none; padding-left: 0; }
-#modal-exemplares li { margin-bottom: 0.5rem; color: var(--cor-texto-secundario); background-color: var(--cor-fundo); padding: 0.5rem; border-radius: 4px; }
+#modal-exemplares li {
+    margin-bottom: 0.5rem;
+    color: var(--cor-texto-principal); /* Melhor contraste */
+    background-color: rgba(0, 0, 0, 0.2); /* Mesmo efeito de transparência */
+    padding: 0.5rem; border-radius: 4px;
+}
 
 /* Rodapé */
 footer {
