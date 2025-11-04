@@ -24,20 +24,22 @@ try {
     // 3. Conectar ao MongoDB
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
-    $gravadorasCollection = $database->selectCollection('gravadoras');
 
-    // 4. Pipeline de Agregação Robusto
+    // A coleção principal da consulta agora é 'albuns'.
+    $albunsCollection = $database->selectCollection('albuns');
+
+    // 4. Pipeline de Agregação Robusto (Adaptado para a nova topologia)
     $pipeline = [
-        // Desmembra o array de álbuns para processar um por um
-        ['$unwind' => '$albuns'],
+        // Etapa 1: Fazer o "JOIN" com a coleção de gravadoras.
+        [
+            '$lookup' => [
+                'from' => 'gravadoras',
+                'localField' => 'gravadora_id', // Campo no álbum
+                'foreignField' => '_id',         // Campo na gravadora
+                'as' => 'gravadora_info'
+            ]
+        ],
 
-        // Substitui a raiz do documento pelo subdocumento do álbum, mantendo o nome da gravadora
-        ['$replaceRoot' => ['newRoot' => ['$mergeObjects' => ['$albuns', ['nome_gravadora' => '$nome_gravadora']]]]],
-
-        // Garante que 'artistas_ids' seja um array para o $lookup não falhar
-        ['$addFields' => ['artistas_ids' => ['$ifNull' => ['$artistas_ids', []]]]],
-
-        // Junta com a coleção de artistas
         [
             '$lookup' => [
                 'from' => 'artistas',
@@ -47,10 +49,6 @@ try {
             ]
         ],
 
-        // Garante que 'generos_ids' seja um array
-        ['$addFields' => ['generos_ids' => ['$ifNull' => ['$generos_ids', []]]]],
-
-        // Junta com a coleção de gêneros
         [
             '$lookup' => [
                 'from' => 'generos_musicais',
@@ -63,16 +61,20 @@ try {
         // Formata o documento final para exibição
         [
             '$project' => [
-                '_id' => 1,
+                '_id' => '$_id',
                 'titulo' => '$titulo_album',
                 'ano' => ['$year' => '$data_lancamento'],
                 'duracao' => '$duracao',
-                'exemplares' => '$exemplares',
-                'gravadora' => '$nome_gravadora',
-                // Pega o nome do primeiro artista, ou "Desconhecido" se não houver
+                
+                // --- ALTERAÇÃO ---
+                // O campo agora se chama 'formatos'
+                'formatos' => '$formatos', 
+                'gravadora' => ['$ifNull' => [['$arrayElemAt' => ['$gravadora_info.nome_gravadora', 0]], 'Gravadora Desconhecida']],
                 'artista' => ['$ifNull' => [['$arrayElemAt' => ['$artistas_info.nome_artista', 0]], 'Artista Desconhecido']],
+                
                 // Pega a lista de nomes de gêneros
-                'generos' => '$generos_info.nome_genero_musical',                
+                'generos' => '$generos_info.nome_genero_musical',
+                
                 // Pega a primeira imagem do array, ou usa um placeholder se o array estiver vazio/nulo
                 'url_capa' => [
                     '$ifNull' => [['$arrayElemAt' => ['$imagens_capas', 0]], 'https://via.placeholder.com/300/1e1e1e/bb86fc?text=Capa']
@@ -84,7 +86,8 @@ try {
         ['$sort' => ['artista' => 1, 'titulo' => 1]]
     ];
 
-    $cursor = $gravadorasCollection->aggregate($pipeline);
+    // Executa a agregação na coleção 'albuns'
+    $cursor = $albunsCollection->aggregate($pipeline);
     $albuns = $cursor->toArray();
 
 } catch (Exception $e) {
@@ -133,7 +136,7 @@ try {
                          data-gravadora="<?= htmlspecialchars($album['gravadora'] ?? 'N/A') ?>"
                          data-duracao="<?= htmlspecialchars($album['duracao'] ?? 'N/A') ?>"
                          data-capa="<?= htmlspecialchars($album['url_capa'] ?? '') ?>"
-                         data-exemplares="<?= htmlspecialchars(json_encode($album['exemplares'] ?? [])) ?>">
+                         data-formatos="<?= htmlspecialchars(json_encode($album['formatos'] ?? [])) ?>">
                         
                         <img src="<?= htmlspecialchars($album['url_capa'] ?? 'https://via.placeholder.com/300?text=Capa') ?>" alt="Capa do álbum <?= htmlspecialchars($album['titulo']) ?>">
                         <div class="album-info">
@@ -149,7 +152,6 @@ try {
         </div>
     </main>
 
-    <!-- Modal (Popup) -->
     <div id="album-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -164,9 +166,9 @@ try {
                         <span><strong>Gravadora:</strong> <span id="modal-gravadora"></span></span>
                         <span><strong>Duração:</strong> <span id="modal-duracao"></span></span>
                     </div>
-                    <h3>Exemplares Disponíveis:</h3>
-                    <ul id="modal-exemplares"></ul>
-                </div>
+
+                    <h3>Formatos Disponíveis:</h3>
+                    <ul id="modal-formatos"></ul> </div>
             </div>
         </div>
     </div>

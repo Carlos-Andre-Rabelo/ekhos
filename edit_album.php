@@ -21,24 +21,20 @@ if (!$albumId) {
 try {
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
-    $gravadorasCollection = $database->selectCollection('gravadoras');
+    $albunsCollection = $database->selectCollection('albuns');
 
     // Buscar dados para preencher os selects do formulário
-    $gravadoras = $gravadorasCollection->find([], ['sort' => ['nome_gravadora' => 1]])->toArray();
+    // Projeta os campos necessários e converte o _id para string para uso no HTML
+    $gravadoras = $database->selectCollection('gravadoras')->find(
+        [],
+        ['sort' => ['nome_gravadora' => 1],
+         'projection' => ['_id' => 1, 'nome_gravadora' => 1]]
+    )->toArray();
     $artistas = $database->selectCollection('artistas')->find([], ['sort' => ['nome_artista' => 1]])->toArray();
     $generos = $database->selectCollection('generos_musicais')->find([], ['sort' => ['nome_genero_musical' => 1]])->toArray();
 
-    // Buscar os dados do álbum específico para preencher o formulário
-    $result = $gravadorasCollection->findOne(['albuns._id' => (int)$albumId]);
-    if ($result) {
-        foreach ($result['albuns'] as $a) {
-            if ((string)$a['_id'] === $albumId) {
-                $album = (array)$a;
-                $album['gravadora_id'] = (int)$result['_id']; // Adiciona o ID da gravadora pai
-                break;
-            }
-        }
-    }
+    // Buscar os dados do álbum específico diretamente da coleção 'albuns'
+    $album = $albunsCollection->findOne(['_id' => (int)$albumId]);
 
     if (!$album) {
         throw new Exception("Álbum não encontrado.");
@@ -77,34 +73,26 @@ try {
 
         // --- Montagem dos campos a serem atualizados ---
         $updateFields = [
-            'albuns.$.titulo_album' => (string) ($_POST['titulo_album'] ?? ''),
-            'albuns.$.data_lancamento' => new MongoDB\BSON\UTCDateTime(new DateTime($_POST['data_lancamento'])),
-            'albuns.$.imagens_capas' => $imagePath ? [$imagePath] : [],
-            'albuns.$.numero_faixas' => (int) ($_POST['numero_faixas'] ?? 0),
-            'albuns.$.duracao' => (string) ($_POST['duracao'] ?? '00:00:00'),
-            'albuns.$.artistas_ids' => [ (int) ($_POST['artista_id'] ?? 0) ],
-            'albuns.$.generos_ids' => array_map('intval', $_POST['generos_ids'] ?? []),
+            'titulo_album' => (string) ($_POST['titulo_album'] ?? ''),
+            'gravadora_id' => (int) $_POST['gravadora_id'], // Permitir alterar a gravadora
+            'data_lancamento' => new MongoDB\BSON\UTCDateTime(new DateTime($_POST['data_lancamento'])),
+            'imagens_capas' => $imagePath ? [$imagePath] : [],
+            'numero_faixas' => (int) ($_POST['numero_faixas'] ?? 0),
+            'duracao' => (string) ($_POST['duracao'] ?? '00:00:00'),
+            'artistas_ids' => [ (int) ($_POST['artista_id'] ?? 0) ],
+            'generos_ids' => array_map('intval', $_POST['generos_ids'] ?? []),
         ];
 
         // --- Atualização no Banco de Dados ---
-        $updateResult = $gravadorasCollection->updateOne(
-            ['albuns._id' => (int)$albumId],
+        $updateResult = $albunsCollection->updateOne(
+            ['_id' => (int)$albumId],
             ['$set' => $updateFields]
         );
 
         if ($updateResult->getModifiedCount() > 0) {
             $message = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($_POST['titulo_album']) . '" atualizado com sucesso!'];
             // Recarregar os dados do álbum para exibir as informações atualizadas no formulário
-            $result = $gravadorasCollection->findOne(['albuns._id' => (int)$albumId]);
-            if ($result) {
-                foreach ($result['albuns'] as $a) {
-                    if ((string)$a['_id'] === $albumId) {
-                        $album = (array)$a;
-                        $album['gravadora_id'] = (int)$result['_id'];
-                        break;
-                    }
-                }
-            }
+            $album = $albunsCollection->findOne(['_id' => (int)$albumId]);
         } else {
             $message = ['type' => 'info', 'text' => 'Nenhuma alteração foi detectada.'];
         }
@@ -165,10 +153,10 @@ try {
             </div>
 
             <div class="form-group">
-                <label for="gravadora_id">Gravadora (não pode ser alterada)</label>
-                <select id="gravadora_id" name="gravadora_id" required disabled>
+                <label for="gravadora_id">Gravadora</label>
+                <select id="gravadora_id" name="gravadora_id" required>
                     <?php foreach ($gravadoras as $gravadora): ?>
-                        <option value="<?= $gravadora['_id'] ?>" <?= ($album['gravadora_id'] == $gravadora['_id']) ? 'selected' : '' ?>><?= htmlspecialchars($gravadora['nome_gravadora']) ?></option>
+                        <option value="<?= $gravadora['_id'] ?>" <?= ((string)$album['gravadora_id'] == (string)$gravadora['_id']) ? 'selected' : '' ?>><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

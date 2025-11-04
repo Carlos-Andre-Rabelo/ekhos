@@ -49,12 +49,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modal-duracao').textContent = card.dataset.duracao;
 
         // Preencher lista de exemplares
-        const exemplaresList = document.getElementById('modal-exemplares');
-        exemplaresList.innerHTML = ''; // Limpa exemplares anteriores
+        const formatosList = document.getElementById('modal-formatos');
+        formatosList.innerHTML = ''; // Limpa formatos anteriores
         try {
-            const exemplares = JSON.parse(card.dataset.exemplares);
-            if (exemplares && exemplares.length > 0) {
-                exemplares.forEach(exemplar => {
+            const formatos = JSON.parse(card.dataset.formatos);
+            if (formatos && formatos.length > 0) {
+                formatos.forEach(exemplar => {
                     const li = document.createElement('li');
                     const tipo = exemplar.tipo.charAt(0).toUpperCase() + exemplar.tipo.slice(1);
                     const preco = parseFloat(exemplar.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -63,13 +63,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         text += ` (${exemplar.tamanho}")`;
                     }
                     li.textContent = text;
-                    exemplaresList.appendChild(li);
+                    formatosList.appendChild(li);
                 });
             } else {
-                exemplaresList.innerHTML = '<li>Nenhum exemplar disponível.</li>';
+                formatosList.innerHTML = '<li>Nenhum formato disponível.</li>';
             }
         } catch (e) {
-            exemplaresList.innerHTML = '<li>Erro ao carregar informações dos exemplares.</li>';
+            formatosList.innerHTML = '<li>Erro ao carregar informações dos formatos.</li>';
         }
 
         // Exibir o modal com animação
