@@ -10,15 +10,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
 $message = null;
-$action = $_GET['action'] ?? 'add_album'; // Define a ação a ser executada
 
 try {
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
 
     // Buscar dados para preencher os selects do formulário
-    // Projeta os campos necessários e converte o _id para string para uso no HTML
-    if ($action === 'add_album') {
+    // Esta parte agora sempre executa, pois a página só serve para adicionar álbuns
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || ($_POST['action'] ?? '') === 'add_album') {
         $gravadoras = $database->selectCollection('gravadoras')->find(
             [],
             ['sort' => ['nome_gravadora' => 1], 'projection' => ['_id' => 1, 'nome_gravadora' => 1]]
@@ -27,8 +26,14 @@ try {
         $generos = $database->selectCollection('generos_musicais')->find([], ['sort' => ['nome_genero_musical' => 1]])->toArray();
     }
 
-    // Roteamento de ações com base no método POST
+    // Roteamento de ações com base no método POST.
+    // A requisição pode ser a submissão do formulário principal ou uma chamada AJAX dos modais.
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Se for uma requisição AJAX, preparamos uma resposta JSON
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            header('Content-Type: application/json');
+        }
+
         $postedAction = $_POST['action'] ?? 'add_album';
 
         if ($postedAction === 'add_album') {
@@ -120,11 +125,11 @@ try {
             $insertResult = $database->selectCollection('gravadoras')->insertOne($newGravadora);
 
             if ($insertResult->getInsertedCount() > 0) {
-                $message = ['type' => 'success', 'text' => 'Gravadora "' . htmlspecialchars($nomeGravadora) . '" adicionada com sucesso! Você pode fechar esta aba e atualizar a página anterior.'];
+                echo json_encode(['status' => 'success', 'message' => 'Gravadora adicionada!']);
             } else {
-                throw new Exception("Não foi possível adicionar a gravadora.");
+                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar gravadora.']);
             }
-
+            exit; // Termina a execução para requisições AJAX
         } elseif ($postedAction === 'add_artista') {
             $nomeArtista = $_POST['nome_artista'] ?? '';
             if (empty($nomeArtista)) {
@@ -148,12 +153,13 @@ try {
             $insertResult = $database->selectCollection('artistas')->insertOne($newArtista);
 
             if ($insertResult->getInsertedCount() > 0) {
-                $message = ['type' => 'success', 'text' => 'Artista "' . htmlspecialchars($nomeArtista) . '" adicionado com sucesso! Você pode fechar esta aba e atualizar a página anterior.'];
+                echo json_encode(['status' => 'success', 'message' => 'Artista adicionado!']);
             } else {
-                throw new Exception("Não foi possível adicionar o artista.");
+                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar artista.']);
             }
-        }
-        elseif ($postedAction === 'add_genero') {
+            exit; // Termina a execução para requisições AJAX
+
+        } elseif ($postedAction === 'add_genero') {
             $nomeGenero = $_POST['nome_genero_musical'] ?? '';
             if (empty($nomeGenero)) {
                 throw new Exception("O nome do gênero é obrigatório.");
@@ -174,14 +180,19 @@ try {
             $insertResult = $database->selectCollection('generos_musicais')->insertOne($newGenero);
 
             if ($insertResult->getInsertedCount() > 0) {
-                $message = ['type' => 'success', 'text' => 'Gênero "' . htmlspecialchars($nomeGenero) . '" adicionado com sucesso! Você pode fechar esta aba e atualizar a página anterior.'];
+                echo json_encode(['status' => 'success', 'message' => 'Gênero adicionado!']);
             } else {
-                throw new Exception("Não foi possível adicionar o gênero.");
+                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar gênero.']);
             }
+            exit; // Termina a execução para requisições AJAX
         }
     }
 } catch (Exception $e) {
-    $message = ['type' => 'error', 'text' => 'Erro: ' . $e->getMessage()];
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        exit;
+    }
+    $message = ['type' => 'error', 'text' => 'Erro: ' . $e->getMessage()]; // Para a página principal
 }
 
 ?>
@@ -195,6 +206,10 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css"> <!-- Mantém o link para o CSS principal -->
+    <style>
+        /* Estilos adicionais para o formulário de adição */
+        .form-container .message { margin-bottom: 1.5rem; }
+    </style>
 </head>
 <body>
     <div class="form-container">
@@ -204,11 +219,11 @@ try {
             </div>
         <?php endif; ?>
 
-        <?php if ($action === 'add_album'): ?>
-            <nav style="text-align: center; margin-bottom: 2rem;">
-                <a href="index.php">&larr; Voltar para a Coleção</a>
-            </nav> 
-            <h1>Adicionar Novo Álbum</h1>
+        <?php if (isset($gravadoras)): // Verifica se os dados do formulário principal foram carregados ?>
+            <div class="form-header">
+                <a href="index.php" class="back-link" title="Voltar para a Coleção">&larr;</a>
+                <h1>Adicionar Novo Álbum</h1>
+            </div>
             <form action="add_album.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="add_album">
                 <div class="form-group">
@@ -220,13 +235,16 @@ try {
                 <div class="form-group">
                     <label for="gravadora_id">Gravadora</label>
                     <div class="form-group-inline">
-                        <select id="gravadora_id" name="gravadora_id" required>
-                            <option value="">Gravadora</option>
-                            <?php foreach ($gravadoras as $gravadora): ?>
-                                <option value="<?= $gravadora['_id'] ?>"><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <a href="add_album.php?action=add_gravadora" target="_blank" class="btn-add-related" title="Adicionar Nova Gravadora">+</a>
+                        <div class="custom-select-container">
+                            <input type="hidden" name="gravadora_id" id="gravadora_id_hidden" value="">
+                            <div class="select-selected">Selecione a Gravadora</div>
+                            <div class="select-items">
+                                <?php foreach ($gravadoras as $gravadora): ?>
+                                    <div data-value="<?= $gravadora['_id'] ?>"><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-gravadora" title="Adicionar Nova Gravadora">+</button>
                     </div>
                 </div>
 
@@ -234,13 +252,16 @@ try {
                 <div class="form-group">
                     <label for="artista_id">Artista</label>
                     <div class="form-group-inline">
-                        <select id="artista_id" name="artista_id" required>
-                            <option value="">Artista</option>
-                            <?php foreach ($artistas as $artista): ?>
-                                <option value="<?= $artista['_id'] ?>"><?= htmlspecialchars($artista['nome_artista']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <a href="add_album.php?action=add_artista" target="_blank" class="btn-add-related" title="Adicionar Novo Artista">+</a>
+                        <div class="custom-select-container">
+                            <input type="hidden" name="artista_id" id="artista_id_hidden" value="">
+                            <div class="select-selected">Selecione o Artista</div>
+                            <div class="select-items">
+                                <?php foreach ($artistas as $artista): ?>
+                                    <div data-value="<?= $artista['_id'] ?>"><?= htmlspecialchars($artista['nome_artista']) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-artista" title="Adicionar Novo Artista">+</button>
                     </div>
                 </div>
 
@@ -254,7 +275,7 @@ try {
                                 <span class="genre-name"><?= htmlspecialchars($genero['nome_genero_musical']) ?></span>
                             </label>
                         <?php endforeach; ?>
-                        <a href="add_album.php?action=add_genero" target="_blank" class="btn-add-related" title="Adicionar Novo Gênero">+</a>
+                        <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-genero" title="Adicionar Novo Gênero">+</button>
                     </div>
                 </div>
 
@@ -276,10 +297,12 @@ try {
                 <div class="form-group">
                     <label for="imagem_capa">Capa do Álbum</label>
                     <input type="file" id="imagem_capa" name="imagem_capa" accept="image/*">
+                    <!-- Contêiner para a pré-visualização da imagem -->
+                    <img id="image-preview" src="#" alt="Pré-visualização da capa" class="image-preview">
                 </div>
 
                 <div class="form-group">
-                    <div class="formatos-section">
+                    <div class="formatos-section" style="display: none;">
                         <h3>Formatos (Exemplares)</h3>
                         <div id="formatos-container"></div>
                     </div>
@@ -288,82 +311,258 @@ try {
 
                 <button type="submit" class="btn-submit">Adicionar Álbum</button> 
             </form>
-
-        <?php elseif ($action === 'add_gravadora'): ?>
-            <h1>Adicionar Nova Gravadora</h1>
-            <form action="add_album.php?action=add_gravadora" method="post">
-                <input type="hidden" name="action" value="add_gravadora">
-                <div class="form-group">
-                    <label for="nome_gravadora">Nome da Gravadora</label>
-                    <input type="text" id="nome_gravadora" name="nome_gravadora" required>
-                </div>
-                <div class="form-group">
-                    <label for="email_gravadora">E-mail da Gravadora</label>
-                    <input type="email" id="email_gravadora" name="email_gravadora">
-                </div>
-                <button type="submit" class="btn-submit">Adicionar Gravadora</button>
-            </form>
-
-        <?php elseif ($action === 'add_artista'): ?>
-            <h1>Adicionar Novo Artista</h1>
-            <form action="add_album.php?action=add_artista" method="post">
-                <input type="hidden" name="action" value="add_artista">
-                <div class="form-group">
-                    <label for="nome_artista">Nome do Artista</label>
-                    <input type="text" id="nome_artista" name="nome_artista" required>
-                </div>
-                <div class="form-group">
-                    <label for="data_nascimento">Data de Nascimento (opcional)</label>
-                    <input type="date" id="data_nascimento" name="data_nascimento">
-                </div>
-                <button type="submit" class="btn-submit">Adicionar Artista</button>
-            </form>
-
-        <?php elseif ($action === 'add_genero'): ?>
-            <h1>Adicionar Novo Gênero</h1>
-            <form action="add_album.php?action=add_genero" method="post">
-                <input type="hidden" name="action" value="add_genero">
-                <div class="form-group">
-                    <label for="nome_genero_musical">Nome do Gênero</label>
-                    <input type="text" id="nome_genero_musical" name="nome_genero_musical" required>
-                </div>
-                <button type="submit" class="btn-submit">Adicionar Gênero</button>
-            </form>
         <?php endif; ?>
+    </div>
+
+    <!-- Modais para Adicionar Itens -->
+    <div id="modal-add-gravadora" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Nova Gravadora</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_gravadora">
+                    <div class="form-group">
+                        <label for="nome_gravadora">Nome da Gravadora</label>
+                        <input type="text" name="nome_gravadora" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_gravadora">E-mail da Gravadora</label>
+                        <input type="email" name="email_gravadora">
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-add-artista" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Novo Artista</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_artista">
+                    <div class="form-group">
+                        <label for="nome_artista">Nome do Artista</label>
+                        <input type="text" name="nome_artista" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de Nascimento (opcional)</label>
+                        <input type="date" name="data_nascimento">
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-add-genero" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Novo Gênero</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_genero">
+                    <div class="form-group">
+                        <label for="nome_genero_musical">Nome do Gênero</label>
+                        <input type="text" name="nome_genero_musical" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // --- Lógica para adicionar formatos dinamicamente ---
         const addFormatoBtn = document.getElementById('add-formato-btn');
-        if (addFormatoBtn) {
+        if (addFormatoBtn) { // Verifica se o botão existe na página
             const container = document.getElementById('formatos-container');
+            const formatosSection = document.querySelector('.formatos-section');
             let formatoIndex = 0;
 
-            addFormatoBtn.addEventListener('click', function() { // Adiciona um novo item de formato
+            addFormatoBtn.addEventListener('click', function() {
+                if (formatosSection.style.display === 'none') {
+                    formatosSection.style.display = 'block'; // Mostra a seção de formatos
+                }
                 const div = document.createElement('div');
                 div.classList.add('formato-item');
                 div.innerHTML = `
-                    <select name="formatos[${formatoIndex}][tipo]" required>
-                        <option value="">-- Tipo --</option>
-                        <option value="cd">CD</option>
-                        <option value="vinil_7">Vinil 7"</option>
-                        <option value="vinil_10">Vinil 10"</option>
-                        <option value="vinil_12">Vinil 12"</option>
-                    </select>
+                    <div class="custom-select-container">
+                        <input type="hidden" name="formatos[${formatoIndex}][tipo]" value="" required>
+                        <div class="select-selected">Selecione o Tipo</div>
+                        <div class="select-items">
+                            <div data-value="cd">CD</div>
+                            <div data-value="vinil_7">Vinil 7"</div>
+                            <div data-value="vinil_10">Vinil 10"</div>
+                            <div data-value="vinil_12">Vinil 12"</div>
+                        </div>
+                    </div>
                     <input type="number" name="formatos[${formatoIndex}][preco]" placeholder="Preço (ex: 99.90)" step="0.01" required>
                     <input type="number" name="formatos[${formatoIndex}][quantidade]" placeholder="Quantidade" min="0" required>
                     <button type="button" class="remove-formato-btn">X</button>
                 `;
                 container.appendChild(div);
+                // Inicializa o novo custom select que acabamos de adicionar
+                initializeCustomSelect(div.querySelector('.custom-select-container'));
                 formatoIndex++;
             });
 
             container.addEventListener('click', function(e) {
                 if (e.target && e.target.classList.contains('remove-formato-btn')) {
                     e.target.closest('.formato-item').remove();
+                    // Se não houver mais formatos, esconde a seção novamente
+                    if (container.children.length === 0 && formatosSection) {
+                        formatosSection.style.display = 'none';
+                    }
                 }
             });
         }
+
+        // --- Lógica para pré-visualização da imagem ---
+        const imageInput = document.getElementById('imagem_capa');
+        const imagePreview = document.getElementById('image-preview');
+
+        if (imageInput && imagePreview) {
+            imageInput.addEventListener('change', function(event) {
+                if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            });
+        }
+
+        // --- Lógica para o Novo Custom Select ---
+        function initializeCustomSelect(container) {
+            const selected = container.querySelector('.select-selected');
+            const items = container.querySelector('.select-items');
+            const hiddenInput = container.querySelector('input[type="hidden"]');
+
+            selected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeAllSelects(this); // Fecha outros selects abertos
+                items.style.maxHeight = items.style.maxHeight ? null : items.scrollHeight + "px";
+                items.style.opacity = items.style.opacity === '1' ? '0' : '1';
+                this.classList.toggle('select-arrow-active');
+            });
+
+            items.querySelectorAll('div').forEach(item => {
+                item.addEventListener('click', function() {
+                    selected.textContent = this.textContent;
+                    hiddenInput.value = this.getAttribute('data-value');
+                    closeAllSelects();
+                });
+            });
+        }
+
+        function closeAllSelects(elmnt) {
+            document.querySelectorAll('.custom-select-container').forEach(container => {
+                const selected = container.querySelector('.select-selected');
+                const items = container.querySelector('.select-items');
+                if (selected !== elmnt) {
+                    items.style.maxHeight = null;
+                    items.style.opacity = '0';
+                    selected.classList.remove('select-arrow-active');
+                }
+            });
+        }
+
+        document.querySelectorAll('.custom-select-container').forEach(initializeCustomSelect);
+
+        // Fecha os selects se clicar fora
+        document.addEventListener('click', closeAllSelects);
+
+
+        // --- Lógica para os Modais de Adição (Gravadora, Artista, Gênero) ---
+        const openModalButtons = document.querySelectorAll('.open-sub-modal');
+        const subModals = document.querySelectorAll('.add-modal');
+
+        function openSubModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                document.body.classList.add('modal-open');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                }, 10);
+            }
+        }
+
+        function closeSubModal(modal) {
+            if (modal) {
+                modal.style.opacity = '0';
+                modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    // Limpa a mensagem de feedback ao fechar
+                    const messageDiv = modal.querySelector('.message');
+                    if (messageDiv) {
+                        messageDiv.style.display = 'none';
+                        messageDiv.textContent = '';
+                        messageDiv.className = 'message';
+                    }
+                    // Só remove a classe do body se nenhum outro modal estiver aberto
+                    if (document.querySelectorAll('.modal-overlay[style*="display: flex"]').length === 0) {
+                        document.body.classList.remove('modal-open');
+                    }
+                }, 300);
+            }
+        }
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal-id');
+                openSubModal(modalId);
+            });
+        });
+
+        subModals.forEach(modal => {
+            // Fechar ao clicar no 'X'
+            modal.querySelector('.modal-close').addEventListener('click', () => closeSubModal(modal));
+            // Fechar ao clicar no overlay
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeSubModal(modal);
+                }
+            });
+
+            // Lidar com a submissão do formulário via AJAX
+            const form = modal.querySelector('.sub-modal-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const messageDiv = form.querySelector('.message');
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = `message ${data.status}`;
+                    messageDiv.style.display = 'block';
+
+                    if (data.status === 'success') {
+                        setTimeout(() => window.location.reload(), 1500); // Recarrega a página após sucesso
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            });
+        });
+
+
     });
     </script>
 </body>

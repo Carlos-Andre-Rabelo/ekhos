@@ -25,11 +25,7 @@ try {
 
     // Buscar dados para preencher os selects do formulário
     // Projeta os campos necessários e converte o _id para string para uso no HTML
-    $gravadoras = $database->selectCollection('gravadoras')->find(
-        [],
-        ['sort' => ['nome_gravadora' => 1],
-         'projection' => ['_id' => 1, 'nome_gravadora' => 1]]
-    )->toArray();
+    $gravadoras = $database->selectCollection('gravadoras')->find([], ['sort' => ['nome_gravadora' => 1]])->toArray();
     $artistas = $database->selectCollection('artistas')->find([], ['sort' => ['nome_artista' => 1]])->toArray();
     $generos = $database->selectCollection('generos_musicais')->find([], ['sort' => ['nome_genero_musical' => 1]])->toArray();
 
@@ -83,6 +79,21 @@ try {
             'generos_ids' => array_map('intval', $_POST['generos_ids'] ?? []),
         ];
 
+        // --- Montagem dos Formatos (Exemplares) ---
+        $formatos = [];
+        if (isset($_POST['formatos']) && is_array($_POST['formatos'])) {
+            foreach ($_POST['formatos'] as $formato) {
+                if (!empty($formato['tipo']) && isset($formato['preco']) && isset($formato['quantidade'])) {
+                    $formatos[] = [
+                        'tipo' => (string) $formato['tipo'],
+                        'preco' => (float) $formato['preco'],
+                        'quantidade_estoque' => (int) $formato['quantidade']
+                    ];
+                }
+            }
+        }
+        $updateFields['formatos'] = $formatos;
+
         // --- Atualização no Banco de Dados ---
         $updateResult = $albunsCollection->updateOne(
             ['_id' => (int)$albumId],
@@ -90,7 +101,7 @@ try {
         );
 
         if ($updateResult->getModifiedCount() > 0) {
-            $message = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($_POST['titulo_album']) . '" atualizado com sucesso!'];
+            $message = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($updateFields['titulo_album']) . '" atualizado com sucesso!'];
             // Recarregar os dados do álbum para exibir as informações atualizadas no formulário
             $album = $albunsCollection->findOne(['_id' => (int)$albumId]);
         } else {
@@ -115,10 +126,10 @@ try {
 </head>
 <body>
     <div class="form-container">
-        <nav style="text-align: center; margin-bottom: 2rem;">
-            <a href="index.php">&larr; Voltar para a Coleção</a>
-        </nav>
-        <h1>Editar Álbum</h1>
+        <div class="form-header">
+            <a href="index.php" class="back-link" title="Voltar para a Coleção">&larr;</a>
+            <h1>Editar Álbum</h1>
+        </div>
 
         <?php if ($message): ?>
             <div class="message <?= $message['type'] ?>">
@@ -137,21 +148,44 @@ try {
 
             <div class="form-group">
                 <label for="gravadora_id">Gravadora</label>
-                <select id="gravadora_id" name="gravadora_id" required>
-                    <?php foreach ($gravadoras as $gravadora): ?>
-                        <option value="<?= $gravadora['_id'] ?>" <?= ((string)$album['gravadora_id'] == (string)$gravadora['_id']) ? 'selected' : '' ?>><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="form-group-inline">
+                    <div class="custom-select-container">
+                        <?php
+                            $selectedGravadoraId = $album['gravadora_id'] ?? '';
+                            $selectedGravadoraName = 'Selecione a Gravadora';
+                            foreach ($gravadoras as $g) { if ($g['_id'] == $selectedGravadoraId) { $selectedGravadoraName = htmlspecialchars((string)($g['nome_gravadora'] ?? '')); break; } }
+                        ?>
+                        <input type="hidden" name="gravadora_id" id="gravadora_id_hidden" value="<?= $selectedGravadoraId ?>">
+                        <div class="select-selected"><?= $selectedGravadoraName ?></div>
+                        <div class="select-items">
+                            <?php foreach ($gravadoras as $gravadora): ?>
+                                <div data-value="<?= $gravadora['_id'] ?>"><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-gravadora" title="Adicionar Nova Gravadora">+</button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="artista_id">Artista</label>
-                <select id="artista_id" name="artista_id" required>
-                    <option value="">-- Selecione um artista --</option>
-                    <?php foreach ($artistas as $artista): ?>
-                        <option value="<?= $artista['_id'] ?>" <?= (in_array($artista['_id'], (array)($album['artistas_ids'] ?? []))) ? 'selected' : '' ?>><?= htmlspecialchars($artista['nome_artista']) ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="form-group-inline">
+                    <div class="custom-select-container">
+                        <?php
+                            $selectedArtistaId = $album['artistas_ids'][0] ?? '';
+                            $selectedArtistaName = 'Selecione o Artista';
+                            foreach ($artistas as $a) { if ($a['_id'] == $selectedArtistaId) { $selectedArtistaName = htmlspecialchars($a['nome_artista']); break; } }
+                        ?>
+                        <input type="hidden" name="artista_id" id="artista_id_hidden" value="<?= $selectedArtistaId ?>">
+                        <div class="select-selected"><?= $selectedArtistaName ?></div>
+                        <div class="select-items">
+                            <?php foreach ($artistas as $artista): ?>
+                                <div data-value="<?= $artista['_id'] ?>"><?= htmlspecialchars($artista['nome_artista']) ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-artista" title="Adicionar Novo Artista">+</button>
+                </div>
             </div>
 
             <div class="form-group">
@@ -165,7 +199,7 @@ try {
                             <span class="genre-name"><?= htmlspecialchars($genero['nome_genero_musical']) ?></span>
                         </label>
                     <?php endforeach; ?>
-                    <a href="add_album.php?action=add_genero" target="_blank" class="btn-add-related" title="Adicionar Novo Gênero">+</a>
+                    <button type="button" class="btn-add-related open-sub-modal" data-modal-id="modal-add-genero" title="Adicionar Novo Gênero">+</button>
                 </div>
             </div>
 
@@ -190,12 +224,311 @@ try {
                     <p>Capa atual:</p>
                     <img src="<?= htmlspecialchars($album['imagens_capas'][0]) ?>" alt="Capa atual" class="current-image">
                 <?php endif; ?>
-                <input type="file" id="imagem_capa" name="imagem_capa" accept="image/*">
+                <input type="file" id="imagem_capa" name="imagem_capa" accept="image/*" onchange="previewImage(event)">
+                <!-- Contêiner para a pré-visualização da nova imagem -->
+                <img id="image-preview" src="#" alt="Pré-visualização da nova capa" class="image-preview">
+            </div>
+
+            <!-- Seção de Formatos Editáveis -->
+            <div class="form-group">
+                <div class="formatos-section">
+                    <h3>Formatos (Exemplares)</h3>
+                    <div id="formatos-container">
+                        <?php 
+                        $formatoIndex = 0;
+                        if (!empty($album['formatos'])):
+                            foreach ($album['formatos'] as $formato):
+                        ?>
+                            <div class="formato-item">
+                                <div class="custom-select-container">
+                                    <?php
+                                        $currentType = $formato['tipo'] ?? '';
+                                        $typeName = 'Selecione o Tipo';
+                                        $types = ['cd' => 'CD', 'vinil_7' => 'Vinil 7"', 'vinil_10' => 'Vinil 10"', 'vinil_12' => 'Vinil 12"'];
+                                        if (array_key_exists($currentType, $types)) {
+                                            $typeName = $types[$currentType];
+                                        }
+                                    ?>
+                                    <input type="hidden" name="formatos[<?= $formatoIndex ?>][tipo]" value="<?= htmlspecialchars($currentType) ?>" required>
+                                    <div class="select-selected"><?= $typeName ?></div>
+                                    <div class="select-items">
+                                        <?php foreach ($types as $value => $name): ?>
+                                            <div data-value="<?= $value ?>"><?= $name ?></div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                                <input type="number" name="formatos[<?= $formatoIndex ?>][preco]" placeholder="Preço (ex: 99.90)" step="0.01" value="<?= htmlspecialchars((string)($formato['preco'] ?? '')) ?>" required>
+                                <input type="number" name="formatos[<?= $formatoIndex ?>][quantidade]" placeholder="Quantidade" min="0" value="<?= htmlspecialchars((string)($formato['quantidade_estoque'] ?? '')) ?>" required>
+                                <button type="button" class="remove-formato-btn">X</button>
+                            </div>
+                        <?php 
+                                $formatoIndex++;
+                            endforeach;
+                        endif; 
+                        ?>
+                    </div>
+                </div>
+                <button type="button" id="add-formato-btn" style="margin-top: 10px;">+ Adicionar Formato</button>
             </div>
 
             <button type="submit" class="btn-submit">Salvar Alterações</button>
-        </form>
+        </form> 
         <?php endif; ?>
     </div>
+
+    <!-- Modais para Adicionar Itens (copiados de add_album.php) -->
+    <div id="modal-add-gravadora" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Nova Gravadora</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_gravadora">
+                    <div class="form-group">
+                        <label for="nome_gravadora_modal">Nome da Gravadora</label>
+                        <input type="text" name="nome_gravadora" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_gravadora_modal">E-mail da Gravadora</label>
+                        <input type="email" name="email_gravadora">
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-add-artista" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Novo Artista</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_artista">
+                    <div class="form-group">
+                        <label for="nome_artista_modal">Nome do Artista</label>
+                        <input type="text" name="nome_artista" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data_nascimento_modal">Data de Nascimento (opcional)</label>
+                        <input type="date" name="data_nascimento">
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-add-genero" class="modal-overlay add-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-body">
+                <h1>Adicionar Novo Gênero</h1>
+                <form class="sub-modal-form" action="add_album.php" method="post">
+                    <input type="hidden" name="action" value="add_genero">
+                    <div class="form-group">
+                        <label for="nome_genero_musical_modal">Nome do Gênero</label>
+                        <input type="text" name="nome_genero_musical" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Adicionar</button>
+                    <div class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Lógica para adicionar formatos dinamicamente ---
+        const addFormatoBtn = document.getElementById('add-formato-btn');
+        if (addFormatoBtn) {
+            const container = document.getElementById('formatos-container');
+            const formatosSection = document.querySelector('.formatos-section');
+            // Começa o índice a partir do número de formatos já existentes
+            let formatoIndex = <?= $formatoIndex ?? 0 ?>;
+
+            // Se não houver formatos, esconde a seção
+            if (container.children.length === 0) {
+                formatosSection.style.display = 'none';
+            }
+
+            addFormatoBtn.addEventListener('click', function() {
+                // Mostra a seção se estiver oculta
+                if (formatosSection.style.display === 'none') {
+                    formatosSection.style.display = 'block';
+                }
+
+                const div = document.createElement('div');
+                div.classList.add('formato-item');
+                div.innerHTML = `
+                    <div class="custom-select-container">
+                        <input type="hidden" name="formatos[${formatoIndex}][tipo]" value="" required>
+                        <div class="select-selected">Selecione o Tipo</div>
+                        <div class="select-items">
+                            <div data-value="cd">CD</div>
+                            <div data-value="vinil_7">Vinil 7"</div>
+                            <div data-value="vinil_10">Vinil 10"</div>
+                            <div data-value="vinil_12">Vinil 12"</div>
+                        </div>
+                    </div>
+                    <input type="number" name="formatos[${formatoIndex}][preco]" placeholder="Preço (ex: 99.90)" step="0.01" required>
+                    <input type="number" name="formatos[${formatoIndex}][quantidade]" placeholder="Quantidade" min="0" required>
+                    <button type="button" class="remove-formato-btn">X</button>
+                `;
+                container.appendChild(div);
+                // Inicializa o novo custom select que acabamos de adicionar
+                initializeCustomSelect(div.querySelector('.custom-select-container'));
+                formatoIndex++;
+            });
+
+            container.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('remove-formato-btn')) {
+                    e.target.closest('.formato-item').remove();
+                    // Se não houver mais formatos, esconde a seção novamente
+                    if (container.children.length === 0) {
+                        formatosSection.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // --- Lógica para o Novo Custom Select ---
+        function initializeCustomSelect(container) {
+            const selected = container.querySelector('.select-selected');
+            const items = container.querySelector('.select-items');
+            const hiddenInput = container.querySelector('input[type="hidden"]');
+
+            selected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeAllSelects(this); // Fecha outros selects abertos
+                items.style.maxHeight = items.style.maxHeight ? null : items.scrollHeight + "px";
+                items.style.opacity = items.style.opacity === '1' ? '0' : '1';
+                this.classList.toggle('select-arrow-active');
+            });
+
+            items.querySelectorAll('div').forEach(item => {
+                item.addEventListener('click', function() {
+                    selected.textContent = this.textContent;
+                    hiddenInput.value = this.getAttribute('data-value');
+                    closeAllSelects();
+                });
+            });
+        }
+
+        function closeAllSelects(elmnt) {
+            document.querySelectorAll('.custom-select-container').forEach(container => {
+                const selected = container.querySelector('.select-selected');
+                const items = container.querySelector('.select-items');
+                if (selected !== elmnt) {
+                    items.style.maxHeight = null;
+                    items.style.opacity = '0';
+                    selected.classList.remove('select-arrow-active');
+                }
+            });
+        }
+
+        document.querySelectorAll('.custom-select-container').forEach(initializeCustomSelect);
+
+        // Fecha os selects se clicar fora
+        document.addEventListener('click', closeAllSelects);
+
+        // --- Lógica para os Modais de Adição (Gravadora, Artista, Gênero) ---
+        const openModalButtons = document.querySelectorAll('.open-sub-modal');
+        const subModals = document.querySelectorAll('.add-modal');
+
+        function openSubModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                document.body.classList.add('modal-open');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                }, 10);
+            }
+        }
+
+        function closeSubModal(modal) {
+            if (modal) {
+                modal.style.opacity = '0';
+                modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    // Limpa a mensagem de feedback ao fechar
+                    const messageDiv = modal.querySelector('.message');
+                    if (messageDiv) {
+                        messageDiv.style.display = 'none';
+                        messageDiv.textContent = '';
+                        messageDiv.className = 'message';
+                    }
+                    // Só remove a classe do body se nenhum outro modal estiver aberto
+                    if (document.querySelectorAll('.modal-overlay[style*="display: flex"]').length === 0) {
+                        document.body.classList.remove('modal-open');
+                    }
+                }, 300);
+            }
+        }
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal-id');
+                openSubModal(modalId);
+            });
+        });
+
+        subModals.forEach(modal => {
+            // Fechar ao clicar no 'X'
+            modal.querySelector('.modal-close').addEventListener('click', () => closeSubModal(modal));
+            // Fechar ao clicar no overlay
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeSubModal(modal);
+                }
+            });
+
+            // Lidar com a submissão do formulário via AJAX
+            const form = modal.querySelector('.sub-modal-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const messageDiv = form.querySelector('.message');
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = `message ${data.status}`;
+                    messageDiv.style.display = 'block';
+
+                    if (data.status === 'success') {
+                        setTimeout(() => window.location.reload(), 1500); // Recarrega a página após sucesso
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            });
+        });
+
+        // --- Lógica para pré-visualização da imagem na página de edição ---
+        const imagePreview = document.getElementById('image-preview');
+        
+        window.previewImage = function(event) {
+            if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        };
+
+    });
+    </script>
 </body>
 </html>
