@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Funcionalidade do Modal (Popup) ---
 
+    // Função para acionar a busca
+    const triggerSearch = (term) => {
+        closeModal();
+        searchBar.value = term;
+        searchBar.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
     // Função para abrir o modal
     const openModal = (card) => {
         // Adiciona a classe ao body para aplicar o blur no fundo
@@ -42,12 +49,37 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modal-capa').src = card.dataset.capa;
         document.getElementById('modal-capa').alt = `Capa do álbum ${card.dataset.titulo}`;
         document.getElementById('modal-titulo').textContent = card.dataset.titulo;
-        document.getElementById('modal-artista').textContent = card.dataset.artista;
+        
+        // Preencher Artista e adicionar evento de clique
+        const modalArtista = document.getElementById('modal-artista');
+        modalArtista.textContent = card.dataset.artista;
+        modalArtista.onclick = () => triggerSearch(card.dataset.artista);
+
         document.getElementById('modal-ano').textContent = card.dataset.ano;
-        document.getElementById('modal-genero').textContent = card.dataset.genero;
+
+        // Preencher Gêneros e adicionar eventos de clique no span de display
+        const generoDisplaySpan = document.getElementById('modal-genero-display');
+        generoDisplaySpan.innerHTML = '<strong>Gênero:</strong> '; // Começa com o texto "Gênero:"
+
+        const generos = card.dataset.genero.split(', ').filter(g => g);
+        if (generos.length > 0) {
+            generos.forEach((genero, index) => {
+                const genreLink = document.createElement('a');
+                genreLink.textContent = genero;
+                genreLink.className = 'genre-link'; // Mantém a classe para o estilo de link
+                genreLink.onclick = () => triggerSearch(genero);
+                generoDisplaySpan.appendChild(genreLink);
+                if (index < generos.length - 1) {
+                    generoDisplaySpan.append(', ');
+                }
+            });
+        } else {
+            generoDisplaySpan.append('N/A');
+        }
+
         document.getElementById('modal-gravadora').textContent = card.dataset.gravadora;
         document.getElementById('modal-duracao').textContent = card.dataset.duracao;
-
+        
         // Preencher lista de exemplares
         const formatosList = document.getElementById('modal-formatos');
         formatosList.innerHTML = ''; // Limpa formatos anteriores
@@ -56,13 +88,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (formatos && formatos.length > 0) {
                 formatos.forEach(exemplar => {
                     const li = document.createElement('li');
-                    const tipo = exemplar.tipo.charAt(0).toUpperCase() + exemplar.tipo.slice(1);
+                    // Formata o tipo (ex: "vinil_7" -> "Vinil 7"")
+                    const tipoFormatado = exemplar.tipo.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) + (exemplar.tipo.includes('vinil') ? '"' : '');
                     const preco = parseFloat(exemplar.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    let text = `${tipo} - ${preco}`;
-                    if(exemplar.tipo === 'vinil' && exemplar.tamanho) {
-                        text += ` (${exemplar.tamanho}")`;
-                    }
-                    li.textContent = text;
+                    const quantidade = exemplar.quantidade_estoque;
+
+                    li.innerHTML = `
+                        <span class="formato-tipo">${tipoFormatado}</span>
+                        <span class="formato-estoque">Estoque: ${quantidade}</span>
+                        <span class="formato-preco">${preco}</span>
+                    `;
                     formatosList.appendChild(li);
                 });
             } else {

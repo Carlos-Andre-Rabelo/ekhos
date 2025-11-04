@@ -112,23 +112,6 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .form-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: var(--cor-superficie); border-radius: 8px; }
-        .form-container h1 { text-align: center; color: var(--cor-primaria); margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-        .form-group input, .form-group select { width: 100%; padding: 0.8rem; font-size: 1rem; border-radius: 4px; border: 1px solid var(--cor-borda); background-color: var(--cor-fundo); color: var(--cor-texto-principal); }
-        .form-group select[multiple] { height: 150px; }
-        .form-group input[type="file"] { padding: 0.5rem; }
-        .btn-submit { display: block; width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; color: #fff; background-color: var(--cor-primaria); border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
-        .btn-submit:hover { background-color: #2980b9; }
-        .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; text-align: center; }
-        .message.success { background-color: #27ae60; color: #fff; }
-        .message.error { background-color: #c0392b; color: #fff; }
-        .message.info { background-color: #3498db; color: #fff; }
-        nav a { color: var(--cor-primaria); text-decoration: none; }
-        .current-image { max-width: 100px; max-height: 100px; border-radius: 4px; margin-top: 10px; }
-    </style>
 </head>
 <body>
     <div class="form-container">
@@ -145,7 +128,7 @@ try {
 
         <?php if ($album): ?>
         <form action="edit_album.php?id=<?= $albumId ?>" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="current_image_path" value="<?= htmlspecialchars($album['imagens_capas'][0] ?? '') ?>">
+            <input type="hidden" name="current_image_path" value="<?= htmlspecialchars($album['imagens_capas'][0] ?? '') ?>"> 
 
             <div class="form-group">
                 <label for="titulo_album">Título do Álbum</label>
@@ -172,12 +155,18 @@ try {
             </div>
 
             <div class="form-group">
-                <label for="generos_ids">Gêneros (segure Ctrl/Cmd para selecionar vários)</label>
-                <select id="generos_ids" name="generos_ids[]" multiple required>
+                <label>Gêneros</label>
+                <div class="checkbox-group-container">
                     <?php foreach ($generos as $genero): ?>
-                        <option value="<?= $genero['_id'] ?>" <?= (in_array($genero['_id'], (array)($album['generos_ids'] ?? []))) ? 'selected' : '' ?>><?= htmlspecialchars($genero['nome_genero_musical']) ?></option>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="generos_ids[]" value="<?= $genero['_id'] ?>"
+                                <?= (in_array($genero['_id'], (array)($album['generos_ids'] ?? []))) ? 'checked' : '' ?>>
+                            <span class="custom-checkbox"></span>
+                            <span class="genre-name"><?= htmlspecialchars($genero['nome_genero_musical']) ?></span>
+                        </label>
                     <?php endforeach; ?>
-                </select>
+                    <a href="add_album.php?action=add_genero" target="_blank" class="btn-add-related" title="Adicionar Novo Gênero">+</a>
+                </div>
             </div>
 
             <div class="form-group">

@@ -162,7 +162,7 @@ try {
                     <p id="modal-artista"></p>
                     <div class="modal-meta">
                         <span><strong>Ano:</strong> <span id="modal-ano"></span></span>
-                        <span><strong>Gênero:</strong> <span id="modal-genero"></span></span>
+                        <span id="modal-genero-display"></span>
                         <span><strong>Gravadora:</strong> <span id="modal-gravadora"></span></span>
                         <span><strong>Duração:</strong> <span id="modal-duracao"></span></span>
                     </div>

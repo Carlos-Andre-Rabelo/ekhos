@@ -153,6 +153,32 @@ try {
                 throw new Exception("Não foi possível adicionar o artista.");
             }
         }
+        elseif ($postedAction === 'add_genero') {
+            $nomeGenero = $_POST['nome_genero_musical'] ?? '';
+            if (empty($nomeGenero)) {
+                throw new Exception("O nome do gênero é obrigatório.");
+            }
+
+            // Gerar um novo _id inteiro para o gênero
+            $maxId = 0;
+            $lastGenero = $database->selectCollection('generos_musicais')->findOne([], ['sort' => ['_id' => -1]]);
+            if ($lastGenero) {
+                $maxId = (int)$lastGenero['_id'];
+            }
+            $newId = $maxId + 1;
+
+            $newGenero = [
+                '_id' => $newId,
+                'nome_genero_musical' => (string) $nomeGenero,
+            ];
+            $insertResult = $database->selectCollection('generos_musicais')->insertOne($newGenero);
+
+            if ($insertResult->getInsertedCount() > 0) {
+                $message = ['type' => 'success', 'text' => 'Gênero "' . htmlspecialchars($nomeGenero) . '" adicionado com sucesso! Você pode fechar esta aba e atualizar a página anterior.'];
+            } else {
+                throw new Exception("Não foi possível adicionar o gênero.");
+            }
+        }
     }
 } catch (Exception $e) {
     $message = ['type' => 'error', 'text' => 'Erro: ' . $e->getMessage()];
@@ -168,27 +194,7 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .form-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: var(--cor-superficie); border-radius: 8px; }
-        .form-container h1 { text-align: center; color: var(--cor-primaria); margin-bottom: 2rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-        .form-group input, .form-group select, .form-group-inline input, .form-group-inline select { width: 100%; padding: 0.8rem; font-size: 1rem; border-radius: 4px; border: 1px solid var(--cor-borda); background-color: var(--cor-fundo); color: var(--cor-texto-principal); }
-        .form-group select[multiple] { height: 150px; }
-        .form-group input[type="file"] { padding: 0.5rem; }
-        .form-group-inline { display: flex; align-items: center; gap: 10px; }
-        .form-group-inline select { flex-grow: 1; }
-        .btn-add-related { padding: 0.8rem; font-size: 1rem; background-color: var(--cor-secundaria); color: var(--cor-fundo); border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
-        .formatos-container { border: 1px solid var(--cor-borda); padding: 1rem; border-radius: 4px; }
-        .formato-item { display: grid; grid-template-columns: 3fr 2fr 2fr 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
-        .btn-submit { display: block; width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; color: #fff; background-color: var(--cor-primaria); border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; }
-        .btn-submit:hover { background-color: #2980b9; }
-        .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px; text-align: center; }
-        .message.success { background-color: #27ae60; color: #fff; }
-        .message.error { background-color: #c0392b; color: #fff; }
-        nav a { color: var(--cor-primaria); text-decoration: none; }
-    </style>
+    <link rel="stylesheet" href="style.css"> <!-- Mantém o link para o CSS principal -->
 </head>
 <body>
     <div class="form-container">
@@ -201,7 +207,7 @@ try {
         <?php if ($action === 'add_album'): ?>
             <nav style="text-align: center; margin-bottom: 2rem;">
                 <a href="index.php">&larr; Voltar para a Coleção</a>
-            </nav>
+            </nav> 
             <h1>Adicionar Novo Álbum</h1>
             <form action="add_album.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="add_album">
@@ -210,11 +216,12 @@ try {
                     <input type="text" id="titulo_album" name="titulo_album" required>
                 </div>
 
+                <!--selecionar a gravadora-->
                 <div class="form-group">
                     <label for="gravadora_id">Gravadora</label>
                     <div class="form-group-inline">
                         <select id="gravadora_id" name="gravadora_id" required>
-                            <option value="">-- Selecione uma gravadora --</option>
+                            <option value="">Gravadora</option>
                             <?php foreach ($gravadoras as $gravadora): ?>
                                 <option value="<?= $gravadora['_id'] ?>"><?= htmlspecialchars((string)($gravadora['nome_gravadora'] ?? '')) ?></option>
                             <?php endforeach; ?>
@@ -223,11 +230,12 @@ try {
                     </div>
                 </div>
 
+                <!--selecionar o artista-->                            
                 <div class="form-group">
                     <label for="artista_id">Artista</label>
                     <div class="form-group-inline">
                         <select id="artista_id" name="artista_id" required>
-                            <option value="">-- Selecione um artista --</option>
+                            <option value="">Artista</option>
                             <?php foreach ($artistas as $artista): ?>
                                 <option value="<?= $artista['_id'] ?>"><?= htmlspecialchars($artista['nome_artista']) ?></option>
                             <?php endforeach; ?>
@@ -237,12 +245,17 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label for="generos_ids">Gêneros (segure Ctrl/Cmd para selecionar vários)</label>
-                    <select id="generos_ids" name="generos_ids[]" multiple required>
+                    <label>Gêneros</label>
+                    <div class="checkbox-group-container">
                         <?php foreach ($generos as $genero): ?>
-                            <option value="<?= $genero['_id'] ?>"><?= htmlspecialchars($genero['nome_genero_musical']) ?></option>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="generos_ids[]" value="<?= $genero['_id'] ?>">
+                                <span class="custom-checkbox"></span>
+                                <span class="genre-name"><?= htmlspecialchars($genero['nome_genero_musical']) ?></span>
+                            </label>
                         <?php endforeach; ?>
-                    </select>
+                        <a href="add_album.php?action=add_genero" target="_blank" class="btn-add-related" title="Adicionar Novo Gênero">+</a>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -251,13 +264,13 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label for="numero_faixas">Número de Faixas</label>
+                    <label for="numero_faixas">Quantidade de Faixas</label>
                     <input type="number" id="numero_faixas" name="numero_faixas" min="1" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="duracao">Duração (HH:MM:SS)</label>
-                    <input type="text" id="duracao" name="duracao" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" placeholder="ex: 00:45:33" required>
+                    <label for="duracao">Duração</label>
+                    <input type="text" id="duracao" name="duracao" pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" placeholder="hh:mm:ss" required>
                 </div>
 
                 <div class="form-group">
@@ -266,12 +279,14 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label>Formatos (Exemplares)</label>
-                    <div id="formatos-container" class="formatos-container"></div>
+                    <div class="formatos-section">
+                        <h3>Formatos (Exemplares)</h3>
+                        <div id="formatos-container"></div>
+                    </div>
                     <button type="button" id="add-formato-btn" style="margin-top: 10px;">+ Adicionar Formato</button>
                 </div>
 
-                <button type="submit" class="btn-submit">Adicionar Álbum</button>
+                <button type="submit" class="btn-submit">Adicionar Álbum</button> 
             </form>
 
         <?php elseif ($action === 'add_gravadora'): ?>
@@ -303,6 +318,17 @@ try {
                 </div>
                 <button type="submit" class="btn-submit">Adicionar Artista</button>
             </form>
+
+        <?php elseif ($action === 'add_genero'): ?>
+            <h1>Adicionar Novo Gênero</h1>
+            <form action="add_album.php?action=add_genero" method="post">
+                <input type="hidden" name="action" value="add_genero">
+                <div class="form-group">
+                    <label for="nome_genero_musical">Nome do Gênero</label>
+                    <input type="text" id="nome_genero_musical" name="nome_genero_musical" required>
+                </div>
+                <button type="submit" class="btn-submit">Adicionar Gênero</button>
+            </form>
         <?php endif; ?>
     </div>
 
@@ -313,7 +339,7 @@ try {
             const container = document.getElementById('formatos-container');
             let formatoIndex = 0;
 
-            addFormatoBtn.addEventListener('click', function() {
+            addFormatoBtn.addEventListener('click', function() { // Adiciona um novo item de formato
                 const div = document.createElement('div');
                 div.classList.add('formato-item');
                 div.innerHTML = `
@@ -326,7 +352,7 @@ try {
                     </select>
                     <input type="number" name="formatos[${formatoIndex}][preco]" placeholder="Preço (ex: 99.90)" step="0.01" required>
                     <input type="number" name="formatos[${formatoIndex}][quantidade]" placeholder="Quantidade" min="0" required>
-                    <button type="button" class="remove-formato-btn" style="background-color: #c0392b; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">X</button>
+                    <button type="button" class="remove-formato-btn">X</button>
                 `;
                 container.appendChild(div);
                 formatoIndex++;
