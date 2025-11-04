@@ -4,10 +4,11 @@
 
 - **Visualização da Coleção**: Exibe todos os álbuns em um grid responsivo.
 - **Busca Dinâmica**: Filtra álbuns em tempo real por título, artista ou gênero.
-- **Detalhes do Álbum**: Clique em um álbum para ver informações detalhadas em um modal, como gravadora, ano, duração e exemplares disponíveis.
-- **Adicionar Álbum**: Formulário para adicionar novos álbuns à coleção, incluindo upload de imagem da capa.
+- **Detalhes do Álbum**: Clique em um álbum para ver informações detalhadas em um modal, como gravadora, ano, duração, formatos disponíveis e preços.
+- **Adicionar Álbum**: Formulário completo para adicionar novos álbuns, incluindo upload de imagem da capa e múltiplos formatos (CD, Vinil) com preço e estoque.
+- **Adição de Entidades Relacionadas**: Adicione novas gravadoras, artistas e gêneros diretamente pela página de adição de álbuns, sem interromper o fluxo de trabalho.
 - **Editar Álbum**: Formulário para editar informações de um álbum existente.
-- **Estrutura de Dados Relacional**: Utiliza agregações do MongoDB para juntar dados de diferentes coleções (álbuns, artistas, gêneros, gravadoras).
+- **Estrutura de Dados Desnormalizada**: Utiliza agregações (`$lookup`) do MongoDB para juntar dados de coleções separadas (`albuns`, `artistas`, `generos_musicais`, `gravadoras`), simulando relacionamentos.
 
 ## Tecnologias Utilizadas
 
@@ -37,11 +38,11 @@ Antes de começar, garanta que você tenha os seguintes softwares instalados:
 
 **a. Clone o Repositório**
 
-Clone ou baixe este projeto para o diretório raiz do seu servidor web (ex: `C:\xampp\htdocs\` no XAMPP).
+Clone ou baixe este projeto para o diretório raiz do seu servidor web (ex: `C:\xampp\htdocs\` no XAMPP). Renomeie a pasta para `ekhos` se necessário.
 
 ```bash
-git clone <url-do-repositorio> disco_imaginario_site
-cd disco_imaginario_site
+git clone <url-do-repositorio> ekhos
+cd ekhos
 ```
 
 **b. Instale as Dependências**
