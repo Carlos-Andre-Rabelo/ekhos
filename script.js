@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Se albumGrid for nulo, albumCards será um array vazio, evitando erros.
     const albumCards = albumGrid ? albumGrid.querySelectorAll('.album-card') : [];
 
-    // Verifica se o usuário é cliente (pela existência do container de ações)
-    const isClient = !!document.getElementById('client-actions');
+    // Verifica o papel do usuário (guest, client, admin)
+    const userRole = document.body.dataset.userRole || 'guest';
 
     // --- Funcionalidade de Pesquisa ---
     searchBar.addEventListener('input', (e) => {
@@ -96,14 +96,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     const quantidade = exemplar.quantidade_estoque;
 
                     let liContent = `
-                        <span class="formato-tipo">${tipoFormatado}</span>`;
+                        <div class="formato-info">
+                            <span class="formato-tipo">${tipoFormatado}</span>
+                            <span class="formato-preco">${preco}</span>
+                        </div>`;
 
-                    if (isClient) {
-                        liContent += `<span class="formato-preco">${preco}</span>
-                                      <button class="btn-add-cart" data-album-id="${card.dataset.id}" data-formato-tipo="${exemplar.tipo}">Adicionar ao Carrinho</button>`;
+                    if (userRole === 'client') {
+                        liContent += `
+                            <div class="formato-acao-cliente">
+                                <input type="number" class="quantidade-input" value="1" min="1" max="${quantidade}" aria-label="Quantidade">
+                                <button class="btn-add-cart-icon" data-album-id="${card.dataset.id}" data-formato-tipo="${exemplar.tipo}" title="Adicionar ao Carrinho">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                </button>
+                            </div>`;
+                    } else if (userRole === 'guest') {
+                         liContent += `<button class="btn-add-cart-login">Adicionar ao Carrinho</button>`;
                     } else {
-                        liContent += `<span class="formato-estoque">Estoque: ${quantidade}</span>
-                                      <span class="formato-preco">${preco}</span>`;
+                        // Para admin, mostra o estoque
+                        liContent += `<span class="formato-estoque">Estoque: ${quantidade}</span>`;
                     }
 
                     li.innerHTML = liContent;
@@ -122,6 +132,51 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.opacity = '1';
             modal.querySelector('.modal-content').style.transform = 'scale(1)';
         }, 10); // Pequeno delay para garantir que a transição CSS funcione
+
+        // Adiciona eventos aos novos botões dentro do modal
+        attachModalButtonEvents();
+    };
+
+    // Função para adicionar eventos aos botões do modal (precisa ser chamada após o modal ser preenchido)
+    const attachModalButtonEvents = () => {
+        // Botão para redirecionar para login
+        document.querySelectorAll('.btn-add-cart-login').forEach(button => {
+            button.onclick = () => {
+                window.location.href = 'login/login.php';
+            };
+        });
+
+        // Botão de adicionar ao carrinho (ícone)
+        document.querySelectorAll('.btn-add-cart-icon').forEach(button => {
+            button.onclick = (e) => {
+                const albumId = e.currentTarget.dataset.albumId;
+                const formatoTipo = e.currentTarget.dataset.formatoTipo;
+                const li = e.currentTarget.closest('li');
+                const quantidadeInput = li.querySelector('.quantidade-input');
+                const quantidade = quantidadeInput.value;
+
+                const formData = new FormData();
+                formData.append('action', 'add'); // Adiciona a ação
+                formData.append('album_id', albumId);
+                formData.append('formato_tipo', formatoTipo);
+                formData.append('quantidade', quantidade);
+
+                fetch('cart_actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message); // Simples alerta por enquanto
+                        // Futuramente, pode-se atualizar um ícone de carrinho no header
+                    } else {
+                        alert('Erro: ' + data.message);
+                    }
+                })
+                .catch(error => console.error('Erro na requisição:', error));
+            };
+        });
     };
 
     // Função para fechar o modal

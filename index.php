@@ -109,7 +109,15 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-user-role="<?php
+    if (is_admin()) {
+        echo 'admin';
+    } elseif (is_client()) {
+        echo 'client';
+    } else {
+        echo 'guest';
+    }
+?>">
 
     <header>
         <div class="header-main">
@@ -125,7 +133,7 @@ try {
                     <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
                 <?php else: ?>
                     <!-- Ações para Clientes -->
-                    <a href="carrinho.php" class="btn-header">Carrinho</a>
+                    <a href="carrinho.php" class="btn-header">Meu Carrinho</a>
                 <?php endif; ?>
 
                 <!-- Mostra informações do usuário e botão de logout -->

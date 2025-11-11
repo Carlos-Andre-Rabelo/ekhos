@@ -1,0 +1,187 @@
+/* --- Estilos para a Página do Carrinho (carrinho.php) --- */
+
+/* Container Principal */
+.cart-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.cart-page-container h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 1rem;
+}
+
+/* Layout do Carrinho Vazio */
+.cart-empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    background-color: var(--cor-superficie);
+    border-radius: 12px;
+    border: 1px solid var(--cor-borda);
+}
+
+.cart-empty p {
+    font-size: 1.5rem;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 2rem;
+}
+
+/* Layout Principal (Itens + Resumo) */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2.5rem; /* Mais espaço entre as colunas */
+    align-items: flex-start;
+}
+
+/* Tabela de Itens */
+.cart-items-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-items-list thead {
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.cart-items-list th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--cor-texto-secundario);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.cart-items-list tbody tr {
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.cart-items-list td {
+    padding: 1.5rem 1rem;
+    vertical-align: middle;
+}
+
+.item-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-details {
+    line-height: 1.4;
+}
+
+.item-title {
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+    font-size: 1.1rem;
+}
+
+.item-format {
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+}
+
+.item-price, .item-subtotal {
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 1.1rem;
+}
+
+.item-quantity .quantity-input {
+    width: 70px;
+    padding: 0.8rem;
+    text-align: center;
+    background-color: #2a2a2a;
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto-principal);
+    border-radius: 6px;
+}
+
+.item-remove .remove-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    color: var(--cor-texto-secundario);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.item-remove .remove-btn:hover {
+    background-color: var(--cor-secundaria);
+    color: #fff;
+}
+
+/* Resumo do Pedido */
+.cart-summary {
+    background-color: var(--cor-superficie);
+    padding: 2rem;
+    border-radius: 12px;
+    position: sticky;
+    top: 2rem;
+    border: 1px solid var(--cor-borda);
+}
+
+.cart-summary h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 1rem;
+}
+
+.summary-row, .summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.summary-total {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-checkout:hover {
+    background-color: rgba(var(--cor-primaria-rgb), 0.85);
+    transform: translateY(-2px);
+}
+
+.continue-shopping-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--cor-texto-secundario);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.continue-shopping-link:hover {
+    color: var(--cor-texto-principal);
+}

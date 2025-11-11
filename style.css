@@ -365,10 +365,10 @@ main {
 #modal-formatos { list-style-type: none; padding-left: 0; }
 #modal-formatos li {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
-    color: var(--cor-texto-principal); /* Melhor contraste */
     background-color: rgba(0, 0, 0, 0.2);
     /* Removida a borda fina para um visual mais limpo */
     padding: 0.8rem; 
@@ -376,11 +376,71 @@ main {
 }
 
 .formato-tipo { font-weight: 600; flex-basis: 40%; }
-.formato-estoque { color: var(--cor-texto-secundario); font-size: 0.9rem; }
-.formato-preco { font-weight: 600; color: var(--cor-texto-principal); text-align: right; flex-basis: 30%; }
+.formato-estoque { color: var(--cor-texto-secundario); font-size: 0.9rem; text-align: right; }
+.formato-preco { font-weight: 600; color: var(--cor-texto-principal); }
 
-/* Estilo para o botão de adicionar ao carrinho no modal */
-.btn-add-cart {
+/* Container para informações do formato (tipo e preço) */
+.formato-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex-grow: 1;
+}
+
+/* Container para ações do cliente (input de quantidade e botão) */
+.formato-acao-cliente {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: 1rem;
+}
+
+/* Input de quantidade */
+.quantidade-input {
+    width: 60px;
+    padding: 0.6rem;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid var(--cor-borda);
+    background-color: #2a2a2a;
+    color: var(--cor-texto-principal);
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quantidade-input:focus {
+    border-color: var(--cor-texto-principal);
+}
+
+/* Botão de ícone de carrinho */
+.btn-add-cart-icon {
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-add-cart-icon:hover {
+    background-color: rgba(var(--cor-primaria-rgb), 0.85);
+    transform: scale(1.1);
+}
+
+.btn-add-cart-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--cor-fundo);
+}
+
+/* Botão genérico para adicionar ao carrinho (para visitantes e fallback) */
+.btn-add-cart, .btn-add-cart-login {
     background-color: var(--cor-primaria);
     color: var(--cor-fundo);
     border: none;
@@ -393,7 +453,8 @@ main {
     margin-left: 1rem; /* Espaço entre o preço e o botão */
 }
 
-.btn-add-cart:hover {
+.btn-add-cart:hover,
+.btn-add-cart-login:hover {
     background-color: rgba(var(--cor-primaria-rgb), 0.85);
     transform: translateY(-2px);
 }
@@ -870,20 +931,4 @@ input[type=number] {
 .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; color: #fff; }
 .message.success { background-color: #28a745; }
 .message.error { background-color: var(--cor-secundaria); }
-.message.info { background-color: #17a2b8; }
-
-/* Estilização da barra de rolagem (para Webkit, como Chrome/Safari) */
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-track {
-    background: #2a2a2a;
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
+.message.info { background-color: #17a2b8; }}
