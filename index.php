@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Inclui o nosso novo controlador de sessão.
+require_once __DIR__ . '/login/sessao.php';
+
 // Habilitar a exibição de todos os erros para diagnóstico completo.
 // Em um ambiente de produção, isso deve ser desativado.
 ini_set('display_errors', '1');
@@ -109,12 +112,31 @@ try {
 <body>
 
     <header>
-        <h1>ēkhos</h1>
-        <div class="search-container">
-            <input type="search" id="search-bar" placeholder="Buscar por álbum, artista ou gênero...">
+        <div class="header-main">
+            <h1>ēkhos</h1>
+            <div class="search-container">
+                <input type="search" id="search-bar" placeholder="Buscar por álbum, artista ou gênero...">
+            </div>
         </div>
-        <div class="header-actions" style="margin-top: 1.5rem;">
-            <a href="add_album.php" class="edit-link" style="padding: 0.8rem 1.5rem; font-size: 1rem;">+ Adicionar Novo Álbum</a>
+        <div class="header-user-actions">
+            <?php if (is_logged_in()): ?>
+                <?php if (is_admin()): ?>
+                    <!-- Ações para Administradores -->
+                    <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
+                <?php else: ?>
+                    <!-- Ações para Clientes -->
+                    <a href="carrinho.php" class="btn-header">Carrinho</a>
+                <?php endif; ?>
+
+                <!-- Mostra informações do usuário e botão de logout -->
+                <div class="user-session">
+                    <span>Olá, <?= htmlspecialchars($_SESSION['user_name']) ?>!</span>
+                    <a href="login/logout.php" class="btn-header btn-logout">Sair</a>
+                </div>
+            <?php else: ?>
+                <!-- Mostra o botão de login se não houver sessão ativa -->
+                <a href="login/login.php" class="btn-header">Login</a>
+            <?php endif; ?>
         </div>
     </header>
 
@@ -129,6 +151,7 @@ try {
             <?php else: ?>
                 <?php foreach ($albuns as $album): ?>
                     <div class="album-card" 
+                         data-id="<?= htmlspecialchars((string)($album['_id'] ?? '')) ?>"
                          data-titulo="<?= htmlspecialchars($album['titulo'] ?? 'N/A') ?>"
                          data-artista="<?= htmlspecialchars($album['artista'] ?? 'N/A') ?>"
                          data-ano="<?= htmlspecialchars((string)($album['ano'] ?? 'N/A')) ?>"
@@ -142,9 +165,11 @@ try {
                         <div class="album-info">
                             <h3><?= htmlspecialchars($album['titulo'] ?? 'Título Desconhecido') ?></h3>
                             <p><?= htmlspecialchars($album['artista'] ?? 'Artista Desconhecido') ?></p>
-                            <div class="card-actions">
-                                <a href="edit_album.php?id=<?= $album['_id'] ?>" class="edit-link">Editar</a>
-                            </div>
+                            <?php if (is_admin()): ?>
+                                <div class="card-actions">
+                                    <a href="edit_album.php?id=<?= $album['_id'] ?>" class="edit-link">Editar</a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -168,7 +193,11 @@ try {
                     </div>
 
                     <h3>Formatos Disponíveis:</h3>
-                    <ul id="modal-formatos"></ul> </div>
+                    <ul id="modal-formatos"></ul>
+                    <?php if (is_client()): ?>
+                        <div id="client-actions" class="client-actions-container"></div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>

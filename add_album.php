@@ -1,6 +1,14 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/login/sessao.php';
+
+// Protege a página: apenas administradores podem adicionar álbuns.
+if (!is_admin()) {
+    header('Location: login/login.php');
+    exit;
+}
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);

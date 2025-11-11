@@ -53,11 +53,17 @@ try {
     // Criptografa a senha
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+    // Cria o novo usuário com uma estrutura base completa, porém com campos vazios.
     $newUser = [
         '_id' => $newId,
         'nome_cliente' => $name,
         'email_cliente' => $email,
         'senha_cliente' => $hashedPassword,
+        'telefones' => [],
+        'compras' => [],
+        'endereco' => new stdClass(), // Cria um objeto JSON vazio: {}
+        'carrinho' => [],
+        'role' => 'client', // Adiciona o papel padrão para novos usuários
     ];
 
     $collection->insertOne($newUser);

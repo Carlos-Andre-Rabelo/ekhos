@@ -43,10 +43,19 @@ body.modal-open > footer {
 }
 /* Cabeçalho e Pesquisa */
 header {
-    padding: 2rem 5%;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 5%;
     background-color: var(--cor-superficie);
     border-bottom: 1px solid var(--cor-borda);
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-grow: 1; /* Permite que a busca ocupe o espaço disponível */
 }
 
 header h1 {
@@ -54,12 +63,13 @@ header h1 {
     font-weight: 600;
     font-family: 'Hero', sans-serif;
     color: var(--cor-texto-principal); /* Usa a cor de texto principal */
-    margin-bottom: 1rem;
+    margin-bottom: 0; /* Remove a margem inferior */
 }
 
 .search-container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0; /* Remove a margem automática */
+    flex-grow: 1; /* Faz a barra de busca crescer */
 }
 
 #search-bar {
@@ -77,6 +87,69 @@ header h1 {
 #search-bar:focus {
     border-color: var(--cor-texto-principal); /* Destaque neutro no foco */
     outline: none; /* Remove o outline padrão do navegador */
+}
+
+/* Estilos para a área de ações do cabeçalho (Login/Logout/Adicionar) */
+.header-user-actions {
+    margin-top: 0; /* Remove a margem superior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap; /* Permite que os itens quebrem a linha em telas menores */
+}
+
+/* Estilo para o contêiner da sessão do usuário */
+.user-session {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 0.5rem 0.5rem 1.2rem;
+    border-radius: 50px;
+}
+
+.user-session span {
+    font-size: 0.95rem;
+    color: var(--cor-texto-secundario);
+}
+
+.btn-header {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.2s;
+    background-color: var(--cor-secundaria);
+    color: #fff;
+    font-weight: 500;
+    border: 2px solid transparent;
+}
+
+.btn-header.btn-logout {
+    background-color: transparent;
+    border: 2px solid var(--cor-borda);
+    color: var(--cor-texto-secundario);
+}
+
+/* Botão de adicionar álbum com a cor primária para destaque */
+.btn-header[href="add_album.php"] {
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+}
+
+.btn-header:hover {
+    background-color: rgba(var(--cor-secundaria-rgb), 0.8);
+    transform: translateY(-2px);
+}
+.btn-header.btn-logout:hover {
+    background-color: #555;
+    color: #fff;
+    border-color: #555;
+}
+.btn-header[href="add_album.php"]:hover {
+    background-color: rgba(var(--cor-primaria-rgb), 0.85);
 }
 
 /* Grid de Álbuns */
@@ -305,6 +378,28 @@ main {
 .formato-tipo { font-weight: 600; flex-basis: 40%; }
 .formato-estoque { color: var(--cor-texto-secundario); font-size: 0.9rem; }
 .formato-preco { font-weight: 600; color: var(--cor-texto-principal); text-align: right; flex-basis: 30%; }
+
+/* Estilo para o botão de adicionar ao carrinho no modal */
+.btn-add-cart {
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 1rem; /* Espaço entre o preço e o botão */
+}
+
+.btn-add-cart:hover {
+    background-color: rgba(var(--cor-primaria-rgb), 0.85);
+    transform: translateY(-2px);
+}
+
+/* Ajuste no layout da lista de formatos para clientes */
+#modal-formatos li { grid-template-columns: 1fr auto auto; gap: 1rem; display: grid; }
 
 
 /* Rodapé */

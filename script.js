@@ -1,17 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const albumGrid = document.getElementById('album-grid');
-    const albumCards = albumGrid.querySelectorAll('.album-card');
 
     // Modal elements
     const modal = document.getElementById('album-modal');
     const modalClose = document.querySelector('.modal-close');
     const modalOverlay = document.querySelector('.modal-overlay');
 
-    // Se não houver cartões de álbum, não há nada a fazer.
-    if (albumCards.length === 0) {
-        return;
-    }
+    // --- CORREÇÃO ---
+    // Verifica se o grid de álbuns existe antes de tentar selecionar os cards.
+    // Se albumGrid for nulo, albumCards será um array vazio, evitando erros.
+    const albumCards = albumGrid ? albumGrid.querySelectorAll('.album-card') : [];
+
+    // Verifica se o usuário é cliente (pela existência do container de ações)
+    const isClient = !!document.getElementById('client-actions');
 
     // --- Funcionalidade de Pesquisa ---
     searchBar.addEventListener('input', (e) => {
@@ -93,11 +95,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     const preco = parseFloat(exemplar.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     const quantidade = exemplar.quantidade_estoque;
 
-                    li.innerHTML = `
-                        <span class="formato-tipo">${tipoFormatado}</span>
-                        <span class="formato-estoque">Estoque: ${quantidade}</span>
-                        <span class="formato-preco">${preco}</span>
-                    `;
+                    let liContent = `
+                        <span class="formato-tipo">${tipoFormatado}</span>`;
+
+                    if (isClient) {
+                        liContent += `<span class="formato-preco">${preco}</span>
+                                      <button class="btn-add-cart" data-album-id="${card.dataset.id}" data-formato-tipo="${exemplar.tipo}">Adicionar ao Carrinho</button>`;
+                    } else {
+                        liContent += `<span class="formato-estoque">Estoque: ${quantidade}</span>
+                                      <span class="formato-preco">${preco}</span>`;
+                    }
+
+                    li.innerHTML = liContent;
                     formatosList.appendChild(li);
                 });
             } else {
