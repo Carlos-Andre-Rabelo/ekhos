@@ -11,10 +11,10 @@
 /* Reset e Configurações Globais */
 :root {
     --cor-fundo: #121212;
-    --cor-superficie: #1f1f1f; /* Ligeiramente mais escuro */
-    --cor-primaria: #bb86fc; /* Um roxo mais elegante, similar ao Material Design */
-    --cor-primaria-rgb: 187, 134, 252; /* RGB para uso em rgba() */
-    --cor-secundaria: #cf6679; /* Um vermelho mais suave para ações secundárias */
+    --cor-superficie: #1f1f1f;
+    --cor-primaria: #bb86fc;
+    --cor-primaria-rgb: 187, 134, 252;
+    --cor-secundaria: #cf6679;
     --cor-secundaria-rgb: 207, 102, 121;
     --cor-texto-principal: #e1e1e1;
     --cor-texto-secundario: #b3b3b3;
@@ -27,11 +27,24 @@
     box-sizing: border-box;
 }
 
+html {
+    /* Melhora a fluidez da rolagem */
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--cor-fundo);
     color: var(--cor-texto-principal);
     line-height: 1.6;
+    min-height: 100vh;
+    /* Melhora a renderização do texto */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+    line-height: 1.3;
 }
 
 /* Estilo para desfocar o fundo quando o modal está aberto */
@@ -41,14 +54,17 @@ body.modal-open > footer {
     filter: blur(5px);
     transition: filter 0.3s ease-in-out;
 }
-/* Cabeçalho e Pesquisa */
+
+/* --- Cabeçalho e Pesquisa --- */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Padding responsivo: 1.5rem (cima/baixo) e 5% (lados) */
     padding: 1.5rem 5%;
     background-color: var(--cor-superficie);
     border-bottom: 1px solid var(--cor-borda);
+    gap: 1rem; /* Espaço entre os elementos do cabeçalho */
 }
 
 .header-main {
@@ -56,20 +72,22 @@ header {
     align-items: center;
     gap: 2rem;
     flex-grow: 1; /* Permite que a busca ocupe o espaço disponível */
+    flex-wrap: wrap; /* Permite quebra em telas menores */
 }
 
 header h1 {
     font-size: 2.5rem;
     font-weight: 600;
     font-family: 'Hero', sans-serif;
-    color: var(--cor-texto-principal); /* Usa a cor de texto principal */
-    margin-bottom: 0; /* Remove a margem inferior */
+    color: var(--cor-texto-principal);
+    /* margin-bottom: 0; removido, pois * { margin: 0; } já faz isso */
 }
 
 .search-container {
     max-width: 600px;
-    margin: 0; /* Remove a margem automática */
+    margin: 0;
     flex-grow: 1; /* Faz a barra de busca crescer */
+    min-width: 200px; /* Garante que a barra não encolha demais */
 }
 
 #search-bar {
@@ -85,21 +103,20 @@ header h1 {
 }
 
 #search-bar:focus {
-    border-color: var(--cor-texto-principal); /* Destaque neutro no foco */
-    outline: none; /* Remove o outline padrão do navegador */
+    border-color: var(--cor-texto-principal);
+    outline: none;
 }
 
-/* Estilos para a área de ações do cabeçalho (Login/Logout/Adicionar) */
+/* Ações do cabeçalho (Login/Logout/Adicionar) */
 .header-user-actions {
-    margin-top: 0; /* Remove a margem superior */
+    margin-top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.5rem;
-    flex-wrap: wrap; /* Permite que os itens quebrem a linha em telas menores */
+    flex-wrap: wrap; /* Permite que os itens quebrem a linha */
 }
 
-/* Estilo para o contêiner da sessão do usuário */
 .user-session {
     display: flex;
     align-items: center;
@@ -125,6 +142,7 @@ header h1 {
     color: #fff;
     font-weight: 500;
     border: 2px solid transparent;
+    text-align: center; /* Garante centralização em tela cheia (mobile) */
 }
 
 .btn-header.btn-logout {
@@ -133,7 +151,6 @@ header h1 {
     color: var(--cor-texto-secundario);
 }
 
-/* Botão de adicionar álbum com a cor primária para destaque */
 .btn-header[href="add_album.php"] {
     background-color: var(--cor-primaria);
     color: var(--cor-fundo);
@@ -152,13 +169,15 @@ header h1 {
     background-color: rgba(var(--cor-primaria-rgb), 0.85);
 }
 
-/* Grid de Álbuns */
+/* --- Grid de Álbuns --- */
 main {
+    /* Padding responsivo: 2rem (cima/baixo) e 5% (lados) */
     padding: 2rem 5%;
 }
 
 #album-grid {
     display: grid;
+    /* O minmax(220px, 1fr) já é inerentemente responsivo. */
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 2rem;
 }
@@ -175,8 +194,11 @@ main {
 .album-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    /* Mostra as ações do card no hover */
-    .card-actions { opacity: 1; }
+}
+
+/* Sintaxe padrão (corrigida) para mostrar ações no hover */
+.album-card:hover .card-actions {
+    opacity: 1;
 }
 
 .album-card img {
@@ -207,7 +229,6 @@ main {
 .card-actions {
     margin-top: 1rem;
     text-align: right;
-    /* Oculta por padrão e adiciona transição suave */
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -215,7 +236,7 @@ main {
 .edit-link {
     display: inline-block;
     padding: 0.3rem 0.8rem;
-    background-color: #444; /* Fundo cinza neutro */
+    background-color: #444;
     color: #fff;
     text-decoration: none;
     border-radius: 20px;
@@ -223,10 +244,10 @@ main {
     transition: background-color 0.3s;
 }
 .edit-link:hover {
-    background-color: #555; /* Cinza mais claro no hover */
+    background-color: #555;
 }
 
-/* Mensagens de Erro/Info */
+/* --- Mensagens de Erro/Info --- */
 .error-message, .info-message {
     grid-column: 1 / -1;
     text-align: center;
@@ -236,7 +257,7 @@ main {
     text-align: left;
 }
 
-/* Bloco de Depuração */
+/* --- Bloco de Depuração --- */
 .debug-info {
     grid-column: 1 / -1;
     background-color: #2a2a2a;
@@ -245,11 +266,12 @@ main {
     margin-top: 2rem;
     color: #ccc;
     text-align: left;
+    overflow-x: auto; /* Garante que o <pre> não quebre o layout */
 }
 .debug-info h2 { color: var(--cor-secundaria); }
 .debug-info pre { background-color: #121212; padding: 1rem; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; font-size: 0.85rem; }
 
-/* Modal (Popup) */
+/* --- Modal (Popup) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -263,24 +285,25 @@ main {
     z-index: 1000;
     opacity: 0;
     transition: opacity 0.3s ease;
+    /* Adicionado padding para evitar que o modal toque as bordas */
+    padding: 1rem;
 }
 
 .modal-content {
     background-color: var(--cor-superficie);
     padding: 2rem;
-    border-radius: 16px; /* Cantos mais arredondados */
-    width: 90%;
+    border-radius: 16px;
+    width: 100%; /* Ocupa 100% do padding do overlay */
     max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    z-index: 1; /* Garante que o conteúdo fique acima dos pseudo-elementos */
+    z-index: 1;
     transform: scale(0.9);
     transition: transform 0.3s ease;
     overflow: hidden; /* Essencial para conter os pseudo-elementos */
 }
 
-/* Pseudo-elemento para o fundo desfocado com a imagem do álbum */
 .modal-content::before {
     content: '';
     position: absolute;
@@ -288,30 +311,25 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    /* A imagem será definida via JS */
     background-image: var(--modal-bg-image);
     background-size: cover;
     background-position: center;
-    /* Desfoque forte */
     filter: blur(100px);
-    /* Overlay preto com transparência */
     background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
     z-index: -1;
-    /* Aumenta a escala para evitar bordas vazias causadas pelo blur */
     transform: scale(1.1);
 }
 
-/* Estilo específico para os modais de formulário de adição */
+/* Modais de formulário de adição */
 .add-modal .modal-content {
-    max-width: 500px; /* Mais estreito que o modal de detalhes */
-    overflow-y: auto; /* Garante rolagem se o conteúdo for grande */
+    max-width: 500px;
+    overflow-y: auto;
 }
-.add-modal .modal-content::before { display: none; } /* Remove o fundo de imagem */
+.add-modal .modal-content::before { display: none; }
 
-/* Estilo para o corpo do modal de adição, para centralizar o formulário */
 .add-modal .modal-body {
-    display: block; /* Remove o flex para que o conteúdo flua normalmente */
+    display: block;
 }
 .add-modal .modal-content h1 { margin-bottom: 1.5rem; font-size: 1.5rem; }
 .add-modal .modal-content .message { margin-top: 1rem; }
@@ -339,7 +357,8 @@ main {
     width: 300px;
     height: 300px;
     object-fit: cover;
-    border-radius: 12px; /* Cantos mais arredondados */
+    border-radius: 12px;
+    flex-shrink: 0; /* Impede que a imagem encolha */
 }
 .modal-details #modal-artista,
 .modal-details .genre-link {
@@ -348,38 +367,37 @@ main {
 }
 .modal-details #modal-artista:hover,
 .modal-details .genre-link:hover {
-    color: var(--cor-texto-principal); /* Destaque neutro no hover */
+    color: var(--cor-texto-principal);
 }
 
 .modal-details h2 { color: var(--cor-texto-principal); margin-bottom: 0.5rem; }
 .modal-details p { color: var(--cor-texto-secundario); margin-bottom: 1.5rem; font-size: 1.2rem; }
 .modal-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-.modal-meta > span { /* Usando seletor de filho direto para evitar sobreposição */
+.modal-meta > span {
     background-color: rgba(0, 0, 0, 0.2);
-    /* Removida a borda fina para um visual mais limpo */
     padding: 0.4rem 0.8rem;
     border-radius: 6px;
     font-size: 0.9rem;
 }
 .modal-details h3 { margin-bottom: 1rem; border-bottom: 1px solid var(--cor-borda); padding-bottom: 0.5rem; }
 #modal-formatos { list-style-type: none; padding-left: 0; }
+
+/* Regra de grid para desktop, será sobreposta em mobile */
 #modal-formatos li {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
     align-items: center;
     margin-bottom: 0.5rem;
     background-color: rgba(0, 0, 0, 0.2);
-    /* Removida a borda fina para um visual mais limpo */
-    padding: 0.8rem; 
+    padding: 0.8rem;
     border-radius: 6px;
 }
 
-.formato-tipo { font-weight: 600; flex-basis: 40%; }
+.formato-tipo { font-weight: 600; }
 .formato-estoque { color: var(--cor-texto-secundario); font-size: 0.9rem; text-align: right; }
 .formato-preco { font-weight: 600; color: var(--cor-texto-principal); }
 
-/* Container para informações do formato (tipo e preço) */
 .formato-info {
     display: flex;
     flex-direction: column;
@@ -387,7 +405,6 @@ main {
     flex-grow: 1;
 }
 
-/* Container para ações do cliente (input de quantidade e botão) */
 .formato-acao-cliente {
     display: flex;
     align-items: center;
@@ -395,7 +412,6 @@ main {
     margin-left: 1rem;
 }
 
-/* Input de quantidade */
 .quantidade-input {
     width: 60px;
     padding: 0.6rem;
@@ -413,7 +429,6 @@ main {
     border-color: var(--cor-texto-principal);
 }
 
-/* Botão de ícone de carrinho */
 .btn-add-cart-icon {
     background-color: var(--cor-primaria);
     color: var(--cor-fundo);
@@ -439,7 +454,6 @@ main {
     stroke: var(--cor-fundo);
 }
 
-/* Botão genérico para adicionar ao carrinho (para visitantes e fallback) */
 .btn-add-cart, .btn-add-cart-login {
     background-color: var(--cor-primaria);
     color: var(--cor-fundo);
@@ -450,7 +464,7 @@ main {
     font-size: 0.85rem;
     font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-left: 1rem; /* Espaço entre o preço e o botão */
+    margin-left: 1rem;
 }
 
 .btn-add-cart:hover,
@@ -459,11 +473,7 @@ main {
     transform: translateY(-2px);
 }
 
-/* Ajuste no layout da lista de formatos para clientes */
-#modal-formatos li { grid-template-columns: 1fr auto auto; gap: 1rem; display: grid; }
-
-
-/* Rodapé */
+/* --- Rodapé --- */
 footer {
     text-align: center;
     padding: 2rem;
@@ -473,77 +483,76 @@ footer {
     border-top: 1px solid var(--cor-borda);
 }
 
-/* --- Estilos Específicos para Formulários (add_album.php, edit_album.php) --- */
+/* --- Estilos Específicos para Formulários --- */
 .form-container {
-    max-width: 900px; /* Ligeiramente mais largo */
+    max-width: 900px;
     margin: 2rem auto;
-    padding: 2.5rem; /* Mais padding */
+    padding: 2.5rem;
     background-color: var(--cor-superficie);
-    border-radius: 12px; /* Cantos mais arredondados */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Sombra sutil para profundidade */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .form-header {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Coluna esquerda, centro (título), coluna direita */
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     margin-bottom: 2.5rem;
 }
 
 .back-link {
-    grid-column: 1 / 2; /* Posiciona na primeira coluna */
-    justify-self: start; /* Alinha à esquerda dentro da coluna */
-    width: 44px; /* Largura fixa */
-    height: 44px; /* Altura fixa para criar um quadrado */
-    border-radius: 50%; /* Transforma em um círculo */
-    background-color: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+    grid-column: 1 / 2;
+    justify-self: start;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e1e1e1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='19' y1='12' x2='5' y2='12'%3E%3C/line%3E%3Cpolyline points='12 19 5 12 12 5'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 20px; /* Tamanho do ícone dentro do botão */
+    background-size: 20px;
     text-decoration: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    /* Remove o texto (&larr;) da exibição */
     text-indent: -9999px;
     overflow: hidden;
 }
 
 .back-link:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Mantém o fundo, a cor do ícone não muda */
+    background-color: rgba(255, 255, 255, 0.1);
     transform: scale(1.05);
 }
 
 .form-container h1 {
-    grid-column: 2 / 3; /* Posiciona o título na coluna central */
+    grid-column: 2 / 3;
     font-size: 2rem;
-    margin-bottom: 0; /* Remove a margem que foi movida para o .form-header */
-    color: var(--cor-texto-principal); /* Usa a cor de texto principal */
+    margin-bottom: 0;
+    color: var(--cor-texto-principal);
     text-align: center;
     font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 1.8rem; /* Espaçamento aumentado */
+    margin-bottom: 1.8rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.7rem; /* Mais espaço abaixo do label */
-    font-weight: 500; /* Peso da fonte ligeiramente mais leve */
-    color: var(--cor-texto-secundario); /* Cor mais suave para o label */
+    margin-bottom: 0.7rem;
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
     font-size: 0.95rem;
 }
 
 .form-group input:not([type="file"]),
 .form-group select,
-.form-group textarea { /* Adicionado textarea caso seja usado */
+.form-group textarea {
     width: 100%;
-    padding: 0.9rem 1.2rem; /* Mais padding */
+    padding: 0.9rem 1.2rem;
     font-size: 1rem;
-    border-radius: 8px; /* Inputs mais arredondados */
+    border-radius: 8px;
     border: 1px solid var(--cor-borda);
-    background-color: #2a2a2a; /* Fundo do input ligeiramente mais escuro */
+    background-color: #2a2a2a;
     color: var(--cor-texto-principal);
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -552,32 +561,31 @@ footer {
 .form-group input:not([type="file"]):focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--cor-texto-principal); /* Destaque neutro no foco */
-    background-color: #333; /* Ligeiramente mais claro no foco */
-    outline: none; /* Remove o outline padrão do navegador */
+    border-color: var(--cor-texto-principal);
+    background-color: #333;
+    outline: none;
 }
 
 .form-group select[multiple] {
-    height: 180px; /* Multiselect mais alto */
+    height: 180px;
 }
 
-/* --- Estilos Repaginados para Grupo de Checkboxes (Gêneros) --- */
+/* Grupo de Checkboxes (Gêneros) */
 .checkbox-group-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Colunas um pouco mais estreitas */
-    gap: 1rem; /* Espaçamento entre os cards */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
     background-color: #2a2a2a;
     padding: 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--cor-borda);
 }
 
-/* O label agora é o card clicável */
 .checkbox-item {
-    position: relative; /* Para posicionamento do input */
-    display: block; /* Transforma o label em um bloco */
+    position: relative;
+    display: block;
     background-color: #333;
-    border: 2px solid #444; /* Borda padrão */
+    border: 2px solid #444;
     border-radius: 8px;
     padding: 1rem;
     text-align: center;
@@ -599,27 +607,26 @@ footer {
     height: 0;
 }
 
-/* Cria o visual do checkbox customizado */
 .custom-checkbox {
     height: 22px;
     width: 22px;
     background-color: #444;
     border: 2px solid #5f5f5f;
     border-radius: 4px;
-    margin: 0 auto 0.8rem auto; /* Centraliza e adiciona espaço abaixo */
+    margin: 0 auto 0.8rem auto;
     transition: background-color 0.2s ease, border-color 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Muda a borda do CARD INTEIRO e o estilo do checkbox quando está marcado */
+/* Muda o estilo do checkbox customizado quando está marcado */
 .checkbox-item input[type="checkbox"]:checked + .custom-checkbox {
     background-color: var(--cor-secundaria);
     border-color: var(--cor-secundaria);
 }
 .checkbox-item input[type="checkbox"]:checked ~ .genre-name {
-    color: var(--cor-texto-principal); /* Garante que o texto fique branco */
+    color: var(--cor-texto-principal);
 }
 .checkbox-item input[type="checkbox"]:checked + .custom-checkbox::before {
     content: '';
@@ -629,27 +636,24 @@ footer {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
     background-size: contain;
 }
-.checkbox-item input[type="checkbox"]:checked ~ label {
-    border-color: var(--cor-secundaria);
-}
+/* Seletor bugado removido: .checkbox-item input[type="checkbox"]:checked ~ label */
 
 .form-group input[type="file"] {
     padding: 0.8rem;
-    border: 1px dashed var(--cor-borda); /* Borda tracejada para input de arquivo */
+    border: 1px dashed var(--cor-borda);
     background-color: #2a2a2a;
     border-radius: 8px;
     color: var(--cor-texto-principal);
-    transition: transform 0.2s ease; /* Adicionado para animação */
+    transition: transform 0.2s ease;
     cursor: pointer;
 }
 
-/* Estilo para a pré-visualização da imagem */
 .image-preview {
     max-width: 150px;
     height: auto;
     border-radius: 8px;
     margin-top: 1rem;
-    display: none; /* Escondido por padrão */
+    display: none;
 }
 
 .form-group input[type="file"]::file-selector-button {
@@ -663,26 +667,22 @@ footer {
     transition: background-color 0.3s ease;
 }
 .form-group input[type="file"]::file-selector-button:hover {
-    background-color: rgba(var(--cor-secundaria-rgb), 0.8); /* Secundária mais escura no hover */
+    background-color: rgba(var(--cor-secundaria-rgb), 0.8);
 }
 .form-group input[type="file"]:hover {
-    transform: scale(1.01); /* Leve aumento no hover */
+    transform: scale(1.01);
 }
 
-
-
-/* Estilo para a imagem de capa atual na página de edição */
 .current-image {
-    max-width: 150px; /* Largura máxima */
-    height: auto; /* Altura automática para manter a proporção */
-    border-radius: 8px; /* Cantos arredondados */
-    margin-bottom: 1rem; /* Espaço abaixo da imagem */
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
 }
 
-/* Grupo de formulário inline para botões ao lado de selects */
 .form-group-inline {
     display: flex;
-    align-items: stretch; /* Faz com que os itens se estiquem para preencher a altura */
+    align-items: stretch;
     gap: 10px;
 }
 .form-group-inline select {
@@ -690,34 +690,33 @@ footer {
 }
 
 .btn-add-related {
-    display: flex; /* Usa flex para centralizar o conteúdo */
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px; /* Largura fixa para um botão quadrado */
-    height: 48px; /* Altura fixa */
-    font-size: 1.5rem; /* Sinal de mais maior */
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
     background-color: var(--cor-secundaria);
-    color: var(--cor-fundo); /* Cor do texto contrastando com a secundária */
+    color: var(--cor-fundo);
     border: none;
-    border-radius: 8px; /* Cantos arredondados */
+    border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    flex-shrink: 0; /* Impede que encolha */
+    flex-shrink: 0;
 }
 .btn-add-related:hover {
-    background-color: rgba(var(--cor-secundaria-rgb), 0.8); /* Secundária mais escura no hover */
-    transform: translateY(-2px); /* Efeito de leve levantamento */
+    background-color: rgba(var(--cor-secundaria-rgb), 0.8);
+    transform: translateY(-2px);
 }
 
-/* Ajuste para o botão de adicionar quando é um <button> e não um <a> */
 .form-group-inline .btn-add-related {
-    height: auto; /* Permite que a altura se ajuste ao padding e font-size */
+    height: auto;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-/* --- Estilos para o Novo Custom Select Dropdown --- */
+/* Custom Select Dropdown */
 .custom-select-container {
     position: relative;
     flex-grow: 1;
@@ -732,7 +731,7 @@ footer {
     cursor: pointer;
     user-select: none;
     transition: border-color 0.3s ease, background-color 0.3s ease;
-    position: relative; /* Para o pseudo-elemento da seta */
+    position: relative;
 }
 
 .select-selected.select-arrow-active {
@@ -742,7 +741,6 @@ footer {
     border-bottom-right-radius: 0;
 }
 
-/* Seta do dropdown */
 .select-selected::after {
     content: '';
     position: absolute;
@@ -768,7 +766,7 @@ footer {
     left: 0;
     right: 0;
     z-index: 99;
-    max-height: 0; /* Começa fechado */
+    max-height: 0;
     overflow: hidden;
     border: 1px solid var(--cor-texto-principal);
     border-top: none;
@@ -789,11 +787,12 @@ footer {
     background-color: var(--cor-secundaria);
 }
 
-/*estilo do botao de adicionar genero */
+/* Botão de adicionar gênero */
 .checkbox-group-container .btn-add-related {
     padding: 1rem;
     height: 94px;
-    width: 181px;
+    width: 100%; /* Ajustado para ocupar 100% da célula do grid */
+    max-width: 181px; /* Mantém o tamanho máximo original */
 }
 
 /* Seção de Formatos (Exemplares) */
@@ -801,7 +800,7 @@ footer {
     border: 1px solid var(--cor-borda);
     padding: 1.5rem;
     border-radius: 8px;
-    background-color: #252525; /* Fundo ligeiramente diferente para esta seção */
+    background-color: #252525;
     margin-top: 1rem;
 }
 .formatos-section h3 {
@@ -812,44 +811,34 @@ footer {
     padding-bottom: 0.8rem;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-    .modal-body { flex-direction: column; align-items: center; }
-    .modal-body img { width: 100%; max-width: 300px; height: auto; }
-    header h1 { font-size: 2rem; }
-}
-
-/* Estilos para itens de formato dinâmicos */
 .formato-item {
     display: grid;
-    grid-template-columns: 2fr 1.5fr 1.5fr 0.5fr; /* Larguras de coluna ajustadas */
-    gap: 15px; /* Espaçamento aumentado */
+    grid-template-columns: 2fr 1.5fr 1.5fr 0.5fr;
+    gap: 15px;
     align-items: center;
     margin-bottom: 1rem;
     padding: 0.8rem;
-    background-color: #2a2a2a; /* Fundo para cada item */
+    background-color: #2a2a2a;
     border-radius: 6px;
-    border: 1px solid #3a3a3a; /* Borda sutil */
+    border: 1px solid #3a3a3a;
 }
 
-/* Regra mais específica para garantir que a borda clara seja aplicada permanentemente */
 .formatos-section .formato-item input,
 .formato-item .select-selected {
-    padding: 0.7rem; /* Menos padding para itens compactos */
+    padding: 0.7rem;
     border-radius: 6px;
     background-color: #333;
-    border: 1px solid var(--cor-texto-principal); /* Borda branca para maior contraste */
+    border: 1px solid var(--cor-texto-principal);
     color: var(--cor-texto-principal);
 }
-/* Ajuste específico para o seletor personalizado dentro do formato-item */
 .formato-item .select-selected {
-    padding: 0.7rem 1.2rem; /* Mantém o padding horizontal do seletor original */
+    padding: 0.7rem 1.2rem;
 }
 
 .formato-item input:focus,
 .formato-item select:focus {
-    border-color: var(--cor-texto-principal); /* Destaque neutro no foco */
-    outline: none; /* Remove o outline padrão do navegador */
+    border-color: var(--cor-texto-principal);
+    outline: none;
 }
 
 .remove-formato-btn {
@@ -861,13 +850,14 @@ footer {
     border-radius: 6px;
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
+    height: 100%; /* Garante que o botão tenha a mesma altura dos inputs */
 }
 .remove-formato-btn:hover {
     background-color: rgba(var(--cor-secundaria-rgb), 0.8);
 }
 
 #add-formato-btn {
-    background-color: var(--cor-secundaria); /* Usa a cor secundária para consistência */
+    background-color: var(--cor-secundaria);
     color: #fff;
     border: none;
     padding: 0.8rem 1.5rem;
@@ -879,22 +869,11 @@ footer {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 #add-formato-btn:hover {
-    background-color: rgba(var(--cor-secundaria-rgb), 0.8); /* Secundária mais escura no hover */
+    background-color: rgba(var(--cor-secundaria-rgb), 0.8);
     transform: translateY(-2px);
 }
 
-/* Responsividade para formulários */
-@media (max-width: 600px) {
-    .form-group-inline {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .formato-item {
-        grid-template-columns: 1fr; /* Empilha itens em telas pequenas */
-    }
-}
-
-/* --- Estilos para o Botão de Submissão do Formulário --- */
+/* Botão de Submissão do Formulário */
 .btn-submit {
     display: block;
     width: 100%;
@@ -902,7 +881,7 @@ footer {
     font-size: 1.1rem;
     font-weight: 600;
     color: #fff;
-    background-color: var(--cor-secundaria); /* Usa a cor secundária para consistência */
+    background-color: var(--cor-secundaria);
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -911,24 +890,152 @@ footer {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 .btn-submit:hover {
-    background-color: rgba(var(--cor-secundaria-rgb), 0.85); /* Secundária mais escura no hover */
+    background-color: rgba(var(--cor-secundaria-rgb), 0.85);
     transform: translateY(-2px);
 }
 
-/* --- Estilos para Detalhes de Inputs --- */
-
-/* Remove as setas de incremento/decremento dos inputs numéricos para um visual mais limpo */
+/* Detalhes de Inputs */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 input[type=number] {
-    -moz-appearance: textfield; /* Para Firefox */
+    -moz-appearance: textfield;
 }
 
-/* Estilos para mensagens de feedback dentro dos formulários */
+/* Mensagens de feedback */
 .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; color: #fff; }
 .message.success { background-color: #28a745; }
 .message.error { background-color: var(--cor-secundaria); }
-.message.info { background-color: #17a2b8; }}
+.message.info { background-color: #17a2b8; }
+
+
+/* --- Seção de Responsividade --- */
+
+/* Tablets e Celulares Maiores (até 992px) */
+@media (max-width: 992px) {
+    /* Cabeçalho empilhado */
+    header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+        padding: 1.5rem 1rem; /* Padding menor em telas menores */
+    }
+
+    .header-main {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+    
+    header h1 {
+        text-align: center; /* Centraliza o título */
+    }
+
+    .search-container {
+        max-width: 100%; /* Ocupa toda a largura */
+    }
+
+    /* Botões do cabeçalho */
+    .header-user-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-header {
+        width: 100%; /* Botões ocupam largura total */
+    }
+
+    .user-session {
+        justify-content: center; /* Centraliza o nome de usuário */
+        padding: 0.8rem 1rem;
+    }
+
+    /* Padding principal */
+    main {
+        padding: 1.5rem 1rem;
+    }
+
+    #album-grid {
+        gap: 1rem; /* Espaçamento menor no grid */
+    }
+}
+
+
+/* Celulares (até 768px) */
+@media (max-width: 768px) {
+    /* Modal */
+    .modal-content {
+        padding: 1.5rem;
+    }
+    .modal-body {
+        flex-direction: column;
+        align-items: center;
+    }
+    .modal-body img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        aspect-ratio: 1 / 1; /* Garante que a imagem seja quadrada */
+    }
+
+    /* Lista de formatos no modal (compra) */
+    #modal-formatos li {
+        display: flex; /* Muda de grid para flex */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .formato-info {
+        flex-direction: row; /* Preço e tipo lado a lado */
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .formato-acao-cliente {
+        margin-left: 0;
+        justify-content: flex-end; /* Alinha à direita */
+    }
+    
+    /* Formulários */
+    .form-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+    }
+    .form-container h1 {
+        font-size: 1.5rem; /* Título menor */
+    }
+    .form-header {
+        grid-template-columns: 44px 1fr 44px; /* Garante espaço para o título */
+        margin-bottom: 2rem;
+    }
+
+    /* Grid de Gêneros */
+    .checkbox-group-container {
+        /* Colunas de 120px no mínimo, para caber mais */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        padding: 1rem;
+    }
+}
+
+/* Telas Pequenas (até 600px) */
+@media (max-width: 600px) {
+    .form-group-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    /* Empilha os itens de formato no formulário */
+    .formato-item {
+        grid-template-columns: 1fr; /* Uma coluna */
+        gap: 10px;
+    }
+    
+    .remove-formato-btn {
+        height: 44px; /* Altura fixa para o botão de remover */
+    }
+}

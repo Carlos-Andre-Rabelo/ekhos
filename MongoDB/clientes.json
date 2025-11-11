@@ -1,237 +1,485 @@
-[
-  {
-    "_id": 34098572875,
-    "nome_cliente": "Cleber Rebelo",
-    "email_cliente": "clebi.rabelo@gmail.com",
-    "telefones": [ 93999348274 ],
-    "compras": [
-      {
-        "_id": 1,
-        "data_compra": { "$date": "2025-03-30T00:00:00Z" },
-        "valor_total": 349.50,
-        "itens_comprados": [
-          { "album_id": 1, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 4, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 8, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 13, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 15, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "santissimo",
-      "logradouro": "avenida maraba",
-      "numero": 1000
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
+[{
+  "_id": {
+    "$numberLong": "34098572875"
   },
-  {
-    "_id": 12387465834,
-    "nome_cliente": "Carlos Rabelo",
-    "email_cliente": "carlosandre@hotmail.com",
-    "telefones": [ 93999493287 ],
-    "compras": [
-      {
-        "_id": 9,
-        "data_compra": { "$date": "2024-03-31T00:00:00Z" },
-        "valor_total": 229.60,
-        "itens_comprados": [
-          { "album_id": 2, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 4, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 6, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 12, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "santissimo",
-      "logradouro": "avenida maraba",
-      "numero": 1000
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 34985732002,
-    "nome_cliente": "Clarice Martins",
-    "email_cliente": "a.claclarice@gmail.com",
-    "telefones": [ 93999372840 ],
-    "compras": [
-      {
-        "_id": 4,
-        "data_compra": { "$date": "2025-04-20T00:00:00Z" },
-        "valor_total": 119.80,
-        "itens_comprados": [
-          { "album_id": 6, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 18, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "prainha",
-      "logradouro": "avenida presidente vargas",
-      "numero": 250
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 43587423987,
-    "nome_cliente": "Leticia Sena",
-    "email_cliente": "sena.leticia@yahoo.com",
-    "telefones": [ 93991287364 ],
-    "compras": [
-      {
-        "_id": 5,
-        "data_compra": { "$date": "2025-03-06T00:00:00Z" },
-        "valor_total": 39.90,
-        "itens_comprados": [
-          { "album_id": 14, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "floresta",
-      "logradouro": "rua rouxinol",
-      "numero": 123
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 43958729843,
-    "nome_cliente": "Larissa Carneiro",
-    "email_cliente": "larilari2709@hotmail.com",
-    "telefones": [ 93999834597 ],
-    "compras": [
-      {
-        "_id": 2,
-        "data_compra": { "$date": "2024-09-27T00:00:00Z" },
-        "valor_total": 459.70,
-        "itens_comprados": [
-          { "album_id": 11, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 13, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 15, "tipo_formato": "vinil_7", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "aldeia",
-      "logradouro": "avenida tapajos",
-      "numero": 3100
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 47536287569,
-    "nome_cliente": "Marcus Vinicius",
-    "email_cliente": "mv.marcus01@gmail.com",
-    "telefones": [ 93998324576 ],
-    "compras": [],
-    "endereco": {
-      "nome_bairro": "aldeia",
-      "logradouro": "avenida tapajos",
-      "numero": 3100
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 72596754672,
-    "nome_cliente": "Victoria Gabriela",
-    "email_cliente": "vic.gab.01@yahoo.com",
-    "telefones": [ 93981103208 ],
-    "compras": [
-      {
-        "_id": 3,
-        "data_compra": { "$date": "2025-01-20T00:00:00Z" },
-        "valor_total": 339.70,
-        "itens_comprados": [
-          { "album_id": 11, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 14, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 26, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "jua",
-      "logradouro": "rua sol nascente",
-      "numero": 456
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 58437509283,
-    "nome_cliente": "Eduardo Pinheiro",
-    "email_cliente": "edu.pinheiro@hotmail.com",
-    "telefones": [ 93992039825 ],
-    "compras": [
-      {
-        "_id": 6,
-        "data_compra": { "$date": "2025-04-14T00:00:00Z" },
-        "valor_total": 709.50,
-        "itens_comprados": [
-          { "album_id": 6, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 20, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 32, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 34, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 35, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "nova republica",
-      "logradouro": "travessa tancredo neves",
-      "numero": 987
-    },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  },
-  {
-    "_id": 54938270944,
-    "nome_cliente": "Cecilia Seoud",
-    "email_cliente": "cissa@gmail.com",
-    "telefones": [ 93994290874 ],
-    "compras": [
-      {
-        "_id": 7,
-        "data_compra": { "$date": "2024-10-22T00:00:00Z" },
-        "valor_total": 499.20,
-        "itens_comprados": [
-          { "album_id": 1, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 3, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 7, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 10, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 17, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 20, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 26, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 28, "tipo_formato": "cd", "quantidade": 1 }
-        ]
+  "nome_cliente": "Cleber Rebelo",
+  "email_cliente": "clebi.rabelo@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93999348274"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 1,
+      "data_compra": {
+        "$date": "2025-03-30T00:00:00.000Z"
       },
-      {
-        "_id": 8,
-        "data_compra": { "$date": "2025-02-12T00:00:00Z" },
-        "valor_total": 349.30,
-        "itens_comprados": [
-          { "album_id": 2, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 5, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 9, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 19, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 22, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 27, "tipo_formato": "cd", "quantidade": 1 },
-          { "album_id": 30, "tipo_formato": "cd", "quantidade": 1 }
-        ]
-      }
-    ],
-    "endereco": {
-      "nome_bairro": "nova republica",
-      "logradouro": "travessa tancredo neves",
-      "numero": 987
+      "valor_total": 349.5,
+      "itens_comprados": [
+        {
+          "album_id": 1,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 4,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 8,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 13,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 15,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "santissimo",
+    "logradouro": "avenida maraba",
+    "numero": 1000
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "12387465834"
+  },
+  "nome_cliente": "Carlos Rabelo",
+  "email_cliente": "carlosandre@hotmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93999493287"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 9,
+      "data_compra": {
+        "$date": "2024-03-31T00:00:00.000Z"
+      },
+      "valor_total": 229.6,
+      "itens_comprados": [
+        {
+          "album_id": 2,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 4,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 6,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 12,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "santissimo",
+    "logradouro": "avenida maraba",
+    "numero": 1000
+  },
+  "carrinho": [],
+  "senha": "$2y$10$kYQDWTm/pELfwCHWetPhz.q4ih.M5hKjf7vonz0fI0iHubzys/79a"
+},
+{
+  "_id": {
+    "$numberLong": "34985732002"
+  },
+  "nome_cliente": "Clarice Martins",
+  "email_cliente": "a.claclarice@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93999372840"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 4,
+      "data_compra": {
+        "$date": "2025-04-20T00:00:00.000Z"
+      },
+      "valor_total": 119.8,
+      "itens_comprados": [
+        {
+          "album_id": 6,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 18,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "prainha",
+    "logradouro": "avenida presidente vargas",
+    "numero": 250
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "43587423987"
+  },
+  "nome_cliente": "Leticia Sena",
+  "email_cliente": "sena.leticia@yahoo.com",
+  "telefones": [
+    {
+      "$numberLong": "93991287364"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 5,
+      "data_compra": {
+        "$date": "2025-03-06T00:00:00.000Z"
+      },
+      "valor_total": 39.9,
+      "itens_comprados": [
+        {
+          "album_id": 14,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "floresta",
+    "logradouro": "rua rouxinol",
+    "numero": 123
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "43958729843"
+  },
+  "nome_cliente": "Larissa Carneiro",
+  "email_cliente": "larilari2709@hotmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93999834597"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 2,
+      "data_compra": {
+        "$date": "2024-09-27T00:00:00.000Z"
+      },
+      "valor_total": 459.7,
+      "itens_comprados": [
+        {
+          "album_id": 11,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 13,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 15,
+          "tipo_formato": "vinil_7",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "aldeia",
+    "logradouro": "avenida tapajos",
+    "numero": 3100
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "47536287569"
+  },
+  "nome_cliente": "Marcus Vinicius",
+  "email_cliente": "mv.marcus01@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93998324576"
+    }
+  ],
+  "compras": [],
+  "endereco": {
+    "nome_bairro": "aldeia",
+    "logradouro": "avenida tapajos",
+    "numero": 3100
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "72596754672"
+  },
+  "nome_cliente": "Victoria Gabriela",
+  "email_cliente": "vic.gab.01@yahoo.com",
+  "telefones": [
+    {
+      "$numberLong": "93981103208"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 3,
+      "data_compra": {
+        "$date": "2025-01-20T00:00:00.000Z"
+      },
+      "valor_total": 339.7,
+      "itens_comprados": [
+        {
+          "album_id": 11,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 14,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 26,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "jua",
+    "logradouro": "rua sol nascente",
+    "numero": 456
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "58437509283"
+  },
+  "nome_cliente": "Eduardo Pinheiro",
+  "email_cliente": "edu.pinheiro@hotmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93992039825"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 6,
+      "data_compra": {
+        "$date": "2025-04-14T00:00:00.000Z"
+      },
+      "valor_total": 709.5,
+      "itens_comprados": [
+        {
+          "album_id": 6,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 20,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 32,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 34,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 35,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "nova republica",
+    "logradouro": "travessa tancredo neves",
+    "numero": 987
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "54938270944"
+  },
+  "nome_cliente": "Cecilia Seoud",
+  "email_cliente": "cissa@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "93994290874"
+    }
+  ],
+  "compras": [
+    {
+      "_id": 7,
+      "data_compra": {
+        "$date": "2024-10-22T00:00:00.000Z"
+      },
+      "valor_total": 499.2,
+      "itens_comprados": [
+        {
+          "album_id": 1,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 3,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 7,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 10,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 17,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 20,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 26,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 28,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
     },
-    "carrinho": [],
-    "senha": "senha_padrao123"
-  }
-]
+    {
+      "_id": 8,
+      "data_compra": {
+        "$date": "2025-02-12T00:00:00.000Z"
+      },
+      "valor_total": 349.3,
+      "itens_comprados": [
+        {
+          "album_id": 2,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 5,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 9,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 19,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 22,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 27,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        },
+        {
+          "album_id": 30,
+          "tipo_formato": "cd",
+          "quantidade": 1
+        }
+      ]
+    }
+  ],
+  "endereco": {
+    "nome_bairro": "nova republica",
+    "logradouro": "travessa tancredo neves",
+    "numero": 987
+  },
+  "carrinho": [],
+  "senha": "senha_padrao123"
+},
+{
+  "_id": {
+    "$numberLong": "72596754673"
+  },
+  "nome_cliente": "Alessandro Benevides",
+  "email_cliente": "ale.benevides@gmail.com",
+  "senha_cliente": "$2y$10$kYQDWTm/pELfwCHWetPhz.q4ih.M5hKjf7vonz0fI0iHubzys/79a",
+  "telefones": [],
+  "compras": [],
+  "endereco": {},
+  "carrinho": [],
+  "adm": true
+},
+{
+  "_id": {
+    "$numberLong": "72596754676"
+  },
+  "nome_cliente": "novapessoa",
+  "email_cliente": "novapessoa@gmail.com",
+  "senha_cliente": "$2y$10$dnb4YYtRu4a7bc9O8vxOCuT26A2tyMRXAel0LMdSihLdLM.TcXREG",
+  "telefones": [],
+  "compras": [],
+  "endereco": {},
+  "carrinho": [],
+  "role": "client"
+}]

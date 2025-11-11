@@ -1,14 +1,31 @@
 # ēkhos - Gerenciador de Loja de Discos e CDs
 
+**ēkhos** é uma aplicação web para gerenciamento de uma loja de discos e CDs, construída com PHP e MongoDB. Ela oferece uma interface de administração para gerenciar o catálogo de produtos e uma área de cliente para visualização de produtos e um carrinho de compras funcional.
+
 ## Funcionalidades
 
-- **Visualização da Coleção**: Exibe todos os álbuns em um grid responsivo.
-- **Busca Dinâmica**: Filtra álbuns em tempo real por título, artista ou gênero.
-- **Detalhes do Álbum**: Clique em um álbum para ver informações detalhadas em um modal, como gravadora, ano, duração, formatos disponíveis e preços.
-- **Adicionar Álbum**: Formulário completo para adicionar novos álbuns, incluindo upload de imagem da capa e múltiplos formatos (CD, Vinil) com preço e estoque.
-- **Adição de Entidades Relacionadas**: Adicione novas gravadoras, artistas e gêneros diretamente pela página de adição de álbuns, sem interromper o fluxo de trabalho.
-- **Editar Álbum**: Formulário para editar informações de um álbum existente.
-- **Estrutura de Dados Desnormalizada**: Utiliza agregações (`$lookup`) do MongoDB para juntar dados de coleções separadas (`albuns`, `artistas`, `generos_musicais`, `gravadoras`), simulando relacionamentos.
+### Para Clientes
+- **Visualização da Coleção**: Navegação por todos os álbuns em um grid responsivo.
+- **Busca Dinâmica**: Filtro de álbuns em tempo real por título, artista ou gênero.
+- **Detalhes do Álbum**: Visualização de informações detalhadas (gravadora, ano, formatos, preços) ao clicar em um álbum.
+- **Carrinho de Compras**:
+  - Adicionar itens ao carrinho.
+  - Visualizar todos os itens, com cálculo de subtotal por item e total do pedido.
+  - Atualizar a quantidade de itens diretamente no carrinho.
+  - Remover itens do carrinho.
+- **Autenticação**: Sistema de login e registro para clientes.
+
+### Para Administradores
+- **Gerenciamento de Catálogo**:
+  - **Adicionar Álbum**: Formulário completo para cadastrar novos álbuns, incluindo upload de imagem da capa e múltiplos formatos (ex: CD, Vinil) com preço e estoque individuais.
+  - **Editar Álbum**: Formulário para editar todas as informações de um álbum existente.
+  - **Remover Álbum**: Exclusão de álbuns do catálogo.
+- **Gerenciamento de Entidades Relacionadas**: Adição de novas gravadoras, artistas e gêneros diretamente pela página de adição de álbuns, sem interromper o fluxo de trabalho.
+
+### Arquitetura e Design
+- **Estrutura de Dados**: Utiliza agregações (`$lookup`) do MongoDB para juntar dados de coleções separadas (`albuns`, `artistas`, `generos_musicais`, `gravadoras`), otimizando consultas complexas.
+- **Interatividade**: Uso de JavaScript assíncrono (AJAX/Fetch API) para atualizar e remover itens do carrinho sem a necessidade de recarregar a página, proporcionando uma experiência de usuário fluida.
+- **Segurança**: Proteção de rotas para garantir que apenas usuários autenticados (clientes) possam acessar o carrinho e apenas administradores possam gerenciar o catálogo.
 
 ## Tecnologias Utilizadas
 
@@ -17,6 +34,26 @@
 - **Servidor Web**: Apache (utilizado com XAMPP no desenvolvimento)
 - **Frontend**: HTML5, CSS3, JavaScript (vanilla)
 - **Dependências PHP**: `mongodb/mongodb` (gerenciado via Composer)
+
+---
+
+## Estrutura de Diretórios
+
+```
+/ekhos
+├── /imagens/             # Capas dos álbuns salvas aqui
+├── /login/               # Scripts de autenticação e sessão
+├── /MongoDB/             # Arquivos JSON para importação no banco
+├── /vendor/              # Dependências do Composer
+├── add_album.php         # Página para adicionar novo álbum
+├── carrinho.php          # Página do carrinho de compras do cliente
+├── cart_actions.php      # Endpoint para ações do carrinho (adicionar, remover, etc.)
+├── check_env.php         # Script de diagnóstico do ambiente
+├── composer.json         # Definição das dependências do projeto
+├── index.php             # Página principal (visualização dos álbuns)
+├── mongo_test.php        # Script de teste de conexão com o MongoDB
+└── README.md             # Este arquivo
+```
 
 ---
 
