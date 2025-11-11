@@ -323,12 +323,12 @@ try {
                 <form class="sub-modal-form" action="add_album.php" method="post">
                     <input type="hidden" name="action" value="add_gravadora">
                     <div class="form-group">
-                        <label for="nome_gravadora">Nome da Gravadora</label>
-                        <input type="text" name="nome_gravadora" required>
+                        <label for="nome_gravadora_modal">Nome da Gravadora</label>
+                        <input type="text" id="nome_gravadora_modal" name="nome_gravadora" required>
                     </div>
                     <div class="form-group">
-                        <label for="email_gravadora">E-mail da Gravadora</label>
-                        <input type="email" name="email_gravadora">
+                        <label for="email_gravadora_modal">E-mail da Gravadora</label>
+                        <input type="email" id="email_gravadora_modal" name="email_gravadora">
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -345,12 +345,12 @@ try {
                 <form class="sub-modal-form" action="add_album.php" method="post">
                     <input type="hidden" name="action" value="add_artista">
                     <div class="form-group">
-                        <label for="nome_artista">Nome do Artista</label>
-                        <input type="text" name="nome_artista" required>
+                        <label for="nome_artista_modal">Nome do Artista</label>
+                        <input type="text" id="nome_artista_modal" name="nome_artista" required>
                     </div>
                     <div class="form-group">
-                        <label for="data_nascimento">Data de Nascimento (opcional)</label>
-                        <input type="date" name="data_nascimento">
+                        <label for="data_nascimento_modal">Data de Nascimento (opcional)</label>
+                        <input type="date" id="data_nascimento_modal" name="data_nascimento">
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -367,8 +367,8 @@ try {
                 <form class="sub-modal-form" action="add_album.php" method="post">
                     <input type="hidden" name="action" value="add_genero">
                     <div class="form-group">
-                        <label for="nome_genero_musical">Nome do Gênero</label>
-                        <input type="text" name="nome_genero_musical" required>
+                        <label for="nome_genero_musical_modal">Nome do Gênero</label>
+                        <input type="text" id="nome_genero_musical_modal" name="nome_genero_musical" required>
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -543,7 +543,7 @@ try {
                 const formData = new FormData(form);
                 const messageDiv = form.querySelector('.message');
 
-                fetch(form.action, {
+                fetch(form.getAttribute('action'), {
                     method: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     body: formData

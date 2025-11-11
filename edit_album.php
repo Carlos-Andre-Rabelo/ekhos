@@ -19,6 +19,83 @@ if (!$albumId) {
 }
 
 try {
+    // --- TRATAMENTO DE REQUISIÇÕES AJAX PRIMEIRO ---
+    // Verifica se é uma requisição AJAX antes de qualquer outra coisa.
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        $client = new MongoDB\Client($mongoUri);
+        $database = $client->selectDatabase($dbName);
+        $action = $_POST['action'] ?? null;
+
+        try {
+            if ($action === 'add_gravadora') {
+                $nomeGravadora = $_POST['nome_gravadora'] ?? '';
+                if (empty($nomeGravadora)) throw new Exception("O nome da gravadora é obrigatório.");
+                
+                $maxId = 0;
+                $lastGravadora = $database->selectCollection('gravadoras')->findOne([], ['sort' => ['_id' => -1]]);
+                if ($lastGravadora) $maxId = (int)$lastGravadora['_id'];
+                
+                $newGravadora = ['_id' => $maxId + 1, 'nome_gravadora' => (string)$nomeGravadora, 'email_gravadora' => (string)($_POST['email_gravadora'] ?? '')];
+                $insertResult = $database->selectCollection('gravadoras')->insertOne($newGravadora);
+
+                if ($insertResult->getInsertedCount() > 0) {
+                    echo json_encode(['status' => 'success', 'message' => 'Gravadora adicionada! A página será recarregada.']);
+                } else {
+                    throw new Exception("Falha ao adicionar gravadora.");
+                }
+
+            } elseif ($action === 'add_artista') {
+                $nomeArtista = $_POST['nome_artista'] ?? '';
+                if (empty($nomeArtista)) throw new Exception("O nome do artista é obrigatório.");
+
+                $maxId = 0;
+                $lastArtista = $database->selectCollection('artistas')->findOne([], ['sort' => ['_id' => -1]]);
+                if ($lastArtista) $maxId = (int)$lastArtista['_id'];
+
+                $newArtista = [
+                    '_id' => $maxId + 1,
+                    'nome_artista' => (string)$nomeArtista,
+                    'data_nascimento' => !empty($_POST['data_nascimento']) ? new MongoDB\BSON\UTCDateTime(new DateTime($_POST['data_nascimento'])) : null,
+                    'albuns_ids' => []
+                ];
+                $insertResult = $database->selectCollection('artistas')->insertOne($newArtista);
+
+                if ($insertResult->getInsertedCount() > 0) {
+                    echo json_encode(['status' => 'success', 'message' => 'Artista adicionado! A página será recarregada.']);
+                } else {
+                    throw new Exception("Falha ao adicionar artista.");
+                }
+
+            } elseif ($action === 'add_genero') {
+                // Este bloco estava faltando na sua implementação anterior, causando o erro.
+                $nomeGenero = $_POST['nome_genero_musical'] ?? '';
+                if (empty($nomeGenero)) throw new Exception("O nome do gênero é obrigatório.");
+
+                $maxId = 0;
+                $lastGenero = $database->selectCollection('generos_musicais')->findOne([], ['sort' => ['_id' => -1]]);
+                if ($lastGenero) $maxId = (int)$lastGenero['_id'];
+
+                $newGenero = ['_id' => $maxId + 1, 'nome_genero_musical' => (string)$nomeGenero];
+                $insertResult = $database->selectCollection('generos_musicais')->insertOne($newGenero);
+
+                if ($insertResult->getInsertedCount() > 0) {
+                    echo json_encode(['status' => 'success', 'message' => 'Gênero adicionado! A página será recarregada.']);
+                } else {
+                    throw new Exception("Falha ao adicionar gênero.");
+                }
+            } else {
+                throw new Exception("Ação AJAX desconhecida.");
+            }
+        } catch (Exception $e) {
+            // Garante que mesmo em caso de erro, a resposta seja um JSON válido
+            http_response_code(400); // Bad Request
+            echo json_encode(['status' => 'error', 'message' => 'Erro AJAX: ' . $e->getMessage()]);
+        }
+        exit; // Termina a execução para requisições AJAX. ESSENCIAL!
+    }
+
+    // --- LÓGICA PARA CARREGAMENTO DA PÁGINA (GET) E SUBMISSÃO DO FORMULÁRIO PRINCIPAL (POST) ---
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
     $albunsCollection = $database->selectCollection('albuns');
@@ -38,6 +115,7 @@ try {
 
     // Processar o formulário quando for enviado
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $postedAction = $_POST['action'] ?? 'update_album';
         $currentImagePath = $_POST['current_image_path'] ?? null;
 
         // --- Tratamento do Upload da Imagem ---
@@ -282,15 +360,15 @@ try {
             <span class="modal-close">&times;</span>
             <div class="modal-body">
                 <h1>Adicionar Nova Gravadora</h1>
-                <form class="sub-modal-form" action="add_album.php" method="post">
+                <form class="sub-modal-form" action="edit_album.php?id=<?= $albumId ?>" method="post">
                     <input type="hidden" name="action" value="add_gravadora">
                     <div class="form-group">
                         <label for="nome_gravadora_modal">Nome da Gravadora</label>
-                        <input type="text" name="nome_gravadora" required>
+                        <input type="text" id="nome_gravadora_modal" name="nome_gravadora" required>
                     </div>
                     <div class="form-group">
                         <label for="email_gravadora_modal">E-mail da Gravadora</label>
-                        <input type="email" name="email_gravadora">
+                        <input type="email" id="email_gravadora_modal" name="email_gravadora">
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -304,15 +382,15 @@ try {
             <span class="modal-close">&times;</span>
             <div class="modal-body">
                 <h1>Adicionar Novo Artista</h1>
-                <form class="sub-modal-form" action="add_album.php" method="post">
+                <form class="sub-modal-form" action="edit_album.php?id=<?= $albumId ?>" method="post">
                     <input type="hidden" name="action" value="add_artista">
                     <div class="form-group">
                         <label for="nome_artista_modal">Nome do Artista</label>
-                        <input type="text" name="nome_artista" required>
+                        <input type="text" id="nome_artista_modal" name="nome_artista" required>
                     </div>
                     <div class="form-group">
                         <label for="data_nascimento_modal">Data de Nascimento (opcional)</label>
-                        <input type="date" name="data_nascimento">
+                        <input type="date" id="data_nascimento_modal" name="data_nascimento">
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -326,11 +404,11 @@ try {
             <span class="modal-close">&times;</span>
             <div class="modal-body">
                 <h1>Adicionar Novo Gênero</h1>
-                <form class="sub-modal-form" action="add_album.php" method="post">
+                <form class="sub-modal-form" action="edit_album.php?id=<?= $albumId ?>" method="post">
                     <input type="hidden" name="action" value="add_genero">
                     <div class="form-group">
                         <label for="nome_genero_musical_modal">Nome do Gênero</label>
-                        <input type="text" name="nome_genero_musical" required>
+                        <input type="text" id="nome_genero_musical_modal" name="nome_genero_musical" required>
                     </div>
                     <button type="submit" class="btn-submit">Adicionar</button>
                     <div class="message" style="display: none;"></div>
@@ -495,7 +573,7 @@ try {
                 const formData = new FormData(form);
                 const messageDiv = form.querySelector('.message');
 
-                fetch(form.action, {
+                fetch(form.getAttribute('action'), {
                     method: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     body: formData

@@ -1,0 +1,285 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); /* Exemplo de fonte similar */
+
+:root {
+    --primary-blue: #0A1C2C; /* Um azul bem escuro para texto/elementos principais */
+    --light-blue: #ADD8E6; /* Um azul mais claro para destaque */
+    --text-color: #E0E0E0; /* Cor de texto padrão */
+    --glass-background: rgba(255, 255, 255, 0.15); /* Fundo do efeito de vidro */
+    --border-color: rgba(255, 255, 255, 0.3); /* Borda do efeito de vidro */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Use a fonte que mais se assemelha */
+}
+
+body {
+    position: relative; /* Necessário para o posicionamento do pseudo-elemento */
+    background-color: #05101a; /* Cor de fundo principal */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-color);
+    overflow: hidden; /* Esconde partes da imagem que podem vazar após a rotação */
+}
+
+/* Pseudo-elemento para a imagem de fundo rotacionada */
+body::before {
+    content: '';
+    position: fixed; /* Fica fixo na tela */
+    top: 50%;
+    left: 50%;
+    width: 100vh; /* Largura se torna a altura da tela */
+    height: 100vw; /* Altura se torna a largura da tela */
+    background-image: url('https://i.pinimg.com/1200x/e8/ce/6d/e8ce6d1ab98209301256afc7758d74f2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* A mágica acontece aqui: rotaciona e ajusta a posição */
+    transform: translate(-50%, -50%) rotate(90deg);
+
+    z-index: -1; /* Coloca a imagem atrás de todo o conteúdo */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: rgba(0, 0, 0, 0.2); /* Um fundo levemente transparente para o navbar */
+    color: #fff;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.navbar nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.navbar nav ul li a:hover {
+    color: var(--light-blue);
+}
+
+.login-btn-nav {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-btn-nav:hover {
+    background-color: #fff;
+    color: var(--primary-blue);
+}
+
+.login-container {
+    flex-grow: 1; /* Faz com que o container ocupe o espaço restante */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 80px; /* Para não ficar atrás do navbar */
+}
+
+.login-box {
+    background: var(--glass-background);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px); /* Efeito de blur do vidro */
+    -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com Safari */
+    padding: 30px;
+    width: 380px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.login-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 15px; /* Mais padding à direita para o ícone */
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo sutil para o input */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input-group input:focus {
+    border-color: var(--light-blue);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.input-group .icon {
+    position: absolute;
+    right: 15px;
+    top: 60%; /* Ajuste para centralizar verticalmente */
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+    pointer-events: none; /* Garante que o ícone não interfira no input */
+}
+
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.remember-me input[type="checkbox"]:checked {
+    background-color: var(--light-blue);
+    border-color: var(--light-blue);
+}
+
+.remember-me input[type="checkbox"]:checked::after {
+    content: '✔';
+    color: var(--primary-blue);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.remember-me label {
+    color: #fff;
+    cursor: pointer;
+}
+
+.forgot-password {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: var(--light-blue);
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--light-blue); /* Cor do botão Login */
+    border: none;
+    border-radius: 8px;
+    color: var(--primary-blue);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 25px;
+}
+
+.login-submit-btn:hover {
+    background-color: #87CEEB; /* Um azul um pouco mais claro no hover */
+    transform: translateY(-2px);
+}
+
+.register-link {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.register-link a {
+    color: var(--light-blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #87CEEB;
+}
