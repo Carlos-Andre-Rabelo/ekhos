@@ -1,9 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); /* Exemplo de fonte similar */
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 :root {
     --primary-blue: #0A1C2C; /* Um azul bem escuro para texto/elementos principais */
-    --light-blue: #ADD8E6; /* Um azul mais claro para destaque */
+    --light-blue: #fcc986; /* Cor de destaque alinhada com o site principal */
     --text-color: #E0E0E0; /* Cor de texto padrão */
+    --hover-color: #eab368; /* Cor para o hover dos links */
     --glass-background: rgba(255, 255, 255, 0.15); /* Fundo do efeito de vidro */
     --border-color: rgba(255, 255, 255, 0.3); /* Borda do efeito de vidro */
 }
@@ -44,90 +54,71 @@ body::before {
     z-index: -1; /* Coloca a imagem atrás de todo o conteúdo */
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    background-color: rgba(0, 0, 0, 0.2); /* Um fundo levemente transparente para o navbar */
-    color: #fff;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 24px;
+.page-logo {
+    font-size: 2.5rem;
     font-weight: 600;
     color: #fff;
     text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    animation: fadeIn 0.2s ease-out forwards; /* Animação mais rápida */
+    margin-bottom: 30px; /* Espaço entre o logo e a caixa de login */
 }
 
-.navbar nav ul {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-}
-
-.navbar nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 400;
-    transition: color 0.3s ease;
-}
-
-.navbar nav ul li a:hover {
-    color: var(--light-blue);
-}
-
-.login-btn-nav {
-    background-color: transparent;
-    border: 1px solid #fff;
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.login-btn-nav:hover {
-    background-color: #fff;
-    color: var(--primary-blue);
+.page-logo:hover {
+    opacity: 1;
 }
 
 .login-container {
     flex-grow: 1; /* Faz com que o container ocupe o espaço restante */
     display: flex;
+    flex-direction: column; /* Empilha o logo e a caixa */
     justify-content: center;
     align-items: center;
-    padding-top: 80px; /* Para não ficar atrás do navbar */
+    padding: 40px 20px; /* Padding simplificado */
 }
 
+/* Caixa principal que contém os formulários */
 .login-box {
-    background: var(--glass-background);
+    background: rgba(0, 0, 0, 0.25); /* Escurecido para melhor contraste */
     border-radius: 15px;
     border: 1px solid var(--border-color);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px); /* Efeito de blur do vidro */
+    backdrop-filter: blur(15px); /* Efeito de blur do vidro */
     -webkit-backdrop-filter: blur(10px); /* Para compatibilidade com Safari */
-    padding: 30px;
-    width: 380px;
+    padding: 35px;
+    width: 100%;
+    max-width: 400px; /* Largura máxima em telas grandes */
     color: #fff;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+
+    /* Animação de entrada inicial */
+    animation: fadeIn 0.5s ease-out 0.1s forwards; /* Animação mais rápida */
+    opacity: 0; /* Começa invisível para a animação */
 }
 
-.login-header {
+/* Wrappers para cada formulário (login e registro) */
+.form-wrapper {
+    display: none; /* Começam ocultos */
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* O wrapper ativo é exibido com animação */
+.form-wrapper.active {
+    display: flex;
+    opacity: 1;
+}
+
+.form-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-.login-header h2 {
+.form-header h2 {
     font-size: 28px;
     font-weight: 600;
     color: #fff;
@@ -164,7 +155,7 @@ body::before {
 
 .input-group input {
     width: 100%;
-    padding: 12px 40px 12px 15px; /* Mais padding à direita para o ícone */
+    padding: 12px 45px 12px 45px; /* Padding para ícone à esquerda e botão à direita */
     background-color: rgba(255, 255, 255, 0.1); /* Fundo sutil para o input */
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -185,67 +176,26 @@ body::before {
 
 .input-group .icon {
     position: absolute;
-    right: 15px;
-    top: 60%; /* Ajuste para centralizar verticalmente */
+    left: 15px;
+    top: 65%; /* Ajustado para alinhar com o input, considerando o label */
     transform: translateY(-50%);
     color: rgba(255, 255, 255, 0.7);
-    font-size: 18px;
     pointer-events: none; /* Garante que o ícone não interfira no input */
-}
-
-
-.options {
-    display: flex;
-    justify-content: space-between;
+    display: flex; /* Para centralizar o SVG perfeitamente */
     align-items: center;
-    font-size: 14px;
-    margin-bottom: 25px;
 }
 
-.remember-me {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.remember-me input[type="checkbox"] {
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.1);
+.password-toggle-btn {
+    position: absolute;
+    right: 15px;
+    top: 65%; /* Ajustado para alinhar com o input, considerando o label */
+    transform: translateY(-50%);
+    background: none;
+    border: none;
     cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.remember-me input[type="checkbox"]:checked {
-    background-color: var(--light-blue);
-    border-color: var(--light-blue);
-}
-
-.remember-me input[type="checkbox"]:checked::after {
-    content: '✔';
-    color: var(--primary-blue);
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.remember-me label {
-    color: #fff;
-    cursor: pointer;
-}
-
-.forgot-password {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.forgot-password:hover {
-    color: var(--light-blue);
 }
 
 .login-submit-btn {
@@ -259,27 +209,27 @@ body::before {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-bottom: 25px;
+    margin-top: 10px; /* Espaço após o último input */
 }
 
 .login-submit-btn:hover {
-    background-color: #87CEEB; /* Um azul um pouco mais claro no hover */
-    transform: translateY(-2px);
+    background-color: var(--hover-color); /* Cor de hover alinhada */
+    transform: scale(1.02); /* Efeito de zoom mais sutil */
 }
 
-.register-link {
+.switch-link {
     text-align: center;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
 }
 
-.register-link a {
+.switch-link a {
     color: var(--light-blue);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
-.register-link a:hover {
-    color: #87CEEB;
+.switch-link a:hover {
+    color: var(--hover-color);
 }
