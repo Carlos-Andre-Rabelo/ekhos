@@ -910,6 +910,16 @@ input[type=number] {
 .message.error { background-color: var(--cor-secundaria); }
 .message.info { background-color: #17a2b8; }
 
+/* Estilos adicionais para o formulário de adição */
+.form-container .message { margin-bottom: 1.5rem; }
+
+/* Contêiner para mensagens na página principal (index.php) */
+.message-container {
+    padding: 0 5% 1.5rem 5%; /* Alinha com o padding da 'main' */
+    margin-top: -1rem; /* Puxa um pouco para cima */
+}
+
+
 
 /* --- Seção de Responsividade --- */
 

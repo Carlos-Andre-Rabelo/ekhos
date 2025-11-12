@@ -106,7 +106,10 @@ try {
             $insertResult = $database->selectCollection('albuns')->insertOne($newAlbum);
 
             if ($insertResult->getInsertedCount() > 0) {
-                $message = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($newAlbum['titulo_album']) . '" adicionado com sucesso!'];
+                // Define a mensagem na sessão e redireciona para a página principal
+                $_SESSION['message'] = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($newAlbum['titulo_album']) . '" adicionado com sucesso!'];
+                header('Location: index.php');
+                exit;
             } else {
                 throw new Exception("Não foi possível adicionar o álbum.");
             }
@@ -133,9 +136,9 @@ try {
             $insertResult = $database->selectCollection('gravadoras')->insertOne($newGravadora);
 
             if ($insertResult->getInsertedCount() > 0) {
-                echo json_encode(['status' => 'success', 'message' => 'Gravadora adicionada!']);
+                echo json_encode(['status' => 'success', 'message' => 'Gravadora adicionada!', 'newItem' => ['id' => $newId, 'name' => $nomeGravadora]]);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar gravadora.']);
+                throw new Exception("Falha ao adicionar gravadora.");
             }
             exit; // Termina a execução para requisições AJAX
         } elseif ($postedAction === 'add_artista') {
@@ -161,9 +164,9 @@ try {
             $insertResult = $database->selectCollection('artistas')->insertOne($newArtista);
 
             if ($insertResult->getInsertedCount() > 0) {
-                echo json_encode(['status' => 'success', 'message' => 'Artista adicionado!']);
+                echo json_encode(['status' => 'success', 'message' => 'Artista adicionado!', 'newItem' => ['id' => $newId, 'name' => $nomeArtista]]);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar artista.']);
+                throw new Exception("Falha ao adicionar artista.");
             }
             exit; // Termina a execução para requisições AJAX
 
@@ -188,9 +191,9 @@ try {
             $insertResult = $database->selectCollection('generos_musicais')->insertOne($newGenero);
 
             if ($insertResult->getInsertedCount() > 0) {
-                echo json_encode(['status' => 'success', 'message' => 'Gênero adicionado!']);
+                echo json_encode(['status' => 'success', 'message' => 'Gênero adicionado!', 'newItem' => ['id' => $newId, 'name' => $nomeGenero]]);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Falha ao adicionar gênero.']);
+                throw new Exception("Falha ao adicionar gênero.");
             }
             exit; // Termina a execução para requisições AJAX
         }
@@ -208,16 +211,11 @@ try {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Novo Álbum - ēkhos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css"> <!-- Mantém o link para o CSS principal -->
-    <style>
-        /* Estilos adicionais para o formulário de adição */
-        .form-container .message { margin-bottom: 1.5rem; }
-    </style>
 </head>
 <body>
     <div class="form-container">
@@ -562,8 +560,57 @@ try {
                     messageDiv.className = `message ${data.status}`;
                     messageDiv.style.display = 'block';
 
+                    // Se a adição foi um sucesso, atualiza a UI dinamicamente
                     if (data.status === 'success') {
-                        setTimeout(() => window.location.reload(), 1500); // Recarrega a página após sucesso
+                        const newItem = data.newItem;
+                        const action = formData.get('action');
+
+                        if (action === 'add_gravadora') {
+                            const selectContainer = document.querySelector('input[name="gravadora_id"]').closest('.custom-select-container');
+                            const selectItems = selectContainer.querySelector('.select-items');
+                            const newOption = document.createElement('div');
+                            newOption.dataset.value = newItem.id;
+                            newOption.textContent = newItem.name;
+                            selectItems.appendChild(newOption);
+                            // Seleciona o novo item
+                            selectContainer.querySelector('.select-selected').textContent = newItem.name;
+                            selectContainer.querySelector('input[type="hidden"]').value = newItem.id;
+                            // Adiciona o evento de clique ao novo item
+                            newOption.addEventListener('click', function() {
+                                selectContainer.querySelector('.select-selected').textContent = this.textContent;
+                                selectContainer.querySelector('input[type="hidden"]').value = this.getAttribute('data-value');
+                                closeAllSelects();
+                            });
+                        } else if (action === 'add_artista') {
+                            const selectContainer = document.querySelector('input[name="artista_id"]').closest('.custom-select-container');
+                            const selectItems = selectContainer.querySelector('.select-items');
+                            const newOption = document.createElement('div');
+                            newOption.dataset.value = newItem.id;
+                            newOption.textContent = newItem.name;
+                            selectItems.appendChild(newOption);
+                            selectContainer.querySelector('.select-selected').textContent = newItem.name;
+                            selectContainer.querySelector('input[type="hidden"]').value = newItem.id;
+                            newOption.addEventListener('click', function() {
+                                selectContainer.querySelector('.select-selected').textContent = this.textContent;
+                                selectContainer.querySelector('input[type="hidden"]').value = this.getAttribute('data-value');
+                                closeAllSelects();
+                            });
+                        } else if (action === 'add_genero') {
+                            const checkboxContainer = document.querySelector('.checkbox-group-container');
+                            const addButton = checkboxContainer.querySelector('.btn-add-related');
+                            const newCheckbox = document.createElement('label');
+                            newCheckbox.className = 'checkbox-item';
+                            newCheckbox.innerHTML = `
+                                <input type="checkbox" name="generos_ids[]" value="${newItem.id}" checked>
+                                <span class="custom-checkbox"></span>
+                                <span class="genre-name">${newItem.name}</span>
+                            `;
+                            // Insere o novo gênero antes do botão de adicionar
+                            checkboxContainer.insertBefore(newCheckbox, addButton);
+                        }
+
+                        // Fecha o modal após um curto período
+                        setTimeout(() => closeSubModal(modal), 1000);
                     }
                 })
                 .catch(error => console.error('Erro:', error));

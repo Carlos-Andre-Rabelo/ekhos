@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+// Inicia a sessão para poder ler as mensagens de feedback
+session_start();
+$message = $_SESSION['message'] ?? null;
+unset($_SESSION['message']);
 //controlador da sessao
 require_once __DIR__ . '/login/sessao.php';
 
@@ -145,6 +149,12 @@ try {
     </header>
 
     <main>
+        <?php if ($message): ?>
+            <div class="message-container">
+                <div class="message <?= $message['type'] ?>"><?= htmlspecialchars($message['text']) ?></div>
+            </div>
+        <?php endif; ?>
+
         <div id="album-grid">
             <?php if ($errorMessage): ?>
                 <div class="error-message">
