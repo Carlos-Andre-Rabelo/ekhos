@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/login/sessao.php';
+require_once __DIR__ . '/../login/sessao.php';
 
 // Apenas clientes logados podem adicionar ao carrinho.
 if (!is_client()) {
@@ -38,7 +38,7 @@ if (($action === 'add' || $action === 'update_quantity') && (!$quantidade || $qu
     exit;
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
 

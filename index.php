@@ -141,7 +141,7 @@ try {
                     <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
                 <?php else: ?>
                     <!--cliente -->
-                    <a href="carrinho.php" class="btn-header">Meu Carrinho</a>
+                    <a href="carrinho/carrinho.php" class="btn-header">Meu Carrinho</a>
                 <?php endif; ?>
 
                 <!--info usuario e logout (para todos logados)-->

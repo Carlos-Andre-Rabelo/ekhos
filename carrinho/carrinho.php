@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/login/sessao.php';
+require_once __DIR__ . '/../login/sessao.php';
 
 // Protege a página: apenas clientes logados podem ver o carrinho.
 if (!is_client()) {
@@ -13,7 +13,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
@@ -109,7 +109,7 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="stylecarrinho.css">
 </head>
 <body data-user-role="client">
@@ -122,7 +122,7 @@ try {
         <?php elseif (empty($cartItems)): ?>
             <div class="cart-empty">
                 <p>Seu carrinho está vazio.</p>
-                <a href="index.php" class="btn-header">Voltar para a loja</a>
+                <a href="../index.php" class="btn-header">Voltar para a loja</a>
             </div>
         <?php else: ?>
             <div class="cart-layout">
@@ -180,7 +180,7 @@ try {
                         <span id="summary-total"><?= 'R$ ' . number_format($totalGeral, 2, ',', '.') ?></span>
                     </div>
                     <button class="btn-checkout">Finalizar Compra</button>
-                    <a href="index.php" class="continue-shopping-link">Continuar comprando</a>
+                    <a href="../index.php" class="continue-shopping-link">Continuar comprando</a>
                 </div>
             </div>
         <?php endif; ?>
