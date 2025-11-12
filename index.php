@@ -85,21 +85,23 @@ try {
         ['$sort' => ['artista' => 1, 'titulo' => 1]]
     ];
 
-    // Executa a agregação na coleção 'albuns'
+    //agregação na collection albuns
     $cursor = $albunsCollection->aggregate($pipeline);
     $albuns = $cursor->toArray();
 
 } catch (Exception $e) {
-    // Captura qualquer erro e o prepara para exibição
+    //exibicao de mensagem de erro
     $errorMessage = "<strong>Ocorreu um erro fatal:</strong><br>" . $e->getMessage() . "<br><br><strong>Arquivo:</strong> " . $e->getFile() . "<br><strong>Linha:</strong> " . $e->getLine();
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ēkhos - Sua Coleção</title>
+    <title>ēkhos - Sua Coleção</title> <!--titulo da aba-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
