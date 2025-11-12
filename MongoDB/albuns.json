@@ -1,533 +1,1396 @@
-[
-  {
-    "_id": 1,
-    "titulo_album": "Fancy That",
-    "data_lancamento": { "$date": "2025-05-09T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a5070fdc-FancyThat.jpg" ],
-    "numero_faixas": 9,
-    "duracao": "00:20:33",
-    "artistas_ids": [ 1 ],
-    "generos_ids": [ 3 ],
-    "gravadora_id": 1,
-    "formatos": [
-      { "tipo": "cd", "preco": 99.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 92384739000131 ] },
-      { "tipo": "vinil_7", "preco": 309.50, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+[{
+  "_id": 1,
+  "titulo_album": "Fancy That",
+  "data_lancamento": {
+    "$date": "2025-05-09T00:00:00.000Z"
   },
-  {
-    "_id": 7,
-    "titulo_album": "Picture Book",
-    "data_lancamento": { "$date": "1985-10-11T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a7465ff0-ab67616d0000b273e6d86dacdcefcc01534d5cfa.jpg" ],
-    "numero_faixas": 15,
-    "duracao": "01:16:50",
-    "artistas_ids": [ 7 ],
-    "generos_ids": [ 5 ],
-    "gravadora_id": 1,
-    "formatos": [
-      { "tipo": "cd", "preco": 29.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_10", "preco": 99.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 28746295000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091a5070fdc-FancyThat.jpg"
+  ],
+  "numero_faixas": 9,
+  "duracao": "00:20:33",
+  "artistas_ids": [
+    1
+  ],
+  "generos_ids": [
+    3
+  ],
+  "gravadora_id": 1,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 99.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 309.5,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 7,
+  "titulo_album": "Picture Book",
+  "data_lancamento": {
+    "$date": "1985-10-11T00:00:00.000Z"
   },
-  {
-    "_id": 10,
-    "titulo_album": "Rumours",
-    "data_lancamento": { "$date": "1977-02-04T00:00:00Z" },
-    "imagens_capas": [ "imagens/690917683741c-FMacRumours.png" ],
-    "numero_faixas": 11,
-    "duracao": "00:39:58",
-    "artistas_ids": [ 10 ],
-    "generos_ids": [ 6, 5 ],
-    "gravadora_id": 1,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_12", "preco": 239.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091a7465ff0-ab67616d0000b273e6d86dacdcefcc01534d5cfa.jpg"
+  ],
+  "numero_faixas": 15,
+  "duracao": "01:16:50",
+  "artistas_ids": [
+    7
+  ],
+  "generos_ids": [
+    5
+  ],
+  "gravadora_id": 1,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 29.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 99.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 10,
+  "titulo_album": "Rumours",
+  "data_lancamento": {
+    "$date": "1977-02-04T00:00:00.000Z"
   },
-  {
-    "_id": 16,
-    "titulo_album": "Celebration",
-    "data_lancamento": { "$date": "2009-09-18T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918a0a02dd-Celebration-Madonna_álbum.png" ],
-    "numero_faixas": 37,
-    "duracao": "02:41:09",
-    "artistas_ids": [ 16 ],
-    "generos_ids": [ 5 ],
-    "gravadora_id": 1,
-    "formatos": [
-      { "tipo": "cd", "preco": 89.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 58374624000133 ] },
-      { "tipo": "vinil_10", "preco": 599.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 58374624000133 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690917683741c-FMacRumours.png"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:39:58",
+  "artistas_ids": [
+    10
+  ],
+  "generos_ids": [
+    6,
+    5
+  ],
+  "gravadora_id": 1,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 239.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 16,
+  "titulo_album": "Celebration",
+  "data_lancamento": {
+    "$date": "2009-09-18T00:00:00.000Z"
   },
-  {
-    "_id": 20,
-    "titulo_album": "The Miseducation of Lauryn Hill",
-    "data_lancamento": { "$date": "1998-08-25T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a4391226-the-miseducation-of-lauryn-hill.webp" ],
-    "numero_faixas": 16,
-    "duracao": "01:17:53",
-    "artistas_ids": [ 20 ],
-    "generos_ids": [ 8 ],
-    "gravadora_id": 1,
-    "formatos": [
-      { "tipo": "cd", "preco": 69.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_10", "preco": 169.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_12", "preco": 269.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918a0a02dd-Celebration-Madonna_álbum.png"
+  ],
+  "numero_faixas": 37,
+  "duracao": "02:41:09",
+  "artistas_ids": [
+    16
+  ],
+  "generos_ids": [
+    5
+  ],
+  "gravadora_id": 1,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 89.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 599.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 20,
+  "titulo_album": "The Miseducation of Lauryn Hill",
+  "data_lancamento": {
+    "$date": "1998-08-25T00:00:00.000Z"
   },
-  {
-    "_id": 2,
-    "titulo_album": "PORTALS",
-    "data_lancamento": { "$date": "2023-03-31T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918ca59163-Melanie_Martinez_-_Portals.png" ],
-    "numero_faixas": 13,
-    "duracao": "00:51:41",
-    "artistas_ids": [ 2 ],
-    "generos_ids": [ 4 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 49.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_10", "preco": 149.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091a4391226-the-miseducation-of-lauryn-hill.webp"
+  ],
+  "numero_faixas": 16,
+  "duracao": "01:17:53",
+  "artistas_ids": [
+    20
+  ],
+  "generos_ids": [
+    8
+  ],
+  "gravadora_id": 1,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 69.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 169.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 269.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 2,
+  "titulo_album": "PORTALS",
+  "data_lancamento": {
+    "$date": "2023-03-31T00:00:00.000Z"
   },
-  {
-    "_id": 3,
-    "titulo_album": "Submarine",
-    "data_lancamento": { "$date": "2024-05-31T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091ad7109ef-the-marias-submarine.webp" ],
-    "numero_faixas": 14,
-    "duracao": "00:45:13",
-    "artistas_ids": [ 3 ],
-    "generos_ids": [ 1 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 109.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_12", "preco": 299.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918ca59163-Melanie_Martinez_-_Portals.png"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:51:41",
+  "artistas_ids": [
+    2
+  ],
+  "generos_ids": [
+    4
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 49.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 149.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 3,
+  "titulo_album": "Submarine",
+  "data_lancamento": {
+    "$date": "2024-05-31T00:00:00.000Z"
   },
-  {
-    "_id": 11,
-    "titulo_album": "BRAT",
-    "data_lancamento": { "$date": "2024-06-07T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909173a0c395-Charli_XCX_-_Brat_(album_cover).svg.png" ],
-    "numero_faixas": 15,
-    "duracao": "00:41:30",
-    "artistas_ids": [ 11 ],
-    "generos_ids": [ 7, 5 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 69.90, "quantidade_estoque": 5, "fornecedores_cnpjs": [ 58374624000133 ] },
-      { "tipo": "vinil_10", "preco": 199.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091ad7109ef-the-marias-submarine.webp"
+  ],
+  "numero_faixas": 14,
+  "duracao": "00:45:13",
+  "artistas_ids": [
+    3
+  ],
+  "generos_ids": [
+    1
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 109.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 299.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 11,
+  "titulo_album": "BRAT",
+  "data_lancamento": {
+    "$date": "2024-06-06T22:00:00.000Z"
   },
-  {
-    "_id": 29,
-    "titulo_album": "After School",
-    "data_lancamento": { "$date": "2020-09-25T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918ab1d0ea-After_School_de_Melanie_Martinez.png" ],
-    "numero_faixas": 7,
-    "duracao": "00:22:17",
-    "artistas_ids": [ 2 ],
-    "generos_ids": [ 4 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 19.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6913c3e6a64ba-ab67616d0000b273c5c6772d1d98b2d0f3a69e37.jpg"
+  ],
+  "numero_faixas": 15,
+  "duracao": "00:41:30",
+  "artistas_ids": [
+    11
+  ],
+  "generos_ids": [
+    7,
+    5
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 69.9,
+      "quantidade_estoque": 5
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 199.9,
+      "quantidade_estoque": 3
+    }
+  ]
+},
+{
+  "_id": 29,
+  "titulo_album": "After School",
+  "data_lancamento": {
+    "$date": "2020-09-25T00:00:00.000Z"
   },
-  {
-    "_id": 30,
-    "titulo_album": "Cry Baby",
-    "data_lancamento": { "$date": "2015-08-14T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918b5e345f-Capa_de_Cry_Baby.jpg" ],
-    "numero_faixas": 13,
-    "duracao": "00:46:42",
-    "artistas_ids": [ 2 ],
-    "generos_ids": [ 4 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 69.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_12", "preco": 399.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918ab1d0ea-After_School_de_Melanie_Martinez.png"
+  ],
+  "numero_faixas": 7,
+  "duracao": "00:22:17",
+  "artistas_ids": [
+    2
+  ],
+  "generos_ids": [
+    4
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 19.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 30,
+  "titulo_album": "Cry Baby",
+  "data_lancamento": {
+    "$date": "2015-08-14T00:00:00.000Z"
   },
-  {
-    "_id": 31,
-    "titulo_album": "K-12",
-    "data_lancamento": { "$date": "2019-09-06T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918bf0996e-Melanie_Martinez_-_K-12.png" ],
-    "numero_faixas": 13,
-    "duracao": "00:46:35",
-    "artistas_ids": [ 2 ],
-    "generos_ids": [ 4 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 43785625000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918b5e345f-Capa_de_Cry_Baby.jpg"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:46:42",
+  "artistas_ids": [
+    2
+  ],
+  "generos_ids": [
+    4
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 69.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 399.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 31,
+  "titulo_album": "K-12",
+  "data_lancamento": {
+    "$date": "2019-09-06T00:00:00.000Z"
   },
-  {
-    "_id": 32,
-    "titulo_album": "CINEMA",
-    "data_lancamento": { "$date": "2021-06-25T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091acc68ab6-ab67616d0000b273ec93734d42345154b422c8d5.jpg" ],
-    "numero_faixas": 13,
-    "duracao": "00:39:50",
-    "artistas_ids": [ 3 ],
-    "generos_ids": [ 1 ],
-    "gravadora_id": 2,
-    "formatos": [
-      { "tipo": "cd", "preco": 29.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 58374624000133 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918bf0996e-Melanie_Martinez_-_K-12.png"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:46:35",
+  "artistas_ids": [
+    2
+  ],
+  "generos_ids": [
+    4
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 32,
+  "titulo_album": "CINEMA",
+  "data_lancamento": {
+    "$date": "2021-06-25T00:00:00.000Z"
   },
-  {
-    "_id": 4,
-    "titulo_album": "Did you know that theres a tunnel under Ocean Blvd",
-    "data_lancamento": { "$date": "2023-03-24T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909189694d75-Did_You_Know_That_There's_a_Tunnel_Under_Ocean_Blvd.jpg" ],
-    "numero_faixas": 16,
-    "duracao": "01:17:02",
-    "artistas_ids": [ 4 ],
-    "generos_ids": [ 4, 5 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "cd", "preco": 79.90, "quantidade_estoque": 5, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_12", "preco": 499.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 28746295000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091acc68ab6-ab67616d0000b273ec93734d42345154b422c8d5.jpg"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:39:50",
+  "artistas_ids": [
+    3
+  ],
+  "generos_ids": [
+    1
+  ],
+  "gravadora_id": 2,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 29.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 4,
+  "titulo_album": "Did you know that theres a tunnel under Ocean Blvd",
+  "data_lancamento": {
+    "$date": "2023-03-24T00:00:00.000Z"
   },
-  {
-    "_id": 6,
-    "titulo_album": "\"Krig-Ha, Bandolo\"",
-    "data_lancamento": { "$date": "1973-01-01T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a601af4d-KrigHaBandolo.jpg" ],
-    "numero_faixas": 11,
-    "duracao": "00:28:32",
-    "artistas_ids": [ 6 ],
-    "generos_ids": [ 2 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "cd", "preco": 39.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 43785625000154 ] },
-      { "tipo": "vinil_12", "preco": 349.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909189694d75-Did_You_Know_That_There's_a_Tunnel_Under_Ocean_Blvd.jpg"
+  ],
+  "numero_faixas": 16,
+  "duracao": "01:17:02",
+  "artistas_ids": [
+    4
+  ],
+  "generos_ids": [
+    4,
+    5
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 79.9,
+      "quantidade_estoque": 5,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 499.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 6,
+  "titulo_album": "\"Krig-Ha, Bandolo\"",
+  "data_lancamento": {
+    "$date": "1973-01-01T00:00:00.000Z"
   },
-  {
-    "_id": 19,
-    "titulo_album": "Oncle Jazz",
-    "data_lancamento": { "$date": "2019-09-13T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918d2c400e-images.png" ],
-    "numero_faixas": 24,
-    "duracao": "01:11:11",
-    "artistas_ids": [ 19 ],
-    "generos_ids": [ 1 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "cd", "preco": 49.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091a601af4d-KrigHaBandolo.jpg"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:28:32",
+  "artistas_ids": [
+    6
+  ],
+  "generos_ids": [
+    2
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 39.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 349.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 19,
+  "titulo_album": "Oncle Jazz",
+  "data_lancamento": {
+    "$date": "2019-09-13T00:00:00.000Z"
   },
-  {
-    "_id": 23,
-    "titulo_album": "The Kick Inside",
-    "data_lancamento": { "$date": "1978-02-17T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909179977846-1900x1900-000000-81-0-0.jpg" ],
-    "numero_faixas": 13,
-    "duracao": "00:43:10",
-    "artistas_ids": [ 23 ],
-    "generos_ids": [ 4, 1 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "vinil_10", "preco": 399.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 43785625000154 ] },
-      { "tipo": "vinil_12", "preco": 499.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 43785625000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918d2c400e-images.png"
+  ],
+  "numero_faixas": 24,
+  "duracao": "01:11:11",
+  "artistas_ids": [
+    19
+  ],
+  "generos_ids": [
+    1
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 49.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 23,
+  "titulo_album": "The Kick Inside",
+  "data_lancamento": {
+    "$date": "1978-02-17T00:00:00.000Z"
   },
-  {
-    "_id": 34,
-    "titulo_album": "Back To Black",
-    "data_lancamento": { "$date": "2006-10-27T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091c3a77aa8-Capa_de_Back_to_Black.jpg" ],
-    "numero_faixas": 11,
-    "duracao": "00:34:46",
-    "artistas_ids": [ 28 ],
-    "generos_ids": [ 8 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_10", "preco": 299.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_12", "preco": 399.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909179977846-1900x1900-000000-81-0-0.jpg"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:43:10",
+  "artistas_ids": [
+    23
+  ],
+  "generos_ids": [
+    4,
+    1
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "vinil_10",
+      "preco": 399.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 499.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 34,
+  "titulo_album": "Back To Black",
+  "data_lancamento": {
+    "$date": "2006-10-27T00:00:00.000Z"
   },
-  {
-    "_id": 35,
-    "titulo_album": "Frank",
-    "data_lancamento": { "$date": "2003-10-20T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091540d376d-frank capa 1.jpeg" ],
-    "numero_faixas": 16,
-    "duracao": "00:58:46",
-    "artistas_ids": [ 28 ],
-    "generos_ids": [ 8 ],
-    "gravadora_id": 3,
-    "formatos": [
-      { "tipo": "cd", "preco": 29.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 58374624000133 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091c3a77aa8-Capa_de_Back_to_Black.jpg"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:34:46",
+  "artistas_ids": [
+    28
+  ],
+  "generos_ids": [
+    8
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 299.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 399.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 35,
+  "titulo_album": "Frank",
+  "data_lancamento": {
+    "$date": "2003-10-20T00:00:00.000Z"
   },
-  {
-    "_id": 5,
-    "titulo_album": "Senhas",
-    "data_lancamento": { "$date": "1992-07-21T00:00:00Z" },
-    "imagens_capas": [ "imagens/690914d5aae37-Capa_de_Senhas.png" ],
-    "numero_faixas": 13,
-    "duracao": "00:37:58",
-    "artistas_ids": [ 5 ],
-    "generos_ids": [ 2 ],
-    "gravadora_id": 4,
-    "formatos": [
-      { "tipo": "cd", "preco": 29.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 92384739000131 ] },
-      { "tipo": "vinil_10", "preco": 149.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091540d376d-frank capa 1.jpeg"
+  ],
+  "numero_faixas": 16,
+  "duracao": "00:58:46",
+  "artistas_ids": [
+    28
+  ],
+  "generos_ids": [
+    8
+  ],
+  "gravadora_id": 3,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 29.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 5,
+  "titulo_album": "Senhas",
+  "data_lancamento": {
+    "$date": "1992-07-20T22:00:00.000Z"
   },
-  {
-    "_id": 22,
-    "titulo_album": "Let Go",
-    "data_lancamento": { "$date": "2022-06-04T00:00:00Z" },
-    "imagens_capas": [ "imagens/690916efe5874-Capa_de_Let_Go_(2002).jpg" ],
-    "numero_faixas": 13,
-    "duracao": "00:48:41",
-    "artistas_ids": [ 22 ],
-    "generos_ids": [ 6 ],
-    "gravadora_id": 4,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6913c3d06d14a-ab67616d0000b27310b9944a2d0a026c3032a8bd.jpg"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:37:58",
+  "artistas_ids": [
+    5
+  ],
+  "generos_ids": [
+    2
+  ],
+  "gravadora_id": 4,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 29.9,
+      "quantidade_estoque": 3
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 149.9,
+      "quantidade_estoque": 2
+    }
+  ]
+},
+{
+  "_id": 22,
+  "titulo_album": "Let Go",
+  "data_lancamento": {
+    "$date": "2022-06-04T00:00:00.000Z"
   },
-  {
-    "_id": 33,
-    "titulo_album": "The Seeds Of Love",
-    "data_lancamento": { "$date": "1989-09-25T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a954288d-81KREEkM3YL._UF1000,1000_QL80_.jpg" ],
-    "numero_faixas": 12,
-    "duracao": "01:05:08",
-    "artistas_ids": [ 27 ],
-    "generos_ids": [ 6, 5 ],
-    "gravadora_id": 4,
-    "formatos": [
-      { "tipo": "cd", "preco": 69.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_7", "preco": 319.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_10", "preco": 399.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 43785625000154 ] },
-      { "tipo": "vinil_12", "preco": 459.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690916efe5874-Capa_de_Let_Go_(2002).jpg"
+  ],
+  "numero_faixas": 13,
+  "duracao": "00:48:41",
+  "artistas_ids": [
+    22
+  ],
+  "generos_ids": [
+    6
+  ],
+  "gravadora_id": 4,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 33,
+  "titulo_album": "The Seeds Of Love",
+  "data_lancamento": {
+    "$date": "1989-09-25T00:00:00.000Z"
   },
-  {
-    "_id": 36,
-    "titulo_album": "Blonde",
-    "data_lancamento": { "$date": "2016-08-20T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909177254241-313x0w.jpg" ],
-    "numero_faixas": 17,
-    "duracao": "01:00:00",
-    "artistas_ids": [ 29 ],
-    "generos_ids": [ 8, 4 ],
-    "gravadora_id": 4,
-    "formatos": []
+  "imagens_capas": [
+    "imagens/69091a954288d-81KREEkM3YL._UF1000,1000_QL80_.jpg"
+  ],
+  "numero_faixas": 12,
+  "duracao": "01:05:08",
+  "artistas_ids": [
+    27
+  ],
+  "generos_ids": [
+    6,
+    5
+  ],
+  "gravadora_id": 4,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 69.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 319.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 399.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 459.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 36,
+  "titulo_album": "Blonde",
+  "data_lancamento": {
+    "$date": "2016-08-20T00:00:00.000Z"
   },
-  {
-    "_id": 8,
-    "titulo_album": "Born This Way",
-    "data_lancamento": { "$date": "2011-05-23T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909187e914f5-Born_This_Way.jpg" ],
-    "numero_faixas": 23,
-    "duracao": "01:45:07",
-    "artistas_ids": [ 8 ],
-    "generos_ids": [ 5 ],
-    "gravadora_id": 5,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_12", "preco": 199.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909177254241-313x0w.jpg"
+  ],
+  "numero_faixas": 17,
+  "duracao": "01:00:00",
+  "artistas_ids": [
+    29
+  ],
+  "generos_ids": [
+    8,
+    4
+  ],
+  "gravadora_id": 4,
+  "formatos": []
+},
+{
+  "_id": 8,
+  "titulo_album": "Born This Way",
+  "data_lancamento": {
+    "$date": "2011-05-23T00:00:00.000Z"
   },
-  {
-    "_id": 21,
-    "titulo_album": "Lost & Found",
-    "data_lancamento": { "$date": "2018-06-08T00:00:00Z" },
-    "imagens_capas": [ "imagens/690917828b030-Jorja_Smith_-_Lost_&_Found.png" ],
-    "numero_faixas": 12,
-    "duracao": "00:46:07",
-    "artistas_ids": [ 21 ],
-    "generos_ids": [ 8 ],
-    "gravadora_id": 5,
-    "formatos": []
+  "imagens_capas": [
+    "imagens/6909187e914f5-Born_This_Way.jpg"
+  ],
+  "numero_faixas": 23,
+  "duracao": "01:45:07",
+  "artistas_ids": [
+    8
+  ],
+  "generos_ids": [
+    5
+  ],
+  "gravadora_id": 5,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 199.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 21,
+  "titulo_album": "Lost & Found",
+  "data_lancamento": {
+    "$date": "2018-06-08T00:00:00.000Z"
   },
-  {
-    "_id": 28,
-    "titulo_album": "Blue Banisters",
-    "data_lancamento": { "$date": "2021-10-22T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909188b1d1b6-Blue_Banisters.jpg" ],
-    "numero_faixas": 15,
-    "duracao": "01:01:01",
-    "artistas_ids": [ 4 ],
-    "generos_ids": [ 4 ],
-    "gravadora_id": 5,
-    "formatos": [
-      { "tipo": "cd", "preco": 49.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690917828b030-Jorja_Smith_-_Lost_&_Found.png"
+  ],
+  "numero_faixas": 12,
+  "duracao": "00:46:07",
+  "artistas_ids": [
+    21
+  ],
+  "generos_ids": [
+    8
+  ],
+  "gravadora_id": 5,
+  "formatos": []
+},
+{
+  "_id": 28,
+  "titulo_album": "Blue Banisters",
+  "data_lancamento": {
+    "$date": "2021-10-22T00:00:00.000Z"
   },
-  {
-    "_id": 9,
-    "titulo_album": "Charm",
-    "data_lancamento": { "$date": "2024-07-12T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091745be1e7-Clairo_-_Charm.png" ],
-    "numero_faixas": 11,
-    "duracao": "00:38:07",
-    "artistas_ids": [ 9 ],
-    "generos_ids": [ 1 ],
-    "gravadora_id": 6,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 28746295000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909188b1d1b6-Blue_Banisters.jpg"
+  ],
+  "numero_faixas": 15,
+  "duracao": "01:01:01",
+  "artistas_ids": [
+    4
+  ],
+  "generos_ids": [
+    4
+  ],
+  "gravadora_id": 5,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 49.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 9,
+  "titulo_album": "Charm",
+  "data_lancamento": {
+    "$date": "2024-07-12T00:00:00.000Z"
   },
-  {
-    "_id": 12,
-    "titulo_album": "Thriller",
-    "data_lancamento": { "$date": "1982-11-30T00:00:00Z" },
-    "imagens_capas": [ "imagens/690918dcdc9fd-Michael_Jackson_-_Thriller.jpg" ],
-    "numero_faixas": 9,
-    "duracao": "00:42:21",
-    "artistas_ids": [ 12 ],
-    "generos_ids": [ 5 ],
-    "gravadora_id": 7,
-    "formatos": [
-      { "tipo": "cd", "preco": 59.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_12", "preco": 449.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_10", "preco": 349.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 28746295000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091745be1e7-Clairo_-_Charm.png"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:38:07",
+  "artistas_ids": [
+    9
+  ],
+  "generos_ids": [
+    1
+  ],
+  "gravadora_id": 6,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 12,
+  "titulo_album": "Thriller",
+  "data_lancamento": {
+    "$date": "1982-11-30T00:00:00.000Z"
   },
-  {
-    "_id": 13,
-    "titulo_album": "Sincerely,",
-    "data_lancamento": { "$date": "2025-05-09T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909178edc675-Sincerely_Kali_Uchis.jpeg" ],
-    "numero_faixas": 14,
-    "duracao": "00:50:51",
-    "artistas_ids": [ 13 ],
-    "generos_ids": [ 8 ],
-    "gravadora_id": 8,
-    "formatos": [
-      { "tipo": "cd", "preco": 29.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 58374624000133 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690918dcdc9fd-Michael_Jackson_-_Thriller.jpg"
+  ],
+  "numero_faixas": 9,
+  "duracao": "00:42:21",
+  "artistas_ids": [
+    12
+  ],
+  "generos_ids": [
+    5
+  ],
+  "gravadora_id": 7,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 59.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 449.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 349.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 13,
+  "titulo_album": "Sincerely,",
+  "data_lancamento": {
+    "$date": "2025-05-09T00:00:00.000Z"
   },
-  {
-    "_id": 18,
-    "titulo_album": "The Rise and Fall of a Midwest Princess",
-    "data_lancamento": { "$date": "2023-09-22T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909171b126aa-Chappell_Roan_-_The_Rise_and_Fall_of_a_Midwest_Princess.png" ],
-    "numero_faixas": 14,
-    "duracao": "00:49:08",
-    "artistas_ids": [ 18 ],
-    "generos_ids": [ 5 ],
-    "gravadora_id": 8,
-    "formatos": [
-      { "tipo": "cd", "preco": 79.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 43785625000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909178edc675-Sincerely_Kali_Uchis.jpeg"
+  ],
+  "numero_faixas": 14,
+  "duracao": "00:50:51",
+  "artistas_ids": [
+    13
+  ],
+  "generos_ids": [
+    8
+  ],
+  "gravadora_id": 8,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 29.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 18,
+  "titulo_album": "The Rise and Fall of a Midwest Princess",
+  "data_lancamento": {
+    "$date": "2023-09-22T00:00:00.000Z"
   },
-  {
-    "_id": 24,
-    "titulo_album": "Debut",
-    "data_lancamento": { "$date": "1993-07-05T00:00:00Z" },
-    "imagens_capas": [ "imagens/6909170e650f5-Capa_de_Debut.png" ],
-    "numero_faixas": 11,
-    "duracao": "00:48:31",
-    "artistas_ids": [ 24 ],
-    "generos_ids": [ 4, 1 ],
-    "gravadora_id": 8,
-    "formatos": [
-      { "tipo": "cd", "preco": 19.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 58374624000133 ] },
-      { "tipo": "vinil_7", "preco": 199.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 58374624000133 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909171b126aa-Chappell_Roan_-_The_Rise_and_Fall_of_a_Midwest_Princess.png"
+  ],
+  "numero_faixas": 14,
+  "duracao": "00:49:08",
+  "artistas_ids": [
+    18
+  ],
+  "generos_ids": [
+    5
+  ],
+  "gravadora_id": 8,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 79.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 24,
+  "titulo_album": "Debut",
+  "data_lancamento": {
+    "$date": "1993-07-05T00:00:00.000Z"
   },
-  {
-    "_id": 26,
-    "titulo_album": "Alligator Bites Never Heal",
-    "data_lancamento": { "$date": "2024-08-30T00:00:00Z" },
-    "imagens_capas": [ "imagens/690917595cc10-ab67616d0000b273b245099fe26319344ddf6054.jpg" ],
-    "numero_faixas": 19,
-    "duracao": "00:47:03",
-    "artistas_ids": [ 26 ],
-    "generos_ids": [ 10, 8 ],
-    "gravadora_id": 8,
-    "formatos": [
-      { "tipo": "cd", "preco": 49.90, "quantidade_estoque": 6, "fornecedores_cnpjs": [ 43785625000154 ] },
-      { "tipo": "vinil_7", "preco": 229.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 43785625000154 ] }
-    ]
+  "imagens_capas": [
+    "imagens/6909170e650f5-Capa_de_Debut.png"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:48:31",
+  "artistas_ids": [
+    24
+  ],
+  "generos_ids": [
+    4,
+    1
+  ],
+  "gravadora_id": 8,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 19.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 199.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "58374624000133"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 26,
+  "titulo_album": "Alligator Bites Never Heal",
+  "data_lancamento": {
+    "$date": "2024-08-30T00:00:00.000Z"
   },
-  {
-    "_id": 14,
-    "titulo_album": "Renaissance",
-    "data_lancamento": { "$date": "2022-07-29T00:00:00Z" },
-    "imagens_capas": [ "imagens/690916ffd21af-Renaissance_-_Beyoncé.png" ],
-    "numero_faixas": 16,
-    "duracao": "01:02:30",
-    "artistas_ids": [ 14 ],
-    "generos_ids": [ 9, 5 ],
-    "gravadora_id": 9,
-    "formatos": [
-      { "tipo": "cd", "preco": 39.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_12", "preco": 219.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690917595cc10-ab67616d0000b273b245099fe26319344ddf6054.jpg"
+  ],
+  "numero_faixas": 19,
+  "duracao": "00:47:03",
+  "artistas_ids": [
+    26
+  ],
+  "generos_ids": [
+    10,
+    8
+  ],
+  "gravadora_id": 8,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 49.9,
+      "quantidade_estoque": 6,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 229.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 14,
+  "titulo_album": "Renaissance",
+  "data_lancamento": {
+    "$date": "2022-07-29T00:00:00.000Z"
   },
-  {
-    "_id": 17,
-    "titulo_album": "MOTOMAMI",
-    "data_lancamento": { "$date": "2022-03-18T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a6a1c706-Rosalía_-_Motomami.png" ],
-    "numero_faixas": 16,
-    "duracao": "00:42:25",
-    "artistas_ids": [ 17 ],
-    "generos_ids": [ 4, 1 ],
-    "gravadora_id": 9,
-    "formatos": [
-      { "tipo": "cd", "preco": 49.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 28746295000154 ] },
-      { "tipo": "vinil_7", "preco": 199.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 43785625000154 ] },
-      { "tipo": "vinil_10", "preco": 299.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/690916ffd21af-Renaissance_-_Beyoncé.png"
+  ],
+  "numero_faixas": 16,
+  "duracao": "01:02:30",
+  "artistas_ids": [
+    14
+  ],
+  "generos_ids": [
+    9,
+    5
+  ],
+  "gravadora_id": 9,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 39.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 219.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 17,
+  "titulo_album": "MOTOMAMI",
+  "data_lancamento": {
+    "$date": "2022-03-18T00:00:00.000Z"
   },
-  {
-    "_id": 25,
-    "titulo_album": "CHROMAKOPIA",
-    "data_lancamento": { "$date": "2024-10-28T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091ae2eb07d-Chromakopia_CD_cover.jpg" ],
-    "numero_faixas": 14,
-    "duracao": "00:53:00",
-    "artistas_ids": [ 25 ],
-    "generos_ids": [ 10, 8 ],
-    "gravadora_id": 9,
-    "formatos": [
-      { "tipo": "cd", "preco": 69.90, "quantidade_estoque": 3, "fornecedores_cnpjs": [ 92384739000131 ] },
-      { "tipo": "vinil_10", "preco": 259.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] },
-      { "tipo": "vinil_12", "preco": 389.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 34845837000176 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091a6a1c706-Rosalía_-_Motomami.png"
+  ],
+  "numero_faixas": 16,
+  "duracao": "00:42:25",
+  "artistas_ids": [
+    17
+  ],
+  "generos_ids": [
+    4,
+    1
+  ],
+  "gravadora_id": 9,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 49.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "28746295000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 199.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "43785625000154"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 299.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 25,
+  "titulo_album": "CHROMAKOPIA",
+  "data_lancamento": {
+    "$date": "2024-10-28T00:00:00.000Z"
   },
-  {
-    "_id": 15,
-    "titulo_album": "The Land Is Inhospitable and So Are We",
-    "data_lancamento": { "$date": "2023-09-15T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a2840796-Mitski_-_The_Land_Is_Inhospitable_and_So_Are_We.png" ],
-    "numero_faixas": 11,
-    "duracao": "00:32:22",
-    "artistas_ids": [ 15 ],
-    "generos_ids": [ 1 ],
-    "gravadora_id": 10,
-    "formatos": [
-      { "tipo": "cd", "preco": 79.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 92384739000131 ] },
-      { "tipo": "vinil_7", "preco": 359.90, "quantidade_estoque": 2, "fornecedores_cnpjs": [ 92384739000131 ] }
-    ]
+  "imagens_capas": [
+    "imagens/69091ae2eb07d-Chromakopia_CD_cover.jpg"
+  ],
+  "numero_faixas": 14,
+  "duracao": "00:53:00",
+  "artistas_ids": [
+    25
+  ],
+  "generos_ids": [
+    10,
+    8
+  ],
+  "gravadora_id": 9,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 69.9,
+      "quantidade_estoque": 3,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 259.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_12",
+      "preco": 389.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "34845837000176"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 15,
+  "titulo_album": "The Land Is Inhospitable and So Are We",
+  "data_lancamento": {
+    "$date": "2023-09-15T00:00:00.000Z"
   },
-  {
-    "_id": 27,
-    "titulo_album": "Be the Cowboy",
-    "data_lancamento": { "$date": "2018-08-17T00:00:00Z" },
-    "imagens_capas": [ "imagens/69091a1d04497-Be_the_Cowboy.jpg" ],
-    "numero_faixas": 14,
-    "duracao": "00:32:34",
-    "artistas_ids": [ 15 ],
-    "generos_ids": [ 1, 6 ],
-    "gravadora_id": 10,
-    "formatos": [
-      { "tipo": "cd", "preco": 39.90, "quantidade_estoque": 4, "fornecedores_cnpjs": [ 13454487000145 ] },
-      { "tipo": "vinil_10", "preco": 299.90, "quantidade_estoque": 1, "fornecedores_cnpjs": [ 13454487000145 ] }
-    ]
-  }
-]
+  "imagens_capas": [
+    "imagens/69091a2840796-Mitski_-_The_Land_Is_Inhospitable_and_So_Are_We.png"
+  ],
+  "numero_faixas": 11,
+  "duracao": "00:32:22",
+  "artistas_ids": [
+    15
+  ],
+  "generos_ids": [
+    1
+  ],
+  "gravadora_id": 10,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 79.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_7",
+      "preco": 359.9,
+      "quantidade_estoque": 2,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "92384739000131"
+        }
+      ]
+    }
+  ]
+},
+{
+  "_id": 27,
+  "titulo_album": "Be the Cowboy",
+  "data_lancamento": {
+    "$date": "2018-08-17T00:00:00.000Z"
+  },
+  "imagens_capas": [
+    "imagens/69091a1d04497-Be_the_Cowboy.jpg"
+  ],
+  "numero_faixas": 14,
+  "duracao": "00:32:34",
+  "artistas_ids": [
+    15
+  ],
+  "generos_ids": [
+    1,
+    6
+  ],
+  "gravadora_id": 10,
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 39.9,
+      "quantidade_estoque": 4,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 299.9,
+      "quantidade_estoque": 1,
+      "fornecedores_cnpjs": [
+        {
+          "$numberLong": "13454487000145"
+        }
+      ]
+    }
+  ]
+}]
