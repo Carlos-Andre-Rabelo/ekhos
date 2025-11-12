@@ -1,12 +1,116 @@
-[
-  { "_id": 1, "nome_genero_musical": "Indie", "albuns_ids": [3, 9, 15, 17, 19, 23, 24, 27, 32] },
-  { "_id": 2, "nome_genero_musical": "MPB", "albuns_ids": [5, 6] },
-  { "_id": 3, "nome_genero_musical": "Drum and Bass", "albuns_ids": [1] },
-  { "_id": 4, "nome_genero_musical": "Alternativo", "albuns_ids": [2, 4, 17, 23, 24, 28, 29, 30, 31, 36] },
-  { "_id": 5, "nome_genero_musical": "Pop", "albuns_ids": [4, 7, 8, 10, 11, 12, 14, 16, 18, 33] },
-  { "_id": 6, "nome_genero_musical": "Rock", "albuns_ids": [10, 22, 27, 33] },
-  { "_id": 7, "nome_genero_musical": "Eletronica", "albuns_ids": [11] },
-  { "_id": 8, "nome_genero_musical": "R&B", "albuns_ids": [13, 20, 21, 25, 26, 34, 35, 36] },
-  { "_id": 9, "nome_genero_musical": "Ballroom", "albuns_ids": [14] },
-  { "_id": 10, "nome_genero_musical": "Hip-Hop", "albuns_ids": [25, 26] }
-]
+[{
+  "_id": 1,
+  "nome_genero_musical": "Indie",
+  "albuns_ids": [
+    3,
+    9,
+    15,
+    17,
+    19,
+    23,
+    24,
+    27,
+    32
+  ]
+},
+{
+  "_id": 2,
+  "nome_genero_musical": "MPB",
+  "albuns_ids": [
+    5,
+    6
+  ]
+},
+{
+  "_id": 3,
+  "nome_genero_musical": "Drum and Bass",
+  "albuns_ids": [
+    1
+  ]
+},
+{
+  "_id": 4,
+  "nome_genero_musical": "Alternativo",
+  "albuns_ids": [
+    2,
+    4,
+    17,
+    23,
+    24,
+    28,
+    29,
+    30,
+    31,
+    36
+  ]
+},
+{
+  "_id": 5,
+  "nome_genero_musical": "Pop",
+  "albuns_ids": [
+    4,
+    7,
+    8,
+    10,
+    11,
+    12,
+    14,
+    16,
+    18,
+    33
+  ]
+},
+{
+  "_id": 6,
+  "nome_genero_musical": "Rock",
+  "albuns_ids": [
+    10,
+    22,
+    27,
+    33
+  ]
+},
+{
+  "_id": 7,
+  "nome_genero_musical": "Eletronica",
+  "albuns_ids": [
+    11
+  ]
+},
+{
+  "_id": 8,
+  "nome_genero_musical": "R&B",
+  "albuns_ids": [
+    13,
+    20,
+    21,
+    25,
+    26,
+    34,
+    35,
+    36
+  ]
+},
+{
+  "_id": 9,
+  "nome_genero_musical": "Ballroom",
+  "albuns_ids": [
+    14
+  ]
+},
+{
+  "_id": 10,
+  "nome_genero_musical": "Hip-Hop",
+  "albuns_ids": [
+    25,
+    26
+  ]
+},
+{
+  "_id": 11,
+  "nome_genero_musical": "SynthPop"
+},
+{
+  "_id": 12,
+  "nome_genero_musical": "Psychdelical"
+}]
