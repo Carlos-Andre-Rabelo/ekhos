@@ -5,7 +5,7 @@ require_once __DIR__ . '/../login/sessao.php';
 
 // Protege a página: apenas clientes logados podem ver o carrinho.
 if (!is_client()) {
-    header('Location: login/login.php');
+    header('Location: /ekhos/login/login.php');
     exit;
 }
 
@@ -72,7 +72,7 @@ try {
                 'formato_tipo' => 1,
                 'quantidade' => 1, // Mantém a quantidade (já é numérica)
                 'titulo' => 1,
-                'url_capa' => 1,
+                'url_capa' => '$url_capa', // Garante que o campo url_capa do estágio anterior seja mantido
                 'preco' => ['$toDouble' => '$formato_info.preco'], // Garante que o preço seja numérico (double)
                 'estoque' => '$formato_info.quantidade_estoque',
                 
@@ -122,7 +122,7 @@ try {
         <?php elseif (empty($cartItems)): ?>
             <div class="cart-empty">
                 <p>Seu carrinho está vazio.</p>
-                <a href="../index.php" class="btn-header">Voltar para a loja</a>
+                <a href="/ekhos/index.php" class="btn-header">Voltar para a loja</a>
             </div>
         <?php else: ?>
             <div class="cart-layout">
@@ -141,7 +141,7 @@ try {
                             <?php foreach ($cartItems as $item): ?>
                                 <tr data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>">
                                     <td class="item-image">
-                                        <img src="<?= htmlspecialchars($item['url_capa']) ?>" alt="Capa do <?= htmlspecialchars($item['titulo']) ?>">
+                                        <img src="../<?= htmlspecialchars($item['url_capa']) ?>" alt="Capa do <?= htmlspecialchars($item['titulo']) ?>">
                                     </td>
                                     <td class="item-details">
                                         <div class="item-title"><?= htmlspecialchars($item['titulo']) ?></div>
@@ -180,7 +180,7 @@ try {
                         <span id="summary-total"><?= 'R$ ' . number_format($totalGeral, 2, ',', '.') ?></span>
                     </div>
                     <button class="btn-checkout">Finalizar Compra</button>
-                    <a href="../index.php" class="continue-shopping-link">Continuar comprando</a>
+                    <a href="/ekhos/index.php" class="continue-shopping-link">Continuar comprando</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -249,7 +249,7 @@ try {
                 formData.append('quantidade', quantidade);
             }
 
-            fetch('cart_actions.php', {
+            fetch('/ekhos/carrinho/cart_actions.php', {
                 method: 'POST',
                 body: formData
             })

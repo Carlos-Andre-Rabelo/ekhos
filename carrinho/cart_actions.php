@@ -67,18 +67,26 @@ try {
             throw new Exception("Quantidade solicitada indisponível. Estoque atual: $estoqueDisponivel.");
         }
 
-        // 2. Adicionar/Atualizar item no carrinho
-        // Primeiro, remove o item se ele já existir para evitar duplicatas
-        $clientesCollection->updateOne(
-            ['_id' => $userId],
-            ['$pull' => ['carrinho' => ['album_id' => $albumId, 'formato_tipo' => $formatoTipo]]]
+        // 2. Adicionar/Atualizar item no carrinho de forma mais eficiente
+        // Tenta atualizar a quantidade de um item existente
+        $updateResult = $clientesCollection->updateOne(
+            ['_id' => $userId, 'carrinho.album_id' => $albumId, 'carrinho.formato_tipo' => $formatoTipo],
+            ['$set' => ['carrinho.$.quantidade' => $quantidade]]
         );
 
-        // Depois, adiciona o item com a nova quantidade
-        $updateResult = $clientesCollection->updateOne(
-            ['_id' => $userId],
-            ['$push' => ['carrinho' => ['album_id' => $albumId, 'formato_tipo' => $formatoTipo, 'quantidade' => $quantidade]]]
-        );
+        // Se nenhum item foi atualizado (ou seja, não existia), adiciona um novo
+        if ($updateResult->getModifiedCount() === 0) {
+            $updateResult = $clientesCollection->updateOne(
+                ['_id' => $userId],
+                ['$push' => [
+                    'carrinho' => [
+                        'album_id' => $albumId,
+                        'formato_tipo' => $formatoTipo,
+                        'quantidade' => $quantidade
+                    ]
+                ]]
+            );
+        }
 
         $message = ($action === 'add') ? 'Item adicionado ao carrinho!' : 'Quantidade atualizada!';
         echo json_encode(['status' => 'success', 'message' => $message]);
