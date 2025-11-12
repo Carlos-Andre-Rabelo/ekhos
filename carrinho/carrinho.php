@@ -151,7 +151,11 @@ try {
                                         <?= 'R$ ' . number_format((float)$item['preco'], 2, ',', '.') ?>
                                     </td>
                                     <td class="item-quantity">
-                                        <input type="number" class="quantity-input" value="<?= $item['quantidade'] ?>" min="1" max="<?= $item['estoque'] ?>" data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>">
+                                        <div class="quantity-control">
+                                            <button type="button" class="quantity-btn quantity-minus" aria-label="Diminuir">-</button>
+                                            <input type="number" class="quantity-input" value="<?= $item['quantidade'] ?>" min="1" max="<?= $item['estoque'] ?>" data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>" readonly>
+                                            <button type="button" class="quantity-btn quantity-plus" aria-label="Aumentar">+</button>
+                                        </div>
                                     </td>
                                     <td class="item-subtotal">
                                         <?= 'R$ ' . number_format((float)$item['subtotal'], 2, ',', '.') ?>
@@ -270,6 +274,31 @@ try {
         }
 
         // --- INICIALIZAÇÃO E EVENT LISTENERS CORRIGIDOS ---
+
+        // Event listener para os botões de quantidade (+/-) na página do carrinho
+        document.querySelector('.cart-items-list')?.addEventListener('click', function(e) {
+            const minusBtn = e.target.closest('.quantity-minus');
+            const plusBtn = e.target.closest('.quantity-plus');
+
+            if (!minusBtn && !plusBtn) return;
+
+            const controlDiv = e.target.closest('.quantity-control');
+            const input = controlDiv.querySelector('.quantity-input');
+            let currentValue = parseInt(input.value, 10);
+            const min = parseInt(input.min, 10);
+            const max = parseInt(input.max, 10);
+
+            if (minusBtn && currentValue > min) {
+                input.value = currentValue - 1;
+            }
+
+            if (plusBtn && currentValue < max) {
+                input.value = currentValue + 1;
+            }
+
+            // Dispara o evento 'change' para acionar a atualização do subtotal e a chamada AJAX
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
 
         // Event listener para os inputs de quantidade
         document.querySelectorAll('.quantity-input').forEach(input => {

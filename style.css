@@ -360,13 +360,15 @@ main {
     border-radius: 12px;
     flex-shrink: 0; /* Impede que a imagem encolha */
 }
-.modal-details #modal-artista,
-.modal-details .genre-link {
+
+/* Estilo para os links de busca (artista/gênero) dentro do modal */
+.modal-details .modal-search-link {
+    color: var(--cor-texto-secundario); /* Cor padrão do link */
+    text-decoration: none; /* Remove o sublinhado padrão */
     cursor: pointer;
     transition: color 0.2s ease;
 }
-.modal-details #modal-artista:hover,
-.modal-details .genre-link:hover {
+.modal-details .modal-search-link:hover {
     color: var(--cor-texto-principal);
 }
 
@@ -473,6 +475,42 @@ main {
     transform: translateY(-2px);
 }
 
+/* --- Controles de Quantidade (+/-) --- */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.quantity-btn {
+    background-color: #3a3a3a;
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto-principal);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none; /* Impede a seleção de texto no botão */
+}
+
+.quantity-btn:hover {
+    background-color: #4a4a4a;
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-control .quantidade-input {
+    width: 50px; /* Largura menor para o input */
+}
 /* --- Rodapé --- */
 footer {
     text-align: center;
