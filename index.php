@@ -243,6 +243,7 @@ try {
         const modalClose = modal.querySelector('.modal-close');
         const albumGrid = document.getElementById('album-grid');
         const body = document.body;
+        const searchBar = document.getElementById('search-bar');
         const userRole = body.dataset.userRole;
 
         // Função para abrir o modal
@@ -254,6 +255,9 @@ try {
             document.getElementById('modal-gravadora').textContent = card.dataset.gravadora;
             document.getElementById('modal-duracao').textContent = card.dataset.duracao;
             document.getElementById('modal-capa').src = card.dataset.capa;
+
+            // **CORREÇÃO AQUI:** Define a variável CSS para a imagem de fundo desfocada.
+            modal.querySelector('.modal-content').style.setProperty('--modal-bg-image', `url('${card.dataset.capa}')`);
             
             // Preenche os gêneros
             const generos = card.dataset.genero.split(',').map(g => g.trim());
@@ -375,6 +379,24 @@ try {
             if (e.key === 'Escape' && modal.style.display === 'flex') {
                 closeModal();
             }
+        });
+
+        // --- FUNCIONALIDADE DE BUSCA EM TEMPO REAL ---
+        searchBar.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const albumCards = albumGrid.querySelectorAll('.album-card');
+
+            albumCards.forEach(card => {
+                const title = card.dataset.titulo.toLowerCase();
+                const artist = card.dataset.artista.toLowerCase();
+                const genre = card.dataset.genero.toLowerCase();
+
+                if (title.includes(searchTerm) || artist.includes(searchTerm) || genre.includes(searchTerm)) {
+                    card.style.display = 'block'; // Mostra o card
+                } else {
+                    card.style.display = 'none'; // Oculta o card
+                }
+            });
         });
     });
     </script>
