@@ -103,15 +103,21 @@ try {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"> <!--aparece caracteres especiais e acentos-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--ajusta a tela-->
     <title>ēkhos - Sua Coleção</title> <!--titulo da aba-->
+
+    <!--fontes-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!--estilos-->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body data-user-role="<?php
+    //controle de sessão
     if (is_admin()) {
         echo 'admin';
     } elseif (is_client()) {
@@ -123,34 +129,35 @@ try {
 
     <header>
         <div class="header-main">
-            <h1>ēkhos</h1>
-            <div class="search-container">
+            <h1>ēkhos</h1> <!--nome do site-->
+            <div class="search-container"> <!--barra de busca-->
                 <input type="search" id="search-bar" placeholder="Buscar por álbum, artista ou gênero...">
             </div>
         </div>
         <div class="header-user-actions">
             <?php if (is_logged_in()): ?>
                 <?php if (is_admin()): ?>
-                    <!-- Ações para Administradores -->
+                    <!--administrador-->
                     <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
                 <?php else: ?>
-                    <!-- Ações para Clientes -->
+                    <!--cliente -->
                     <a href="carrinho.php" class="btn-header">Meu Carrinho</a>
                 <?php endif; ?>
 
-                <!-- Mostra informações do usuário e botão de logout -->
+                <!--info usuario e logout (para todos logados)-->
                 <div class="user-session">
                     <span>Olá, <?= htmlspecialchars($_SESSION['user_name']) ?>!</span>
                     <a href="login/logout.php" class="btn-header btn-logout">Sair</a>
                 </div>
             <?php else: ?>
-                <!-- Mostra o botão de login se não houver sessão ativa -->
+                <!--login (nao logado)-->
                 <a href="login/login.php" class="btn-header">Login</a>
             <?php endif; ?>
         </div>
     </header>
 
     <main>
+        <!--verificação de mensagem-->
         <?php if ($message): ?>
             <div class="message-container">
                 <div class="message <?= $message['type'] ?>"><?= htmlspecialchars($message['text']) ?></div>
@@ -160,11 +167,13 @@ try {
         <div id="album-grid">
             <?php if ($errorMessage): ?>
                 <div class="error-message">
-                    <p><?= $errorMessage // Exibe o erro formatado, sem escapar HTML ?></p>
+                    <p><?= $errorMessage //mostra o erro ?></p>
                 </div>
+
             <?php elseif (empty($albuns)): ?>
-                <p class="info-message">Nenhum álbum encontrado no banco de dados.</p>
-            <?php else: ?>
+                <p class="info-message">Nenhum álbum encontrado no banco de dados.</p> <!--se nao houver nenhum album-->
+
+            <?php else: ?> <!--card dos albuns-->
                 <?php foreach ($albuns as $album): ?>
                     <div class="album-card" 
                          data-id="<?= htmlspecialchars((string)($album['_id'] ?? '')) ?>"
@@ -177,10 +186,14 @@ try {
                          data-capa="<?= htmlspecialchars($album['url_capa'] ?? '') ?>"
                          data-formatos="<?= htmlspecialchars(json_encode($album['formatos'] ?? [])) ?>">
                         
+                        <!--mostra a capa-->
                         <img src="<?= htmlspecialchars($album['url_capa'] ?? 'https://via.placeholder.com/300?text=Capa') ?>" alt="Capa do álbum <?= htmlspecialchars($album['titulo']) ?>">
+                        
+                        <!--mostra titulo e artista-->
                         <div class="album-info">
                             <h3><?= htmlspecialchars($album['titulo'] ?? 'Título Desconhecido') ?></h3>
                             <p><?= htmlspecialchars($album['artista'] ?? 'Artista Desconhecido') ?></p>
+                            <!--adm (botao de editar)-->
                             <?php if (is_admin()): ?>
                                 <div class="card-actions">
                                     <a href="edit_album.php?id=<?= $album['_id'] ?>" class="edit-link">Editar</a>
@@ -193,6 +206,8 @@ try {
         </div>
     </main>
 
+    <!--modal dos albuns-->
+    <!--pega as infos do card e coloca no modal-->
     <div id="album-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
