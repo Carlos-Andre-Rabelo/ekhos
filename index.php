@@ -1,91 +1,87 @@
 <?php
 declare(strict_types=1);
 
-// Inclui o nosso novo controlador de sessão.
+//controlador da sessao
 require_once __DIR__ . '/login/sessao.php';
 
-// Habilitar a exibição de todos os erros para diagnóstico completo.
-// Em um ambiente de produção, isso deve ser desativado.
+//mostra os erros
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
+//define uri e nome do banco
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
 $albuns = [];
 $errorMessage = null;
 
 try {
-    // 1. Incluir o autoloader do Composer
+    //carrega autoloader do composer
     require_once __DIR__ . '/vendor/autoload.php';
 
-    // 2. Verificar se a classe do cliente MongoDB existe
+    //verifica se o cliente mongodb existe
     if (!class_exists('MongoDB\Client')) {
         throw new Exception("Classe MongoDB\Client não encontrada. Verifique a extensão do MongoDB e o autoload do Composer.");
     }
 
-    // 3. Conectar ao MongoDB
+    //conecta no mongodb
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
 
-    // A coleção principal da consulta agora é 'albuns'.
+    //collection principal = albuns
     $albunsCollection = $database->selectCollection('albuns');
 
-    // 4. Pipeline de Agregação Robusto (Adaptado para a nova topologia)
+    //agregacoes
     $pipeline = [
-        // Etapa 1: Fazer o "JOIN" com a coleção de gravadoras.
+        //lookup eh equivalente a um left join
+        //join com gravadoras
         [
             '$lookup' => [
                 'from' => 'gravadoras',
-                'localField' => 'gravadora_id', // Campo no álbum
-                'foreignField' => '_id',         // Campo na gravadora
+                'localField' => 'gravadora_id', //no album
+                'foreignField' => '_id', //na gravadora
                 'as' => 'gravadora_info'
             ]
         ],
 
+        //join com artistas
         [
             '$lookup' => [
                 'from' => 'artistas',
-                'localField' => 'artistas_ids',
-                'foreignField' => '_id',
+                'localField' => 'artistas_ids', //no album
+                'foreignField' => '_id', //no artista
                 'as' => 'artistas_info'
             ]
         ],
 
+        //join com generos musicais
         [
             '$lookup' => [
                 'from' => 'generos_musicais',
-                'localField' => 'generos_ids',
-                'foreignField' => '_id',
+                'localField' => 'generos_ids', //no album
+                'foreignField' => '_id', //no genero musical
                 'as' => 'generos_info'
             ]
         ],
 
-        // Formata o documento final para exibição
+        //campos exibidos
         [
             '$project' => [
                 '_id' => '$_id',
                 'titulo' => '$titulo_album',
                 'ano' => ['$year' => '$data_lancamento'],
                 'duracao' => '$duracao',
-                
-                // --- ALTERAÇÃO ---
-                // O campo agora se chama 'formatos'
-                'formatos' => '$formatos', 
+                'formatos' => '$formatos', //cds e vinis 
                 'gravadora' => ['$ifNull' => [['$arrayElemAt' => ['$gravadora_info.nome_gravadora', 0]], 'Gravadora Desconhecida']],
                 'artista' => ['$ifNull' => [['$arrayElemAt' => ['$artistas_info.nome_artista', 0]], 'Artista Desconhecido']],
-                
-                // Pega a lista de nomes de gêneros
                 'generos' => '$generos_info.nome_genero_musical',
-                
-                // Pega a primeira imagem do array, ou usa um placeholder se o array estiver vazio/nulo
                 'url_capa' => [
                     '$ifNull' => [['$arrayElemAt' => ['$imagens_capas', 0]], 'https://via.placeholder.com/300/1e1e1e/bb86fc?text=Capa']
                 ]
             ]
         ],
 
-        // Ordena o resultado final
+        //coloca em ordem alfabetica de artista e depois por titulo
         ['$sort' => ['artista' => 1, 'titulo' => 1]]
     ];
 
