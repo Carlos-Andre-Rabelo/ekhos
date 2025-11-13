@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/login/sessao.php';
 
-// Protege a página: apenas administradores podem editar álbuns.
+//confere se eh adm
 if (!is_admin()) {
     header('Location: login/login.php');
     exit;
@@ -26,9 +26,8 @@ if (!$albumId) {
     exit;
 }
 
+//salva no mongo
 try {
-    // --- TRATAMENTO DE REQUISIÇÕES AJAX PRIMEIRO ---
-    // Verifica se é uma requisição AJAX antes de qualquer outra coisa.
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
         $client = new MongoDB\Client($mongoUri);
@@ -36,6 +35,7 @@ try {
         $action = $_POST['action'] ?? null;
 
         try {
+            //add gravadora
             if ($action === 'add_gravadora') {
                 $nomeGravadora = $_POST['nome_gravadora'] ?? '';
                 if (empty($nomeGravadora)) throw new Exception("O nome da gravadora é obrigatório.");
@@ -53,7 +53,10 @@ try {
                     throw new Exception("Falha ao adicionar gravadora.");
                 }
 
-            } elseif ($action === 'add_artista') {
+            } 
+            
+            //add artista
+            elseif ($action === 'add_artista') {
                 $nomeArtista = $_POST['nome_artista'] ?? '';
                 if (empty($nomeArtista)) throw new Exception("O nome do artista é obrigatório.");
 
@@ -75,8 +78,10 @@ try {
                     throw new Exception("Falha ao adicionar artista.");
                 }
 
-            } elseif ($action === 'add_genero') {
-                // Este bloco estava faltando na sua implementação anterior, causando o erro.
+            } 
+            
+            //add genero
+            elseif ($action === 'add_genero') {
                 $nomeGenero = $_POST['nome_genero_musical'] ?? '';
                 if (empty($nomeGenero)) throw new Exception("O nome do gênero é obrigatório.");
 
@@ -96,38 +101,34 @@ try {
                 throw new Exception("Ação AJAX desconhecida.");
             }
         } catch (Exception $e) {
-            // Garante que mesmo em caso de erro, a resposta seja um JSON válido
-            http_response_code(400); // Bad Request
+            http_response_code(400);
             echo json_encode(['status' => 'error', 'message' => 'Erro AJAX: ' . $e->getMessage()]);
         }
-        exit; // Termina a execução para requisições AJAX. ESSENCIAL!
+        exit;
     }
 
-    // --- LÓGICA PARA CARREGAMENTO DA PÁGINA (GET) E SUBMISSÃO DO FORMULÁRIO PRINCIPAL (POST) ---
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
     $albunsCollection = $database->selectCollection('albuns');
 
-    // Buscar dados para preencher os selects do formulário
-    // Projeta os campos necessários e converte o _id para string para uso no HTML
+    //busca dados e preenche select formulario
     $gravadoras = $database->selectCollection('gravadoras')->find([], ['sort' => ['nome_gravadora' => 1]])->toArray();
     $artistas = $database->selectCollection('artistas')->find([], ['sort' => ['nome_artista' => 1]])->toArray();
     $generos = $database->selectCollection('generos_musicais')->find([], ['sort' => ['nome_genero_musical' => 1]])->toArray();
 
-    // Buscar os dados do álbum específico diretamente da coleção 'albuns'
+    //busca os dados especif do album
     $album = $albunsCollection->findOne(['_id' => (int)$albumId]);
 
     if (!$album) {
         throw new Exception("Álbum não encontrado.");
     }
 
-    // Processar o formulário quando for enviado
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $postedAction = $_POST['action'] ?? 'update_album';
         $currentImagePath = $_POST['current_image_path'] ?? null;
 
-        // --- Tratamento do Upload da Imagem ---
-        $imagePath = $currentImagePath; // Mantém a imagem atual por padrão
+        //upload imag
+        $imagePath = $currentImagePath; //mantem imag atual
         if (isset($_FILES['imagem_capa']) && $_FILES['imagem_capa']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = __DIR__ . '/imagens/';
             if (!is_dir($uploadDir)) {
@@ -140,7 +141,8 @@ try {
             $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
             if (in_array($imageFileType, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 if (move_uploaded_file($_FILES['imagem_capa']['tmp_name'], $targetFile)) {
-                    // Se o upload for bem-sucedido, define o novo caminho e remove a imagem antiga se existir
+                    
+                    //se upload der certo muda o caminho
                     $imagePath = 'imagens/' . $fileName;
                     if ($currentImagePath && file_exists(__DIR__ . '/' . $currentImagePath)) {
                         unlink(__DIR__ . '/' . $currentImagePath);
@@ -153,10 +155,10 @@ try {
             }
         }
 
-        // --- Montagem dos campos a serem atualizados ---
+        //campos a atualizar
         $updateFields = [
             'titulo_album' => (string) ($_POST['titulo_album'] ?? ''),
-            'gravadora_id' => (int) $_POST['gravadora_id'], // Permitir alterar a gravadora
+            'gravadora_id' => (int) $_POST['gravadora_id'],
             'data_lancamento' => new MongoDB\BSON\UTCDateTime(new DateTime($_POST['data_lancamento'])),
             'imagens_capas' => $imagePath ? [$imagePath] : [],
             'numero_faixas' => (int) ($_POST['numero_faixas'] ?? 0),
@@ -165,7 +167,7 @@ try {
             'generos_ids' => array_map('intval', $_POST['generos_ids'] ?? []),
         ];
 
-        // --- Montagem dos Formatos (Exemplares) ---
+        //exemplares
         $formatos = [];
         if (isset($_POST['formatos']) && is_array($_POST['formatos'])) {
             foreach ($_POST['formatos'] as $formato) {
@@ -180,7 +182,7 @@ try {
         }
         $updateFields['formatos'] = $formatos;
 
-        // --- Atualização no Banco de Dados ---
+        //atualizacao bd
         $updateResult = $albunsCollection->updateOne(
             ['_id' => (int)$albumId],
             ['$set' => $updateFields]
@@ -188,7 +190,7 @@ try {
 
         if ($updateResult->getModifiedCount() > 0) {
             $message = ['type' => 'success', 'text' => 'Álbum "' . htmlspecialchars($updateFields['titulo_album']) . '" atualizado com sucesso!'];
-            // Recarregar os dados do álbum para exibir as informações atualizadas no formulário
+            //recarrega dados do album
             $album = $albunsCollection->findOne(['_id' => (int)$albumId]);
         } else {
             $message = ['type' => 'info', 'text' => 'Nenhuma alteração foi detectada.'];
@@ -198,6 +200,7 @@ try {
     $message = ['type' => 'error', 'text' => 'Erro: ' . $e->getMessage()];
 }
 
+//form de edicao do album
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -311,11 +314,11 @@ try {
                     <img src="<?= htmlspecialchars($album['imagens_capas'][0]) ?>" alt="Capa atual" class="current-image">
                 <?php endif; ?>
                 <input type="file" id="imagem_capa" name="imagem_capa" accept="image/*" onchange="previewImage(event)">
-                <!-- Contêiner para a pré-visualização da nova imagem -->
+                <!--preview da imagem-->
                 <img id="image-preview" src="#" alt="Pré-visualização da nova capa" class="image-preview">
             </div>
 
-            <!-- Seção de Formatos Editáveis -->
+            <!--exemplaress-->
             <div class="form-group">
                 <div class="formatos-section">
                     <h3>Formatos (Exemplares)</h3>
@@ -362,7 +365,7 @@ try {
         <?php endif; ?>
     </div>
 
-    <!-- Modais para Adicionar Itens (copiados de add_album.php) -->
+    <!--add itens modal-->
     <div id="modal-add-gravadora" class="modal-overlay add-modal" style="display: none;">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -427,21 +430,21 @@ try {
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- Lógica para adicionar formatos dinamicamente ---
+        //add formato dinamicamente
         const addFormatoBtn = document.getElementById('add-formato-btn');
         if (addFormatoBtn) {
             const container = document.getElementById('formatos-container');
             const formatosSection = document.querySelector('.formatos-section');
-            // Começa o índice a partir do número de formatos já existentes
+            //inicia a partir da quant atual
             let formatoIndex = <?= $formatoIndex ?? 0 ?>;
 
-            // Se não houver formatos, esconde a seção
+            //esconde secao se n houver
             if (container.children.length === 0) {
                 formatosSection.style.display = 'none';
             }
 
             addFormatoBtn.addEventListener('click', function() {
-                // Mostra a seção se estiver oculta
+                //mostra secao
                 if (formatosSection.style.display === 'none') {
                     formatosSection.style.display = 'block';
                 }
@@ -464,7 +467,7 @@ try {
                     <button type="button" class="remove-formato-btn">X</button>
                 `;
                 container.appendChild(div);
-                // Inicializa o novo custom select que acabamos de adicionar
+                //inic novo select
                 initializeCustomSelect(div.querySelector('.custom-select-container'));
                 formatoIndex++;
             });
@@ -472,7 +475,7 @@ try {
             container.addEventListener('click', function(e) {
                 if (e.target && e.target.classList.contains('remove-formato-btn')) {
                     e.target.closest('.formato-item').remove();
-                    // Se não houver mais formatos, esconde a seção novamente
+                    //esconde secao se nao tiver formatos
                     if (container.children.length === 0) {
                         formatosSection.style.display = 'none';
                     }
@@ -480,7 +483,7 @@ try {
             });
         }
 
-        // --- Lógica para o Novo Custom Select ---
+        //custom select
         function initializeCustomSelect(container) {
             const selected = container.querySelector('.select-selected');
             const items = container.querySelector('.select-items');
@@ -488,7 +491,7 @@ try {
 
             selected.addEventListener('click', function(e) {
                 e.stopPropagation();
-                closeAllSelects(this); // Fecha outros selects abertos
+                closeAllSelects(this);
                 items.style.maxHeight = items.style.maxHeight ? null : items.scrollHeight + "px";
                 items.style.opacity = items.style.opacity === '1' ? '0' : '1';
                 this.classList.toggle('select-arrow-active');
@@ -517,10 +520,10 @@ try {
 
         document.querySelectorAll('.custom-select-container').forEach(initializeCustomSelect);
 
-        // Fecha os selects se clicar fora
+        //fecha selects click fora
         document.addEventListener('click', closeAllSelects);
 
-        // --- Lógica para os Modais de Adição (Gravadora, Artista, Gênero) ---
+        //modais de add
         const openModalButtons = document.querySelectorAll('.open-sub-modal');
         const subModals = document.querySelectorAll('.add-modal');
 
@@ -542,14 +545,14 @@ try {
                 modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
                 setTimeout(() => {
                     modal.style.display = 'none';
-                    // Limpa a mensagem de feedback ao fechar
+                    //tira mensagem feedback
                     const messageDiv = modal.querySelector('.message');
                     if (messageDiv) {
                         messageDiv.style.display = 'none';
                         messageDiv.textContent = '';
                         messageDiv.className = 'message';
                     }
-                    // Só remove a classe do body se nenhum outro modal estiver aberto
+                    //remove classe body se nao tiver outro modal aberto
                     if (document.querySelectorAll('.modal-overlay[style*="display: flex"]').length === 0) {
                         document.body.classList.remove('modal-open');
                     }
@@ -565,16 +568,16 @@ try {
         });
 
         subModals.forEach(modal => {
-            // Fechar ao clicar no 'X'
+            //fechar no x
             modal.querySelector('.modal-close').addEventListener('click', () => closeSubModal(modal));
-            // Fechar ao clicar no overlay
+            //fechar no overlay
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     closeSubModal(modal);
                 }
             });
 
-            // Lidar com a submissão do formulário via AJAX
+            //submissao form
             const form = modal.querySelector('.sub-modal-form');
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -592,7 +595,7 @@ try {
                     messageDiv.className = `message ${data.status}`;
                     messageDiv.style.display = 'block';
 
-                    // Se a adição foi um sucesso, atualiza a UI dinamicamente
+                    //atualiza ui se der certo
                     if (data.status === 'success') {
                         const newItem = data.newItem;
                         const action = formData.get('action');
@@ -604,10 +607,10 @@ try {
                             newOption.dataset.value = newItem.id;
                             newOption.textContent = newItem.name;
                             selectItems.appendChild(newOption);
-                            // Seleciona o novo item
+                            //seleciona item novo
                             selectContainer.querySelector('.select-selected').textContent = newItem.name;
                             selectContainer.querySelector('input[type="hidden"]').value = newItem.id;
-                            // Adiciona o evento de clique ao novo item
+                            //add clique no item novo
                             newOption.addEventListener('click', function() {
                                 selectContainer.querySelector('.select-selected').textContent = this.textContent;
                                 selectContainer.querySelector('input[type="hidden"]').value = this.getAttribute('data-value');
@@ -637,11 +640,11 @@ try {
                                 <span class="custom-checkbox"></span>
                                 <span class="genre-name">${newItem.name}</span>
                             `;
-                            // Insere o novo gênero antes do botão de adicionar
+                            //insere genero antes de add
                             checkboxContainer.insertBefore(newCheckbox, addButton);
                         }
 
-                        // Fecha o modal após um curto período
+                        //fecha modal
                         setTimeout(() => closeSubModal(modal), 1000);
                     }
                 })
@@ -649,7 +652,7 @@ try {
             });
         });
 
-        // --- Lógica para pré-visualização da imagem na página de edição ---
+        //preview da imagem na edicao
         const imagePreview = document.getElementById('image-preview');
         
         window.previewImage = function(event) {

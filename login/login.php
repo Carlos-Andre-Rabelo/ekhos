@@ -15,8 +15,7 @@ unset($_SESSION['message']);
 <body>
     <div class="login-container">
         <a href="../index.php" class="page-logo">ēkhos</a>
-        <div class="login-box">            
-            <!-- Wrapper do Formulário de Login (Inicialmente visível) -->
+        <div class="login-box">
             <div id="login-form-wrapper" class="form-wrapper active">
                 <div class="form-header">
                 <h2>Login</h2>
@@ -52,7 +51,7 @@ unset($_SESSION['message']);
             </div>
             </div>
 
-            <!-- Wrapper do Formulário de Registro (Inicialmente oculto) -->
+            <!--formulario-->
             <div id="register-form-wrapper" class="form-wrapper">
                 <div class="form-header">
                 <h2>Criar Conta</h2>
@@ -95,14 +94,13 @@ unset($_SESSION['message']);
     </style>
 
     <script>
-        // Script para alternar entre as caixas de login e registro
+        //alterna login registro
         const loginWrapper = document.getElementById('login-form-wrapper');
         const registerWrapper = document.getElementById('register-form-wrapper');
         const showRegisterLink = document.getElementById('show-register');
         const showLoginLink = document.getElementById('show-login');
 
         const switchForms = (hide, show) => {
-            // Troca instantânea sem animação
             hide.classList.remove('active');
             hide.style.display = 'none';
             show.style.display = 'flex';
@@ -119,14 +117,13 @@ unset($_SESSION['message']);
             switchForms(registerWrapper, loginWrapper);
         });
 
-        // Se a URL tiver #register, mostra o formulário de registro ao carregar
         document.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#register') {
                 switchForms(loginWrapper, registerWrapper);
             }
         });
 
-        // Script para mostrar/ocultar senha
+        //mostrar ocultar senha
         document.querySelectorAll('.password-toggle-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const passwordInput = this.previousElementSibling;

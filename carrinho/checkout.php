@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
-// Protege a página: apenas clientes logados podem acessar o checkout.
+//confere se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
@@ -34,21 +34,21 @@ try {
         throw new Exception("Usuário não encontrado.");
     }
 
-    // Verifica se o endereço está cadastrado
+    //ve se tem endereco cadast
     $endereco = $cliente['endereco'] ?? null;
     if (!$endereco || empty((array)$endereco)) {
         header('Location: /ekhos/carrinho/cadastrar_endereco.php');
         exit;
     }
 
-    // Verifica se o cartão está cadastrado
+    //ve se tem cartao cadast
     $cartao = $cliente['cartao'] ?? null;
     if (!$cartao || empty((array)$cartao) || !isset($cartao['nome_titular']) || empty($cartao['nome_titular'])) {
         header('Location: /ekhos/carrinho/cadastrar_cartao.php');
         exit;
     }
 
-    // Decriptografa o número do cartão para exibir os últimos 4 dígitos
+    //mostra so os ultimos 4 dig do cartao
     define('ENCRYPTION_KEY', 'e0d1f2c3b4a5968778695a4b3c2d1e0f1f2e3d4c5b6a798897a6b5c4d3e2f10e');
     define('ENCRYPTION_CIPHER', 'aes-256-cbc');
 
@@ -62,13 +62,13 @@ try {
     }
 
 
-    // Se o carrinho estiver vazio, redireciona para o carrinho que mostrará a mensagem.
+    //carrinho vazio
     if (empty($cliente['carrinho'])) {
         header('Location: /ekhos/carrinho/carrinho.php');
         exit;
     }
 
-    // Busca os itens do carrinho para exibir o resumo (lógica de agregação do carrinho.php)
+    //procura itens do carrinho
     $pipeline = [
         ['$match' => ['_id' => $userId]],
         ['$unwind' => '$carrinho'],

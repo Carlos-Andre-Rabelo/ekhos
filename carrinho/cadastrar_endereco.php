@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
-// Protege a página: apenas clientes logados podem cadastrar um endereço.
+//ve se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
 }
 
-// Se o usuário já tiver um endereço, redireciona para o checkout.
-// (Esta é uma verificação adicional para evitar que acessem a página diretamente sem necessidade)
+//se tiver endereco redireciona
 require_once __DIR__ . '/../vendor/autoload.php';
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
@@ -24,7 +23,6 @@ try {
         exit;
     }
 } catch (Exception $e) {
-    // Não faz nada, apenas impede o redirecionamento em caso de erro de DB.
 }
 
 ?>

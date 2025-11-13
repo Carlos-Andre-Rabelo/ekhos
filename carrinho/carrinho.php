@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
-// Protege a página: apenas clientes logados podem ver o carrinho.
+//confere se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
@@ -27,13 +27,13 @@ try {
     $clientesCollection = $database->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
 
-    // Pipeline de agregação para buscar os itens do carrinho e seus detalhes
+    //agregacao pros itens do carrinho
     $pipeline = [
-        // 1. Filtrar pelo cliente atual
+        //cliente atual
         ['$match' => ['_id' => $userId]],
-        // 2. Desconstruir o array do carrinho
+        //desfaz array carrinho
         ['$unwind' => '$carrinho'],
-        // 3. "JOIN" com a coleção de álbuns
+        //join com albuns
         [
             '$lookup' => [
                 'from' => 'albuns',
@@ -42,15 +42,15 @@ try {
                 'as' => 'album_details'
             ]
         ],
-        // 4. Desconstruir o resultado do lookup
+        //desfaz result do lookup
         ['$unwind' => '$album_details'],
-        // 5. Projetar campos, calculando subtotal e extraindo formato
+        //mostrar dados e calcular subtotal
         [
             '$project' => [
                 '_id' => 0,
                 'album_id' => '$carrinho.album_id',
                 'formato_tipo' => '$carrinho.formato_tipo',
-                'quantidade' => '$carrinho.quantidade', // Passa a quantidade
+                'quantidade' => '$carrinho.quantidade', //quant
                 'titulo' => '$album_details.titulo_album',
                 'url_capa' => ['$ifNull' => [['$arrayElemAt' => ['$album_details.imagens_capas', 0]], 'https://via.placeholder.com/80']],
                 'formato_info' => [
@@ -62,25 +62,24 @@ try {
                 ]
             ]
         ],
-        // 6. Pega o primeiro elemento do array filtrado
+        //primeira info do array
         ['$unwind' => '$formato_info'],
         
-        // 7. Projeto final - CORREÇÃO APLICADA AQUI
+        //mostra final
         [
             '$project' => [
                 'album_id' => 1,
                 'formato_tipo' => 1,
-                'quantidade' => 1, // Mantém a quantidade (já é numérica)
+                'quantidade' => 1,
                 'titulo' => 1,
-                'url_capa' => '$url_capa', // Garante que o campo url_capa do estágio anterior seja mantido
-                'preco' => ['$toDouble' => '$formato_info.preco'], // Garante que o preço seja numérico (double)
+                'url_capa' => '$url_capa',
+                'preco' => ['$toDouble' => '$formato_info.preco'],
                 'estoque' => '$formato_info.quantidade_estoque',
                 
-                // CORREÇÃO: Usa $toDouble para garantir que a multiplicação funcione
                 'subtotal' => [
                     '$multiply' => [
-                        ['$toDouble' => '$quantidade'], // Converte quantidade para double
-                        ['$toDouble' => '$formato_info.preco']  // Converte preço para double
+                        ['$toDouble' => '$quantidade'],
+                        ['$toDouble' => '$formato_info.preco']
                     ]
                 ]
             ]
@@ -90,7 +89,7 @@ try {
     $cursor = $clientesCollection->aggregate($pipeline);
     $cartItems = $cursor->toArray();
 
-    // Calcula o total geral (agora com subtotais corretos)
+    //calc total
     foreach ($cartItems as $item) {
         $totalGeral += (float)$item['subtotal'];
     }
@@ -205,7 +204,6 @@ try {
             let newTotal = 0;
             document.querySelectorAll('.cart-items-list tbody tr').forEach(row => {
                 const subtotalText = row.querySelector('.item-subtotal').textContent;
-                // A lógica de parse do usuário está correta.
                 const subtotalValue = parseFloat(subtotalText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
                 if (subtotalValue && !isNaN(subtotalValue)) {
                     newTotal += subtotalValue;
@@ -238,12 +236,11 @@ try {
             if (!isNaN(price) && !isNaN(quantity)) {
                 const subtotal = price * quantity;
                 subtotalTextEl.textContent = formatCurrency(subtotal);
-                // Apenas chame updateTotals DEPOIS que a linha foi atualizada
                 updateTotals();
             }
         };
 
-        // Função para enviar a ação para o backend (sem alterações)
+        //envio backend
         function handleCartAction(action, albumId, formatoTipo, quantidade = null) {
             const formData = new FormData();
             formData.append('action', action);
@@ -273,9 +270,7 @@ try {
             });
         }
 
-        // --- INICIALIZAÇÃO E EVENT LISTENERS CORRIGIDOS ---
-
-        // Event listener para os botões de quantidade (+/-) na página do carrinho
+        //listener botao quant
         document.querySelector('.cart-items-list')?.addEventListener('click', function(e) {
             const minusBtn = e.target.closest('.quantity-minus');
             const plusBtn = e.target.closest('.quantity-plus');
@@ -296,50 +291,34 @@ try {
                 input.value = currentValue + 1;
             }
 
-            // Dispara o evento 'change' para acionar a atualização do subtotal e a chamada AJAX
             input.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
-        // Event listener para os inputs de quantidade
+        //listener input quant
         document.querySelectorAll('.quantity-input').forEach(input => {
-            // 1. Adiciona o listener para mudanças futuras
             input.addEventListener('change', function() {
                 const albumId = this.dataset.albumId;
                 const formatoTipo = this.dataset.formatoTipo;
                 const quantidade = this.value;
 
-                updateRowSubtotal(this); // Atualiza a interface imediatamente
+                updateRowSubtotal(this);
                 handleCartAction('update_quantity', albumId, formatoTipo, quantidade);
             });
-            
-            // 2. CORREÇÃO DO BUG (ROBUSTEZ):
-            // Mesmo com o PHP corrigido, é bom garantir que o JS
-            // recalcule os valores ao carregar.
-            // Isso força o recálculo de CADA linha e do total.
             updateRowSubtotal(input);
         });
         
-        // A chamada 'updateRowSubtotal(input)' dentro do loop
-        // irá disparar 'updateTotals()' múltiplas vezes (uma por item).
-        // A chamada final terá o valor completo e correto.
-
-        // Event listener para os botões de remover (sem alterações)
+        //listener remover
         document.querySelectorAll('.remove-btn').forEach(button => {
             button.addEventListener('click', function() {
-                if (confirm('Tem certeza que deseja remover este item do carrinho?')) {
-                    const albumId = this.dataset.albumId;
-                    const formatoTipo = this.dataset.formatoTipo;
-                    const row = this.closest('tr');
+                const albumId = this.dataset.albumId;
+                const formatoTipo = this.dataset.formatoTipo;
+                const row = this.closest('tr');
                     
-                    row.remove(); // Remove a linha da interface imediatamente
-                    updateTotals(); // Recalcula os totais (correto)
-                    handleCartAction('remove_item', albumId, formatoTipo);
-                }
+                row.remove();
+                updateTotals();
+                handleCartAction('remove_item', albumId, formatoTipo);
             });
         });
-
-        // REMOVE A CHAMADA ORIGINAL QUE LIA OS VALORES ERRADOS
-        // updateTotals(); // <- Esta linha causava o bug no JS.
     });
     </script>
 

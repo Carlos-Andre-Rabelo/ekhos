@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../login/sessao.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Protege a página: apenas clientes logados podem cadastrar um cartão.
+//ve se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
@@ -24,7 +24,6 @@ try {
         exit;
     }
 } catch (Exception $e) {
-    // Não faz nada, apenas impede o redirecionamento em caso de erro de DB.
 }
 
 $errorMessage = $_GET['error'] ?? null;

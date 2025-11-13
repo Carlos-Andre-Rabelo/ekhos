@@ -35,21 +35,15 @@ try {
         exit;
     }
 
-    // Verifica a senha usando password_verify
+    //confere senha
     if (password_verify($password, (string)($user['senha_cliente'] ?? ''))) {
-        // Login bem-sucedido
         $_SESSION['user_id'] = (string)$user['_id'];
         $_SESSION['user_name'] = (string)$user['nome_cliente'];
-
-        // --- CORREÇÃO DA LÓGICA DE PAPEL ---
-        // Verifica se o campo 'adm' existe e é true. Se for, o papel é 'admin'.
-        // Caso contrário, o papel é 'client'.
         $isAdmin = isset($user['adm']) && $user['adm'] === true;
         $_SESSION['user_role'] = $isAdmin ? 'admin' : 'client';
 
         $_SESSION['message'] = ['type' => 'success', 'text' => 'Login realizado com sucesso! Bem-vindo(a), ' . htmlspecialchars($user['nome_cliente']) . '!'];
-        
-        // Redireciona para a página principal do sistema
+
         header('Location: ../index.php');
         exit;
     } else {

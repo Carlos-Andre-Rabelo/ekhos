@@ -6,34 +6,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const userRole = body.dataset.userRole;
 
-    // Função auxiliar para acionar a busca (movida para o escopo global do script)
+    //funcao pra auxiliar busca (vai pro escopo global)
     const triggerSearch = (term) => {
         closeModal();
         searchBar.value = term;
-        // Dispara o evento 'input' para que o listener da busca seja ativado
+        //dispara evento input
         searchBar.dispatchEvent(new Event('input', { bubbles: true }));
     };
 
-    // Função para abrir o modal
+    //funcao abrir modal
     const openModal = (card) => {
-        // Preenche os dados básicos do modal
+        //preenche dados do modal
         document.getElementById('modal-titulo').textContent = card.dataset.titulo;
         document.getElementById('modal-ano').textContent = card.dataset.ano;
         document.getElementById('modal-gravadora').textContent = card.dataset.gravadora;
         document.getElementById('modal-duracao').textContent = card.dataset.duracao;
         document.getElementById('modal-capa').src = card.dataset.capa;
 
-        // Define a variável CSS para a imagem de fundo desfocada.
+        //fundo desfocado
         modal.querySelector('.modal-content').style.setProperty('--modal-bg-image', `url('${card.dataset.capa}')`);
         
-        // Preenche o artista como um link clicável
+        //artista clicavel
         const modalArtista = document.getElementById('modal-artista');
         modalArtista.innerHTML = `<a href="#" class="modal-search-link" data-search-term="${card.dataset.artista}">${card.dataset.artista}</a>`;
 
-        // Preenche os gêneros como links clicáveis
+        //generos clicaveis
         const generos = card.dataset.genero.split(',').map(g => g.trim()).filter(g => g);
         const generoDisplay = document.getElementById('modal-genero-display');
-        generoDisplay.innerHTML = '<strong>Gêneros:</strong> '; // Limpa e reinicia
+        generoDisplay.innerHTML = '<strong>Gêneros:</strong> '; //reinicia
         generos.forEach((genero, index) => {
             generoDisplay.innerHTML += `<a href="#" class="modal-search-link" data-search-term="${genero}">${genero}</a>`;
             if (index < generos.length - 1) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Limpa e preenche os formatos disponíveis
+        //limpa e preenche formatos disponiveis
         const formatosList = document.getElementById('modal-formatos');
         formatosList.innerHTML = '';
         const formatos = JSON.parse(card.dataset.formatos);
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
     };
 
-    // Função para fechar o modal
+    //funcao fechar modal
     const closeModal = () => {
         modal.style.opacity = '0';
         modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
@@ -102,18 +102,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     };
 
-    // Event listener para abrir o modal
+    //listener abrir modal
     if (albumGrid) {
         albumGrid.addEventListener('click', function(e) {
             const card = e.target.closest('.album-card');
-            // Não abre o modal se o clique foi no link de editar do admin
+            //nao abre o modal se o clique foi no link de editar do admin
             if (card && !e.target.closest('.edit-link')) {
                 openModal(card);
             }
         });
     }
 
-    // Event listener para fechar o modal
+    //listener fechar modal
     if (modalClose) {
         modalClose.addEventListener('click', closeModal);
     }
@@ -125,17 +125,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Event listener para os links de busca dentro do modal
+    //listener busca modal
     modal.addEventListener('click', function(e) {
         const searchLink = e.target.closest('.modal-search-link');
         if (searchLink) {
-            e.preventDefault(); // Impede que o link '#' navegue
+            e.preventDefault();
             const searchTerm = searchLink.dataset.searchTerm;
             triggerSearch(searchTerm);
         }
     });
 
-    // Event listener para os botões de quantidade (+/-) no modal
+    //listener botoes quant modal
     modal.addEventListener('click', function(e) {
         const minusBtn = e.target.closest('.quantity-minus');
         const plusBtn = e.target.closest('.quantity-plus');
@@ -155,11 +155,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (plusBtn && currentValue < max) {
             input.value = currentValue + 1;
         }
-        // Dispara o evento 'change' para que qualquer outra lógica que dependa dele funcione
+        //change pra logicas dependentes funcionarem
         input.dispatchEvent(new Event('change', { bubbles: true }));
     });
 
-    // Event listener para adicionar ao carrinho (delegação de evento)
+    //listener add carrinho
     modal.addEventListener('click', function(e) {
         const addButton = e.target.closest('.btn-add-cart-icon');
         if (addButton) {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('formato_tipo', formatoTipo);
             formData.append('quantidade', quantidade);
 
-            // **A CHAMADA CORRIGIDA**
+            //chamada carrinho
             fetch('/ekhos/carrinho/cart_actions.php', {
                 method: 'POST',
                 body: formData
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message); // Feedback simples para o usuário
+                    alert(data.message);
                     closeModal();
                 } else {
                     alert('Erro: ' + data.message);
@@ -195,14 +195,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Fechar modal com a tecla Esc
+    //fechar modal esc
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.style.display === 'flex') {
             closeModal();
         }
     });
 
-    // --- FUNCIONALIDADE DE BUSCA EM TEMPO REAL ---
+    //busca tempo real
     searchBar.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase().trim();
         const albumCards = albumGrid.querySelectorAll('.album-card');
@@ -213,9 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const genre = card.dataset.genero.toLowerCase();
 
             if (title.includes(searchTerm) || artist.includes(searchTerm) || genre.includes(searchTerm)) {
-                card.style.display = 'block'; // Mostra o card
+                card.style.display = 'block'; //mostra card
             } else {
-                card.style.display = 'none'; // Oculta o card
+                card.style.display = 'none'; //oculta card
             }
         });
     });

@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 echo '<h1>Teste de Conexão com MongoDB</h1>';
 
-// Inclui o autoloader do Composer para carregar a biblioteca do MongoDB
+//inclui o autoloader do Composer para carregar a biblioteca do MongoDB
 require_once __DIR__ . '/vendor/autoload.php';
 
-// String de conexão padrão para um MongoDB local.
-// Altere se o seu MongoDB estiver em um host ou porta diferente.
+//string de conexão padrão para um MongoDB local.
+//altere se o seu MongoDB estiver em um host ou porta diferente.
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
 
 try {
-    // Cria um novo cliente e conecta ao servidor
+    //cria um novo cliente e conecta ao servidor
     $client = new MongoDB\Client($mongoUri);
 
     echo "<p style='color: green;'>Conexão com o servidor MongoDB estabelecida com sucesso!</p>";
 
-    // Seleciona o banco de dados
+    //seleciona o banco de dados
     $database = $client->selectDatabase($dbName);
     echo "<p>Banco de dados '<strong>" . htmlspecialchars($dbName) . "</strong>' selecionado.</p>";
 
-    // Lista as coleções para verificar o acesso
+    //lista as coleções para verificar o acesso
     $collections = $database->listCollectionNames();
 
     $collectionNames = iterator_to_array($collections);
@@ -36,7 +36,7 @@ try {
             echo "<li>";
             echo "<strong>" . htmlspecialchars($collectionName) . "</strong>";
             
-            // Busca e exibe até 5 documentos de cada coleção
+            //busca e exibe documentos de cada colecao
             $collection = $database->selectCollection($collectionName);
             $documents = $collection->find([], ['limit' => 5]);
             

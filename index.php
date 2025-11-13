@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Inicia a sessão para poder ler as mensagens de feedback
+//inicia sessao e feedback
 session_start();
 $message = $_SESSION['message'] ?? null;
 unset($_SESSION['message']);

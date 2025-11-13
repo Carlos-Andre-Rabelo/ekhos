@@ -3,27 +3,22 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
-// Protege a página: apenas clientes logados podem processar um endereço.
+//ve se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
 }
 
-// Verifica se o método é POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    // Redireciona para a página de cadastro se não for POST
     header('Location: cadastrar_endereco.php');
     exit;
 }
 
-// Validação dos dados recebidos
 $nome_bairro = trim($_POST['nome_bairro'] ?? '');
 $logradouro = trim($_POST['logradouro'] ?? '');
 $numero = trim($_POST['numero'] ?? '');
 
 if (empty($nome_bairro) || empty($logradouro) || empty($numero) || !is_numeric($numero)) {
-    // Idealmente, aqui teríamos uma mensagem de erro para o usuário.
-    // Por simplicidade, vamos apenas redirecionar de volta.
     header('Location: cadastrar_endereco.php?error=invalid_data');
     exit;
 }
@@ -33,6 +28,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $mongoUri = "mongodb://127.0.0.1:27017";
 $dbName = "CDs_&_vinil";
 
+//salva no mongo
 try {
     $client = new MongoDB\Client($mongoUri);
     $collection = $client->selectDatabase($dbName)->selectCollection('clientes');
@@ -44,25 +40,20 @@ try {
             'endereco' => [
                 'nome_bairro' => $nome_bairro,
                 'logradouro' => $logradouro,
-                'numero' => (int)$numero, // Armazena como inteiro
+                'numero' => (int)$numero,
             ]
         ]]
     );
 
     if ($updateResult->getModifiedCount() === 1 || $updateResult->getMatchedCount() === 1) {
-        // Sucesso! Redireciona para o checkout.
         header('Location: checkout.php');
         exit;
     } else {
-        // O usuário existe, mas o endereço não foi atualizado.
-        // Pode ser que os dados sejam os mesmos.
-        // Ainda assim, redirecionamos para o checkout.
         header('Location: checkout.php');
         exit;
     }
 
 } catch (Exception $e) {
-    // Em caso de erro de banco de dados, redireciona com uma mensagem de erro.
     header('Location: cadastrar_endereco.php?error=db_error');
     exit;
 }

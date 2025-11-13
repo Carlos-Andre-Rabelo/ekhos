@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
+//confere se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;
@@ -21,21 +22,21 @@ $client = new MongoDB\Client($mongoUri);
 $userId = (int)$_SESSION['user_id'];
 $errorMessage = null;
 $successMessage = null;
-$purchasedItemsDetails = []; // Para guardar os detalhes dos itens para exibição
+$purchasedItemsDetails = [];//info itens pra exibir
 $valorTotal = 0.0;
 
 try {
     $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
     $albunsCollection = $client->selectDatabase($dbName)->selectCollection('albuns');
 
-    // 1. Buscar o cliente e seu carrinho
+    //cliente e carrinho
     $cliente = $clientesCollection->findOne(['_id' => $userId]);
     if (!$cliente || empty($cliente['carrinho'])) {
         throw new Exception("Seu carrinho está vazio ou usuário não foi encontrado.");
     }
     $carrinho = $cliente['carrinho']->bsonSerialize();
 
-    // --- PRE-CHECK DE ESTOQUE ---
+    //checagem estoque
     $cartDetailsForPurchase = [];
     
     foreach ($carrinho as $item) {
@@ -71,7 +72,6 @@ try {
         $subtotal = $precoItem * $quantidadeComprada;
         $valorTotal += $subtotal;
 
-        // Guarda os detalhes para usar depois
         $cartDetailsForPurchase[] = [
             'album_id' => $albumId,
             'formato_tipo' => $formatoTipo,
@@ -83,12 +83,9 @@ try {
         ];
     }
 
-    // --- FIM DO PRE-CHECK ---
-
-    // Se chegou aqui, há estoque para todos. Agora, processar a compra.
     $itensCompradosParaSalvar = [];
 
-    // 2. Iterar sobre os itens do carrinho para decrementar o estoque
+    //tirar do estoque
     foreach ($cartDetailsForPurchase as $item) {
         $updateResult = $albunsCollection->updateOne(
             [
@@ -98,12 +95,7 @@ try {
             ['$inc' => ['formatos.$.quantidade_estoque' => -$item['quantidade']]]
         );
 
-        if ($updateResult->getModifiedCount() === 0) {
-            // Esta exceção não deve ocorrer por causa do pre-check, mas é uma segurança.
-            throw new Exception("Falha ao atualizar o estoque para o item: " . $item['titulo']);
-        }
-
-        // Prepara o array para salvar no histórico de compras
+        //salvar hist
         $itensCompradosParaSalvar[] = [
             'album_id' => $item['album_id'],
             'tipo_formato' => $item['formato_tipo'],
@@ -112,10 +104,9 @@ try {
         ];
     }
     
-    // Atribui os detalhes para a view
     $purchasedItemsDetails = $cartDetailsForPurchase;
 
-    // 3. Criar o novo registro de compra
+    //criar registro compra
     $compraId = new MongoDB\BSON\ObjectId();
     $novaCompra = [
         '_id' => $compraId,
@@ -124,7 +115,7 @@ try {
         'itens_comprados' => $itensCompradosParaSalvar
     ];
 
-    // 4. Adicionar a compra ao histórico do cliente e limpar o carrinho
+    //add compra hist e limpa carrinho
     $clientesCollection->updateOne(
         ['_id' => $userId],
         [
@@ -133,7 +124,6 @@ try {
         ]
     );
 
-    // 5. Sucesso
     $successMessage = "Compra #" . (string)$compraId . " realizada com sucesso! Obrigado por comprar na ēkhos.";
 
 } catch (Exception $e) {

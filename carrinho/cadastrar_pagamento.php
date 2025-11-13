@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
 
-// Protege a página: apenas clientes logados podem cadastrar um cartão.
+//ve se eh cliente
 if (!is_client()) {
     header('Location: /ekhos/login/login.php');
     exit;

@@ -34,7 +34,7 @@ try {
     $database = $client->selectDatabase($dbName);
     $collection = $database->selectCollection('clientes');
 
-    // Verifica se o email já existe
+    //ve se ja tem email
     $existingUser = $collection->findOne(['email_cliente' => $email]);
     if ($existingUser) {
         $_SESSION['message'] = ['type' => 'error', 'text' => 'Este email já está cadastrado.'];
@@ -42,7 +42,7 @@ try {
         exit;
     }
 
-    // Gera um novo _id inteiro para o cliente
+    //id int cliente
     $maxId = 0;
     $lastUser = $collection->findOne([], ['sort' => ['_id' => -1]]);
     if ($lastUser) {
@@ -50,10 +50,10 @@ try {
     }
     $newId = $maxId + 1;
 
-    // Criptografa a senha
+    //cripto
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Cria o novo usuário com uma estrutura base completa, porém com campos vazios.
+    //cria novo user
     $newUser = [
         '_id' => $newId,
         'nome_cliente' => $name,
@@ -61,9 +61,8 @@ try {
         'senha_cliente' => $hashedPassword,
         'telefones' => [],
         'compras' => [],
-        'endereco' => new stdClass(), // Cria um objeto JSON vazio: {}
+        'endereco' => new stdClass(),
         'carrinho' => [],
-        'role' => 'client', // Adiciona o papel padrão para novos usuários
     ];
 
     $collection->insertOne($newUser);
