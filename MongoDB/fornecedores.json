@@ -1,8 +1,75 @@
-[
-  { "_id": 92384739000131, "nome_fornecedor": "Audio Raiz", "email_fornecedor": "audio.raiz@gmail.com", "telefones": [21993756473] },
-  { "_id": 28746295000154, "nome_fornecedor": "Bau Musical", "email_fornecedor": "baumusical@yahoo.com", "telefones": [51998928347] },
-  { "_id": 58374624000133, "nome_fornecedor": "Groove Central", "email_fornecedor": "groovecentral@hotmail.com", "telefones": [85999273645] },
-  { "_id": 13454487000145, "nome_fornecedor": "Acervo Sonoro", "email_fornecedor": "acervo.sonoro@hotmail.com", "telefones": [11998626642, 11999532427] },
-  { "_id": 43785625000154, "nome_fornecedor": "Melodia Urbana", "email_fornecedor": "melodia.urbana@gmail.com", "telefones": [31992052738] },
-  { "_id": 34845837000176, "nome_fornecedor": "Fita e Agulha", "email_fornecedor": "fitaeagulha@gmail.com", "telefones": [61998237462] }
-]
+[{
+  "_id": {
+    "$numberLong": "92384739000131"
+  },
+  "nome_fornecedor": "Audio Raiz",
+  "email_fornecedor": "audio.raiz@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "21993756473"
+    }
+  ]
+},
+{
+  "_id": {
+    "$numberLong": "28746295000154"
+  },
+  "nome_fornecedor": "Bau Musical",
+  "email_fornecedor": "baumusical@yahoo.com",
+  "telefones": [
+    {
+      "$numberLong": "51998928347"
+    }
+  ]
+},
+{
+  "_id": {
+    "$numberLong": "58374624000133"
+  },
+  "nome_fornecedor": "Groove Central",
+  "email_fornecedor": "groovecentral@hotmail.com",
+  "telefones": [
+    {
+      "$numberLong": "85999273645"
+    }
+  ]
+},
+{
+  "_id": {
+    "$numberLong": "13454487000145"
+  },
+  "nome_fornecedor": "Acervo Sonoro",
+  "email_fornecedor": "acervo.sonoro@hotmail.com",
+  "telefones": [
+    {
+      "$numberLong": "11998626642"
+    },
+    {
+      "$numberLong": "11999532427"
+    }
+  ]
+},
+{
+  "_id": {
+    "$numberLong": "43785625000154"
+  },
+  "nome_fornecedor": "Melodia Urbana",
+  "email_fornecedor": "melodia.urbana@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "31992052738"
+    }
+  ]
+},
+{
+  "_id": {
+    "$numberLong": "34845837000176"
+  },
+  "nome_fornecedor": "Fita e Agulha",
+  "email_fornecedor": "fitaeagulha@gmail.com",
+  "telefones": [
+    {
+      "$numberLong": "61998237462"
+    }
+  ]
+}]

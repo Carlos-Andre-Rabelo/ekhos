@@ -735,7 +735,7 @@
   "_id": 22,
   "titulo_album": "Let Go",
   "data_lancamento": {
-    "$date": "2022-06-04T00:00:00.000Z"
+    "$date": "2022-06-03T22:00:00.000Z"
   },
   "imagens_capas": [
     "imagens/690916efe5874-Capa_de_Let_Go_(2002).jpg"
@@ -753,12 +753,7 @@
     {
       "tipo": "cd",
       "preco": 59.9,
-      "quantidade_estoque": 4,
-      "fornecedores_cnpjs": [
-        {
-          "$numberLong": "34845837000176"
-        }
-      ]
+      "quantidade_estoque": 4
     }
   ]
 },
@@ -1391,6 +1386,40 @@
           "$numberLong": "13454487000145"
         }
       ]
+    }
+  ]
+},
+{
+  "_id": 37,
+  "titulo_album": "Imaginal Disk",
+  "gravadora_id": 11,
+  "data_lancamento": {
+    "$date": "2024-08-22T22:00:00.000Z"
+  },
+  "imagens_capas": [
+    "imagens/6914c682e2a99-ab67616d0000b2735a2ff617de4e51a9a214b56a.jpg"
+  ],
+  "numero_faixas": 15,
+  "duracao": "00:53:42",
+  "artistas_ids": [
+    39
+  ],
+  "generos_ids": [
+    4,
+    1,
+    12,
+    11
+  ],
+  "formatos": [
+    {
+      "tipo": "cd",
+      "preco": 189.9,
+      "quantidade_estoque": 3
+    },
+    {
+      "tipo": "vinil_10",
+      "preco": 439.9,
+      "quantidade_estoque": 2
     }
   ]
 }]

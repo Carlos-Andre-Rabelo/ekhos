@@ -1,12 +1,55 @@
-[
-  { "_id": 1, "nome_gravadora": "Warner Records", "email_gravadora": "warner.records@wmg.com" },
-  { "_id": 2, "nome_gravadora": "Atlantic Recording", "email_gravadora": "atlantic.recording@arc.com" },
-  { "_id": 3, "nome_gravadora": "Universal Music", "email_gravadora": "universal.music@um.com" },
-  { "_id": 4, "nome_gravadora": "Sony Music", "email_gravadora": "sony.music@sm.com" },
-  { "_id": 5, "nome_gravadora": "Interscope Records", "email_gravadora": "interscope.records@ir.com" },
-  { "_id": 6, "nome_gravadora": "Clairo Records", "email_gravadora": "clairo.records@cr.com" },
-  { "_id": 7, "nome_gravadora": "MJJ Productions", "email_gravadora": "michael.jackson.productions@mjj.com" },
-  { "_id": 8, "nome_gravadora": "Capitol Records", "email_gravadora": "capitol.records@umg.com" },
-  { "_id": 9, "nome_gravadora": "Columbia Records", "email_gravadora": "columbia.records@columbia.com" },
-  { "_id": 10, "nome_gravadora": "Dead Oceans", "email_gravadora": "dead.oceans@doceans.com" }
-]
+[{
+  "_id": 1,
+  "nome_gravadora": "Warner Records",
+  "email_gravadora": "warner.records@wmg.com"
+},
+{
+  "_id": 2,
+  "nome_gravadora": "Atlantic Recording",
+  "email_gravadora": "atlantic.recording@arc.com"
+},
+{
+  "_id": 3,
+  "nome_gravadora": "Universal Music",
+  "email_gravadora": "universal.music@um.com"
+},
+{
+  "_id": 4,
+  "nome_gravadora": "Sony Music",
+  "email_gravadora": "sony.music@sm.com"
+},
+{
+  "_id": 5,
+  "nome_gravadora": "Interscope Records",
+  "email_gravadora": "interscope.records@ir.com"
+},
+{
+  "_id": 6,
+  "nome_gravadora": "Clairo Records",
+  "email_gravadora": "clairo.records@cr.com"
+},
+{
+  "_id": 7,
+  "nome_gravadora": "MJJ Productions",
+  "email_gravadora": "michael.jackson.productions@mjj.com"
+},
+{
+  "_id": 8,
+  "nome_gravadora": "Capitol Records",
+  "email_gravadora": "capitol.records@umg.com"
+},
+{
+  "_id": 9,
+  "nome_gravadora": "Columbia Records",
+  "email_gravadora": "columbia.records@columbia.com"
+},
+{
+  "_id": 10,
+  "nome_gravadora": "Dead Oceans",
+  "email_gravadora": "dead.oceans@doceans.com"
+},
+{
+  "_id": 11,
+  "nome_gravadora": "Mom+Pop",
+  "email_gravadora": "mompop@mp.com"
+}]
