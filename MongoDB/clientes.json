@@ -472,11 +472,11 @@
 },
 {
   "_id": {
-    "$numberLong": "72596754676"
+    "$numberLong": "72596754677"
   },
-  "nome_cliente": "novapessoa",
-  "email_cliente": "novapessoa@gmail.com",
-  "senha_cliente": "$2y$10$dnb4YYtRu4a7bc9O8vxOCuT26A2tyMRXAel0LMdSihLdLM.TcXREG",
+  "nome_cliente": "pessoanova",
+  "email_cliente": "pessoanova@gmail.com",
+  "senha_cliente": "$2y$10$ifTdA74qoMwXCIvub2CE.upTuk8PuW7KZJuUduDTAJIxoFhAa7.H6",
   "telefones": [],
   "compras": [],
   "endereco": {},
