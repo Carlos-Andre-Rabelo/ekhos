@@ -314,7 +314,7 @@ main {
     background-image: var(--modal-bg-image);
     background-size: cover;
     background-position: center;
-    filter: blur(100px);
+    filter: blur(75px);
     background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
     z-index: -1;
