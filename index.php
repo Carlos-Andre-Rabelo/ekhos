@@ -237,6 +237,9 @@ try {
         <p>&copy; <?= date('Y') ?> ēkhos</p>
     </footer>
 
+    <!-- Contêiner para as notificações flutuantes (toasts) -->
+    <div id="toast-container"></div>
+
     <script src="script.js"></script>
 
 </body>

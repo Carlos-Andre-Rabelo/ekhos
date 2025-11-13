@@ -314,7 +314,7 @@ main {
     background-image: var(--modal-bg-image);
     background-size: cover;
     background-position: center;
-    filter: blur(100px);
+    filter: blur(75px);
     background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
     z-index: -1;
@@ -415,13 +415,13 @@ main {
 }
 
 .quantidade-input {
-    width: 60px;
     padding: 0.6rem;
     font-size: 1rem;
     text-align: center;
     border-radius: 6px;
-    border: 1px solid var(--cor-borda);
-    background-color: #2a2a2a;
+    /* Alterado para fundo semitransparente e sem borda */
+    border: none;
+    background-color: rgba(0, 0, 0, 0.2);
     color: var(--cor-texto-principal);
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -429,7 +429,7 @@ main {
 
 .quantidade-input:focus {
     border-color: var(--cor-texto-principal);
-}
+} 
 
 .btn-add-cart-icon {
     background-color: var(--cor-primaria);
@@ -484,8 +484,9 @@ main {
 }
 
 .quantity-btn {
-    background-color: #3a3a3a;
-    border: 1px solid var(--cor-borda);
+    /* Alterado para fundo semitransparente e sem borda */
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
     color: var(--cor-texto-principal);
     cursor: pointer;
     width: 32px;
@@ -501,7 +502,7 @@ main {
 }
 
 .quantity-btn:hover {
-    background-color: #4a4a4a;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .quantity-btn:active {
@@ -509,7 +510,7 @@ main {
 }
 
 .quantity-control .quantidade-input {
-    width: 50px; /* Largura menor para o input */
+    width: 60px; /* Largura menor para o input */
 }
 /* --- Rodapé --- */
 footer {
@@ -1085,5 +1086,73 @@ input[type=number] {
     
     .remove-formato-btn {
         height: 44px; /* Altura fixa para o botão de remover */
+    }
+}
+
+/* --- Animação do Carrinho --- */
+
+/* Define a animação de "chacoalhar" */
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+    40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+/* Classe que aplica a animação */
+.cart-added {
+    animation: shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    /* Adiciona um brilho sutil para dar mais destaque */
+    background-color: var(--cor-primaria) !important;
+    color: var(--cor-fundo) !important;
+    border-color: var(--cor-primaria) !important;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* --- Notificações Toast --- */
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000; /* Acima do modal */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: var(--cor-superficie);
+    color: var(--cor-texto-principal);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-left: 5px solid;
+    min-width: 300px;
+    opacity: 0;
+    animation: slideInAndOut 4s ease-out forwards;
+}
+
+.toast.success {
+    border-color: var(--cor-primaria);
+}
+
+.toast.error {
+    border-color: var(--cor-secundaria);
+}
+
+@keyframes slideInAndOut {
+    0% {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+    10%, 80% { /* Fica visível por um tempo */
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(110%);
+        opacity: 0;
     }
 }

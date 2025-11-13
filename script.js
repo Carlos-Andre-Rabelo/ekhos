@@ -6,6 +6,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const userRole = body.dataset.userRole;
 
+    // --- Função para criar notificações Toast ---
+    const showToast = (message, type = 'success') => {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+
+        container.appendChild(toast);
+
+        // Remove o toast após a animação terminar (4 segundos)
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
+    };
+
     // Função auxiliar para acionar a busca (movida para o escopo global do script)
     const triggerSearch = (term) => {
         closeModal();
@@ -182,10 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message); // Feedback simples para o usuário
-                    closeModal();
+                    // Exibe a notificação de sucesso sem fechar o modal
+                    showToast(data.message);
                 } else {
-                    alert('Erro: ' + data.message);
+                    // Exibe a notificação de erro
+                    showToast('Erro: ' + data.message, 'error');
                 }
             })
             .catch(error => {
