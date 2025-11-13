@@ -183,7 +183,7 @@ try {
                         <span>Total</span>
                         <span id="summary-total"><?= 'R$ ' . number_format($totalGeral, 2, ',', '.') ?></span>
                     </div>
-                    <button class="btn-checkout">Finalizar Compra</button>
+                    <a href="/ekhos/carrinho/cadastrar_pagamento.php" class="btn-checkout">Ir para o Pagamento</a>
                     <a href="/ekhos/index.php" class="continue-shopping-link">Continuar comprando</a>
                 </div>
             </div>
