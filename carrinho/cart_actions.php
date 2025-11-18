@@ -38,13 +38,9 @@ if (($action === 'add' || $action === 'update_quantity') && (!$quantidade || $qu
     exit;
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+require_once __DIR__ . '/../db_connect.php';
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
     $albunsCollection = $database->selectCollection('albuns');
     $clientesCollection = $database->selectCollection('clientes');
 

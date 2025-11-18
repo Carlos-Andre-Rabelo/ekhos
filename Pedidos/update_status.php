@@ -29,15 +29,11 @@ if (!$pedidoId || !$novoStatus || !in_array($novoStatus, $validStatuses)) {
     exit;
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+require_once __DIR__ . '/../db_connect.php';
 
 try {
-    $client = new MongoDB\Client($mongoUri);
     // A coleção a ser atualizada é 'clientes', pois as compras estão dentro dela.
-    $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
+    $clientesCollection = $database->selectCollection('clientes');
 
     // O _id da compra é um objeto ObjectId.
     // Precisamos criar um objeto ObjectId a partir da string recebida.

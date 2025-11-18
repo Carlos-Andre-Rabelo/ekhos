@@ -13,10 +13,8 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../db_connect.php';
 
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 $cartItems = [];
 $totalGeral = 0;
 $errorMessage = null;
@@ -27,8 +25,6 @@ unset($_SESSION['checkout_error']); // Limpa a mensagem para não exibir novamen
 
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
     $clientesCollection = $database->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
 

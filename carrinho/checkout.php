@@ -13,18 +13,13 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+require_once __DIR__ . '/../db_connect.php';
 $errorMessage = null;
 $cliente = null;
 $cartItems = [];
 $totalGeral = 0;
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
     $clientesCollection = $database->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
 

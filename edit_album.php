@@ -13,10 +13,8 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/db_connect.php';
 
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 $message = null;
 $album = null;
 $albumId = $_GET['id'] ?? null;
@@ -31,8 +29,6 @@ try {
     // Verifica se é uma requisição AJAX antes de qualquer outra coisa.
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
-        $client = new MongoDB\Client($mongoUri);
-        $database = $client->selectDatabase($dbName);
         $action = $_POST['action'] ?? null;
 
         try {
@@ -104,8 +100,6 @@ try {
     }
 
     // --- LÓGICA PARA CARREGAMENTO DA PÁGINA (GET) E SUBMISSÃO DO FORMULÁRIO PRINCIPAL (POST) ---
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
     $albunsCollection = $database->selectCollection('albuns');
 
     // Buscar dados para preencher os selects do formulário

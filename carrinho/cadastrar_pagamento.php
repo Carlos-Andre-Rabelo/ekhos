@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
-require_once __DIR__ . '/../vendor/autoload.php';
 
 /*
  * AVISO DE SEGURANÇA:
@@ -18,14 +17,12 @@ if (!is_client()) {
     exit;
 }
 
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+require_once __DIR__ . '/../db_connect.php';
 
 $action = $_GET['action'] ?? null;
 // Verifica se o cliente já possui um cartão para pular esta etapa
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
+    $clientesCollection = $database->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
     $cliente = $clientesCollection->findOne(['_id' => $userId], ['projection' => ['cartao' => 1]]);
 
@@ -64,8 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'last_updated' => new MongoDB\BSON\UTCDateTime()
         ];
 
-        $client = new MongoDB\Client("mongodb://127.0.0.1:27017");
-        $clientesCollection = $client->selectDatabase('CDs_&_vinil')->selectCollection('clientes');
+        $clientesCollection = $database->selectCollection('clientes');
 
         $clientesCollection->updateOne(
             ['_id' => $userId],
@@ -79,14 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: cadastrar_pagamento.php?error=db_error');
         exit;
     }
-}
-
-require_once __DIR__ . '/../login/sessao.php';
-
-// Protege a página: apenas clientes logados podem cadastrar um cartão.
-if (!is_client()) {
-    header('Location: /ekhos/login/login.php');
-    exit;
 }
 
 $errorMessage = $_GET['error'] ?? null;

@@ -9,10 +9,8 @@ if (!is_client()) {
     exit;
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../db_connect.php';
 
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 $errorMessage = $_GET['error'] ?? null;
 
 // Processa o formulário quando enviado via POST
@@ -27,8 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $client = new MongoDB\Client($mongoUri);
-        $collection = $client->selectDatabase($dbName)->selectCollection('clientes');
+        $collection = $database->selectCollection('clientes');
         $userId = (int)$_SESSION['user_id'];
 
         $collection->updateOne(
@@ -51,20 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require_once __DIR__ . '/../login/sessao.php';
-
-// Protege a página: apenas clientes logados podem cadastrar um endereço.
-if (!is_client()) {
-    header('Location: /ekhos/login/login.php');
-    exit;
-}
-
 // Se o usuário já tiver um endereço, redireciona para o checkout.
 // (Esta é uma verificação adicional para evitar que acessem a página diretamente sem necessidade)
 $action = $_GET['action'] ?? null;
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
+    $clientesCollection = $database->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
     $cliente = $clientesCollection->findOne(['_id' => $userId]);
     if ($action !== 'change' && $cliente && !empty((array)$cliente['endereco'])) {

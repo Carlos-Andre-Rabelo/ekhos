@@ -13,25 +13,14 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-//define uri e nome do banco
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+// Inclui o arquivo de conexão centralizado.
+// A variável $database já estará disponível para uso.
+require_once __DIR__ . '/db_connect.php';
+
 $albuns = [];
 $errorMessage = null;
 
 try {
-    //carrega autoloader do composer
-    require_once __DIR__ . '/vendor/autoload.php';
-
-    //verifica se o cliente mongodb existe
-    if (!class_exists('MongoDB\Client')) {
-        throw new Exception("Classe MongoDB\Client não encontrada. Verifique a extensão do MongoDB e o autoload do Composer.");
-    }
-
-    //conecta no mongodb
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
-
     //collection principal = albuns
     $albunsCollection = $database->selectCollection('albuns');
 

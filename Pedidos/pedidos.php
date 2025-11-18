@@ -7,10 +7,8 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../db_connect.php';
 
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 $pedidos = [];
 $errorMessage = null;
 $isAdminView = is_admin();
@@ -22,8 +20,6 @@ if (!$isAdminView && !is_client()) {
 }
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
     $clientesCollection = $database->selectCollection('clientes');
 
     if ($isAdminView) {

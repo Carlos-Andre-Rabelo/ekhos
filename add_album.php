@@ -13,16 +13,10 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/vendor/autoload.php';
-
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+require_once __DIR__ . '/db_connect.php';
 $message = null;
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
-
     // Buscar dados para preencher os selects do formulário
     // Esta parte agora sempre executa, pois a página só serve para adicionar álbuns
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || ($_POST['action'] ?? '') === 'add_album') {
