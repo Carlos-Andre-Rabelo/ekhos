@@ -1,0 +1,121 @@
+/* Container principal da página de pedidos */
+.orders-page-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Cabeçalho da página (Título e botão de voltar) */
+.orders-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.orders-header h1 {
+    font-size: 2rem;
+    color: var(--cor-texto-principal);
+    margin: 0;
+}
+
+/* Estilo para o botão de voltar, herdado de style.css */
+.orders-header .back-link {
+    flex-shrink: 0; /* Impede que o botão encolha */
+}
+
+/* Mensagem para quando não há pedidos */
+.orders-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: var(--cor-superficie);
+    border-radius: 12px;
+    border: 1px solid var(--cor-borda);
+}
+
+.orders-empty p {
+    font-size: 1.2rem;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 1.5rem;
+}
+
+/* Lista de cards de pedido */
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Card individual de um pedido */
+.order-card {
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Cabeçalho do card (Número, data e status) */
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--cor-borda);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.order-card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--cor-texto-principal);
+}
+
+.order-card-header p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+}
+
+.order-status {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+    font-weight: 600;
+}
+
+/* Corpo do card (lista de itens) */
+.order-card-body { padding: 1.5rem; }
+.order-card-body h4 { margin-top: 0; margin-bottom: 1rem; }
+.order-items-list { list-style: none; padding: 0; margin: 0; }
+.order-items-list li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--cor-borda); }
+.order-items-list li:last-child { border-bottom: none; }
+.item-info { color: var(--cor-texto-secundario); }
+.item-subtotal { font-weight: 600; }
+
+/* Rodapé do card (Endereço e total) */
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 1rem 1.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--cor-borda);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.order-address { font-size: 0.9rem; color: var(--cor-texto-secundario); }
+.order-address p { margin: 0.2rem 0 0 0; }
+.order-total { text-align: right; }
+.order-total strong { font-size: 1.3rem; color: var(--cor-texto-principal); }

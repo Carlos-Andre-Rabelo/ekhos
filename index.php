@@ -138,10 +138,12 @@ try {
             <?php if (is_logged_in()): ?>
                 <?php if (is_admin()): ?>
                     <!--administrador-->
-                    <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
+                    <a href="/ekhos/Pedidos/pedidos.php" class="btn-header">Pedidos</a>
+                    <a href="add_album.php" class="btn-header">+ Adicionar Álbum</a>
                 <?php else: ?>
                     <!--cliente -->
-                    <a href="carrinho/carrinho.php" class="btn-header">Meu Carrinho</a>
+                    <a href="pedidos/pedidos.php" class="btn-header">Meus Pedidos</a>
+                    <a href="carrinho/carrinho.php" class="btn-header btn-cart">Meu Carrinho</a>
                 <?php endif; ?>
 
                 <!--info usuario e logout (para todos logados)-->

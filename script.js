@@ -1,3 +1,20 @@
+// --- Função para criar notificações Toast (movida para o escopo global) ---
+const showToast = (message, type = 'success') => {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    // Remove o toast após a animação terminar (4 segundos)
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('album-modal');
     const modalClose = modal.querySelector('.modal-close');
@@ -5,23 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const body = document.body;
     const searchBar = document.getElementById('search-bar');
     const userRole = body.dataset.userRole;
-
-    // --- Função para criar notificações Toast ---
-    const showToast = (message, type = 'success') => {
-        const container = document.getElementById('toast-container');
-        if (!container) return;
-
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-
-        container.appendChild(toast);
-
-        // Remove o toast após a animação terminar (4 segundos)
-        setTimeout(() => {
-            toast.remove();
-        }, 4000);
-    };
 
     // Função auxiliar para acionar a busca (movida para o escopo global do script)
     const triggerSearch = (term) => {
