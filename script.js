@@ -31,6 +31,42 @@ document.addEventListener('DOMContentLoaded', function() {
         searchBar.dispatchEvent(new Event('input', { bubbles: true }));
     };
 
+    // --- Lógica de verificação de estoque e carrinho ---
+    let userCart = {}; // Armazena o estado do carrinho do usuário
+
+    // Função para buscar o estado atual do carrinho do usuário via AJAX
+    const fetchCartState = async () => {
+        if (userRole !== 'client') return;
+        try {
+            const response = await fetch('/ekhos/carrinho/cart_actions.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=get_cart_state'
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                userCart = data.cart;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar estado do carrinho:', error);
+        }
+    };
+
+    // Função para atualizar o estado do botão de adicionar ao carrinho
+    const atualizarEstadoBotao = (li) => {
+        const addButton = li.querySelector('.btn-add-cart-icon');
+        const input = li.querySelector('.quantidade-input');
+        if (!addButton || !input) return;
+
+        const albumId = addButton.dataset.albumId;
+        const formatoTipo = addButton.dataset.formatoTipo;
+        const quantidadeDesejada = parseInt(input.value, 10);
+        const estoqueDisponivel = parseInt(input.max, 10);
+        const quantidadeNoCarrinho = userCart[`${albumId}-${formatoTipo}`] || 0;
+
+        addButton.disabled = (quantidadeNoCarrinho + quantidadeDesejada) > estoqueDisponivel;
+    };
+
     // Função para abrir o modal
     const openModal = (card) => {
         // Preenche os dados básicos do modal
@@ -99,6 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${actionHtml}
             `;
             formatosList.appendChild(li);
+
+            if (userRole === 'client' && !isOutOfStock) {
+                atualizarEstadoBotao(li);
+            }
         });
 
         modal.style.display = 'flex';
@@ -108,6 +148,11 @@ document.addEventListener('DOMContentLoaded', function() {
             body.classList.add('modal-open');
         }, 10);
     };
+
+    // Busca o estado do carrinho assim que a página carrega, se for cliente
+    if (userRole === 'client') {
+        fetchCartState();
+    }
 
     // Função para fechar o modal
     const closeModal = () => {
@@ -172,8 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (plusBtn && currentValue < max) {
             input.value = currentValue + 1;
         }
-        // Dispara o evento 'change' para que qualquer outra lógica que dependa dele funcione
-        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // Atualiza o estado do botão de adicionar ao carrinho
+        const li = e.target.closest('li');
+        if(li) atualizarEstadoBotao(li);
     });
 
     // Event listener para adicionar ao carrinho (delegação de evento)
@@ -201,6 +248,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.status === 'success') {
                     // Exibe a notificação de sucesso sem fechar o modal
                     showToast(data.message);
+                    // Atualiza o estado do carrinho local e o estado do botão
+                    fetchCartState().then(() => {
+                        const li = addButton.closest('li');
+                        if(li) atualizarEstadoBotao(li);
+                    });
                 } else {
                     // Exibe a notificação de erro
                     showToast('Erro: ' + data.message, 'error');

@@ -314,7 +314,7 @@ main {
     background-image: var(--modal-bg-image);
     background-size: cover;
     background-position: center;
-    filter: blur(75px);
+    filter: blur(85px);
     background-color: rgba(0, 0, 0, 0.3);
     background-blend-mode: overlay;
     z-index: -1;
@@ -448,6 +448,15 @@ main {
 .btn-add-cart-icon:hover {
     background-color: rgba(var(--cor-primaria-rgb), 0.85);
     transform: scale(1.1);
+}
+
+/* Estilo para o botão de adicionar ao carrinho desabilitado */
+.btn-add-cart-icon:disabled {
+    background-color: #555; /* Cor cinza para indicar inatividade */
+    color: #888;
+    cursor: not-allowed; /* Cursor que indica que a ação não é permitida */
+    transform: none; /* Remove qualquer transformação de hover/active */
+    box-shadow: none;
 }
 
 .btn-add-cart-icon svg {

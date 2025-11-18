@@ -2,6 +2,66 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../login/sessao.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+/*
+ * AVISO DE SEGURANÇA:
+ * Armazenar chaves de criptografia diretamente no código não é seguro para produção.
+ * Em um ambiente real, use variáveis de ambiente ou um serviço de gerenciamento de segredos.
+ */
+define('ENCRYPTION_KEY', 'e0d1f2c3b4a5968778695a4b3c2d1e0f1f2e3d4c5b6a798897a6b5c4d3e2f10e');
+define('ENCRYPTION_CIPHER', 'aes-256-cbc');
+
+// Protege a página: apenas clientes logados podem cadastrar um cartão.
+if (!is_client()) {
+    header('Location: /ekhos/login/login.php');
+    exit;
+}
+
+// Processa o formulário quando enviado via POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $numero_cartao = $_POST['numero_cartao'] ?? '';
+    $nome_titular = $_POST['nome_titular'] ?? '';
+    $data_validade = $_POST['data_validade'] ?? '';
+    $cvv = $_POST['cvv'] ?? '';
+
+    if (empty($numero_cartao) || !preg_match('/^\d{16}$/', $numero_cartao) || empty($nome_titular) || !preg_match('/^(0[1-9]|1[0-2])\/\d{2}$/', $data_validade) || empty($cvv) || !preg_match('/^\d{3,4}$/', $cvv)) {
+        header('Location: cadastrar_pagamento.php?error=invalid_data');
+        exit;
+    }
+
+    try {
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(ENCRYPTION_CIPHER));
+        $encrypted_numero = base64_encode($iv . openssl_encrypt($numero_cartao, ENCRYPTION_CIPHER, ENCRYPTION_KEY, 0, $iv));
+        $encrypted_cvv = base64_encode($iv . openssl_encrypt($cvv, ENCRYPTION_CIPHER, ENCRYPTION_KEY, 0, $iv));
+
+        $userId = (int)$_SESSION['user_id'];
+        $cartaoData = [
+            'numero_cartao_encrypted' => $encrypted_numero,
+            'nome_titular' => $nome_titular,
+            'data_validade' => $data_validade,
+            'cvv_encrypted' => $encrypted_cvv,
+            'last_updated' => new MongoDB\BSON\UTCDateTime()
+        ];
+
+        $client = new MongoDB\Client("mongodb://127.0.0.1:27017");
+        $clientesCollection = $client->selectDatabase('CDs_&_vinil')->selectCollection('clientes');
+
+        $clientesCollection->updateOne(
+            ['_id' => $userId],
+            ['$set' => ['cartao' => $cartaoData]]
+        );
+
+        header('Location: checkout.php');
+        exit;
+
+    } catch (Exception $e) {
+        header('Location: cadastrar_pagamento.php?error=db_error');
+        exit;
+    }
+}
+
+require_once __DIR__ . '/../login/sessao.php';
 
 // Protege a página: apenas clientes logados podem cadastrar um cartão.
 if (!is_client()) {
@@ -61,7 +121,7 @@ $errorMessage = $_GET['error'] ?? null;
         <p>Você precisa cadastrar um método de pagamento para continuar.</p>
 
         <div class="checkout-container">
-            <form action="processa_pagamento.php" method="POST" class="card-form">
+            <form action="cadastrar_pagamento.php" method="POST" class="card-form">
                 <?php if ($errorMessage === 'invalid_data'): ?>
                     <div class="error-message-form">
                         Por favor, preencha todos os campos corretamente. O número do cartão deve ter 16 dígitos.

@@ -21,6 +21,11 @@ $cartItems = [];
 $totalGeral = 0;
 $errorMessage = null;
 
+// Verifica se há uma mensagem de erro vinda do checkout
+$checkoutError = $_SESSION['checkout_error'] ?? null;
+unset($_SESSION['checkout_error']); // Limpa a mensagem para não exibir novamente
+
+
 try {
     $client = new MongoDB\Client($mongoUri);
     $database = $client->selectDatabase($dbName);
@@ -116,6 +121,10 @@ try {
 
     <main class="cart-page-container">
         <h1>Meu Carrinho</h1>
+
+        <?php if ($checkoutError): ?>
+            <div class="message error" style="margin-bottom: 1.5rem;"><?= htmlspecialchars($checkoutError) ?></div>
+        <?php endif; ?>
 
         <?php if ($errorMessage): ?>
             <div class="error-message"><?= htmlspecialchars($errorMessage) ?></div>
