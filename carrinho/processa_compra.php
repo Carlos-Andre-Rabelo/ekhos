@@ -27,7 +27,6 @@ try {
     $database = $client->selectDatabase($dbName);
     $clientesCollection = $database->selectCollection('clientes');
     $albunsCollection = $database->selectCollection('albuns');
-    $pedidosCollection = $database->selectCollection('pedidos');
 
     // 1. Buscar os dados do cliente (carrinho e endereço)
     $cliente = $clientesCollection->findOne(['_id' => $userId]);
@@ -78,32 +77,29 @@ try {
 
         // Adicionar item ao array do pedido
         $itensPedido[] = [
-            'album_id' => $albumId,
-            'titulo' => $album['titulo_album'],
-            'formato_tipo' => $formatoTipo,
+            'album_id' => (int)$album['_id'], // Salva como o ID inteiro original do álbum
+            'tipo_formato' => $formatoTipo,
             'quantidade' => $quantidadeComprada,
             'preco_unitario' => $precoUnitario,
-            'subtotal' => $quantidadeComprada * $precoUnitario
         ];
 
         $totalPedido += $quantidadeComprada * $precoUnitario;
     }
 
-    // 4. Gerar um novo ID para o pedido
-    $lastPedido = $pedidosCollection->findOne([], ['sort' => ['_id' => -1]]);
-    $newPedidoId = ($lastPedido ? (int)$lastPedido['_id'] : 0) + 1;
-
-    // 5. Criar o documento do pedido
-    $novoPedido = [
-        '_id' => $newPedidoId,
-        'cliente_id' => $userId,
-        'data_pedido' => new MongoDB\BSON\UTCDateTime(),
-        'itens' => $itensPedido,
-        'total_pedido' => $totalPedido,
-        'endereco_entrega' => $cliente['endereco'], // Salva uma cópia do endereço
-        'status' => 'processando'
+    // 4. Criar o documento da nova compra para ser embutido
+    $novaCompra = [
+        '_id' => new MongoDB\BSON\ObjectId(), // Gera um ID único para a compra
+        'data_compra' => new MongoDB\BSON\UTCDateTime(),
+        'valor_total' => $totalPedido,
+        'itens_comprados' => $itensPedido,
+        'status' => 'processando' // Status inicial
     ];
-    $pedidosCollection->insertOne($novoPedido);
+
+    // 5. Adicionar a nova compra ao array 'compras' do cliente
+    $clientesCollection->updateOne(
+        ['_id' => $userId],
+        ['$push' => ['compras' => $novaCompra]]
+    );
 
     // 6. Limpar o carrinho do cliente
     $clientesCollection->updateOne(
@@ -115,7 +111,7 @@ try {
     // 7. Se tudo deu certo, redireciona para a página de sucesso.
     $_SESSION['message'] = [
         'type' => 'success',
-        'text' => "Compra realizada com sucesso! O seu pedido número #{$newPedidoId} está sendo processado."
+        'text' => "Compra realizada com sucesso! O seu pedido número #{$novaCompra['_id']} está sendo processado."
     ];
 
     // Redireciona para a página principal.

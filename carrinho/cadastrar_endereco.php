@@ -61,12 +61,13 @@ if (!is_client()) {
 
 // Se o usuário já tiver um endereço, redireciona para o checkout.
 // (Esta é uma verificação adicional para evitar que acessem a página diretamente sem necessidade)
+$action = $_GET['action'] ?? null;
 try {
     $client = new MongoDB\Client($mongoUri);
     $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
     $userId = (int)$_SESSION['user_id'];
     $cliente = $clientesCollection->findOne(['_id' => $userId]);
-    if ($cliente && !empty((array)$cliente['endereco'])) {
+    if ($action !== 'change' && $cliente && !empty((array)$cliente['endereco'])) {
         header('Location: /ekhos/carrinho/checkout.php');
         exit;
     }
@@ -88,7 +89,7 @@ try {
             max-width: 500px;
             margin: 2rem auto;
             padding: 2rem;
-            background-color: #f9f9f9;
+            background-color: #3c3c3c;
             border-radius: 8px;
         }
         .form-group {

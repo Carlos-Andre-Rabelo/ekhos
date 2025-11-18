@@ -129,7 +129,7 @@ try {
     <style>
         .checkout-layout { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }
         .checkout-details { flex: 2; min-width: 300px; }
-        .order-summary-checkout { flex: 1; min-width: 300px; background-color: #f9f9f9; padding: 1.5rem; border-radius: 8px; }
+        .order-summary-checkout { flex: 1; min-width: 300px; background-color: #3c3c3c; padding: 1.5rem; border-radius: 8px; }
         .order-summary-checkout h2 { margin-top: 0; }
         .summary-item { display: flex; justify-content: space-between; margin-bottom: 1rem; align-items: center; }
         .summary-item-details { display: flex; gap: 1rem; align-items: center; }
@@ -138,6 +138,19 @@ try {
         .summary-item-info .item-format { font-size: 0.9em; color: #666; }
         .summary-item-price { font-weight: 600; text-align: right; }
         .address-details { margin-bottom: 1rem; }
+        .change-link {
+            font-size: 0.85em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 0.3rem;
+            border: 1px solid var(--cor-primaria);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .change-link:hover { background-color: var(--cor-primaria); color: var(--cor-fundo); }
+        .checkout-details h2 { margin-top: 1.5rem; }
     </style>
 </head>
 <body>
@@ -154,14 +167,14 @@ try {
                         <p><strong>Bairro:</strong> <?= htmlspecialchars($cliente['endereco']['nome_bairro'] ?? 'Não informado') ?></p>
                         <p><strong>Logradouro:</strong> <?= htmlspecialchars($cliente['endereco']['logradouro'] ?? 'Não informado') ?></p>
                         <p><strong>Número:</strong> <?= htmlspecialchars((string)($cliente['endereco']['numero'] ?? 'Não informado')) ?></p>
-                        <a href="cadastrar_endereco.php" style="font-size: 0.9em;">Alterar endereço</a>
+                        <a href="cadastrar_endereco.php?action=change" class="change-link">Alterar endereço</a>
                     </div>
 
                     <h2>Cartão de Crédito</h2>
                     <div class="payment-details">
                         <p><strong>Nome no Cartão:</strong> <?= htmlspecialchars($cliente['cartao']['nome_titular'] ?? 'Não informado') ?></p>
                         <p><strong>Final do Cartão:</strong> **** **** **** <?= htmlspecialchars($last_four_digits) ?></p>
-                        <a href="cadastrar_pagamento.php" style="font-size: 0.9em;">Alterar cartão</a>
+                        <a href="cadastrar_pagamento.php?action=change" class="change-link">Alterar cartão</a>
                     </div>
 
                     <form action="processa_compra.php" method="POST" style="margin-top: 2rem;">

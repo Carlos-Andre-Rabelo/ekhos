@@ -18,6 +18,26 @@ if (!is_client()) {
     exit;
 }
 
+$mongoUri = "mongodb://127.0.0.1:27017";
+$dbName = "CDs_&_vinil";
+
+$action = $_GET['action'] ?? null;
+// Verifica se o cliente já possui um cartão para pular esta etapa
+try {
+    $client = new MongoDB\Client($mongoUri);
+    $clientesCollection = $client->selectDatabase($dbName)->selectCollection('clientes');
+    $userId = (int)$_SESSION['user_id'];
+    $cliente = $clientesCollection->findOne(['_id' => $userId], ['projection' => ['cartao' => 1]]);
+
+    // Se o cliente tem um cartão e não está tentando alterá-lo, vai direto para o checkout
+    if ($action !== 'change' && $cliente && !empty((array)$cliente['cartao'])) {
+        header('Location: /ekhos/carrinho/checkout.php');
+        exit;
+    }
+} catch (Exception $e) {
+    // Em caso de erro no DB, não faz nada e permite que a página carregue normalmente.
+}
+
 // Processa o formulário quando enviado via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $numero_cartao = $_POST['numero_cartao'] ?? '';
@@ -84,7 +104,7 @@ $errorMessage = $_GET['error'] ?? null;
             max-width: 500px;
             margin: 2rem auto;
             padding: 2rem;
-            background-color: #f9f9f9;
+            background-color: #3c3c3c;
             border-radius: 8px;
         }
         .form-group {
