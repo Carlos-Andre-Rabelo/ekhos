@@ -4,12 +4,15 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "mongodb/mongodb": "^1.20",
+        "mongodb/mongodb": "^1.19",
         "ext-mongodb": "*"
     },
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true
+        },
+        "platform": {
+            "ext-mongodb": "1.21.0"
         }
     }
 }
