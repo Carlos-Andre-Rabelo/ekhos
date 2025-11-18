@@ -133,6 +133,14 @@ $errorMessage = $_GET['error'] ?? null;
             margin-bottom: 1rem;
             border-radius: .25rem;
         }
+
+        /* Estilos para Celular (abaixo de 450px) */
+        @media (max-width: 450px) {
+            .card-form {
+                margin: 1rem auto;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>

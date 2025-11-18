@@ -151,6 +151,26 @@ try {
         }
         .change-link:hover { background-color: var(--cor-primaria); color: var(--cor-fundo); }
         .checkout-details h2 { margin-top: 1.5rem; }
+
+        /* Estilos para Tablet e Celular (abaixo de 950px) */
+        @media (max-width: 950px) {
+            .checkout-layout {
+                flex-direction: column-reverse; /* Coloca o resumo do pedido no topo em telas menores */
+                align-items: stretch;
+            }
+
+            .checkout-details, .order-summary-checkout {
+                width: 100%;
+                flex: none;
+            }
+            .order-summary-checkout {
+                margin-bottom: 2rem;
+            }
+        }
+        @media (max-width: 450px) {
+            .cart-page-container { padding: 1rem; }
+            .cart-page-container h1 { font-size: 1.8rem; }
+        }
     </style>
 </head>
 <body>

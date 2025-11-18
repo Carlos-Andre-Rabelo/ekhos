@@ -120,6 +120,7 @@ try {
 <body data-user-role="client">
 
     <main class="cart-page-container">
+        <a href="/ekhos/index.php" class="back-link" title="Voltar para a Loja" style="position: absolute; top: 1.5rem; left: 1.5rem;"></a>
         <h1>Meu Carrinho</h1>
 
         <?php if ($checkoutError): ?>
@@ -149,27 +150,27 @@ try {
                         <tbody>
                             <?php foreach ($cartItems as $item): ?>
                                 <tr data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>">
-                                    <td class="item-image">
+                                    <td class="item-image" data-label="Produto">
                                         <img src="../<?= htmlspecialchars($item['url_capa']) ?>" alt="Capa do <?= htmlspecialchars($item['titulo']) ?>">
                                     </td>
-                                    <td class="item-details">
+                                    <td class="item-details" data-label="">
                                         <div class="item-title"><?= htmlspecialchars($item['titulo']) ?></div>
                                         <div class="item-format"><?= htmlspecialchars(ucfirst(str_replace('_', ' ', $item['formato_tipo']))) ?></div>
                                     </td>
-                                    <td class="item-price">
+                                    <td class="item-price" data-label="Preço">
                                         <?= 'R$ ' . number_format((float)$item['preco'], 2, ',', '.') ?>
                                     </td>
-                                    <td class="item-quantity">
+                                    <td class="item-quantity" data-label="Quantidade">
                                         <div class="quantity-control">
                                             <button type="button" class="quantity-btn quantity-minus" aria-label="Diminuir">-</button>
                                             <input type="number" class="quantity-input" value="<?= $item['quantidade'] ?>" min="1" max="<?= $item['estoque'] ?>" data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>" readonly>
                                             <button type="button" class="quantity-btn quantity-plus" aria-label="Aumentar">+</button>
                                         </div>
                                     </td>
-                                    <td class="item-subtotal">
+                                    <td class="item-subtotal" data-label="Subtotal">
                                         <?= 'R$ ' . number_format((float)$item['subtotal'], 2, ',', '.') ?>
                                     </td>
-                                    <td class="item-remove">
+                                    <td class="item-remove" data-label="">
                                         <button class="remove-btn" title="Remover item" data-album-id="<?= $item['album_id'] ?>" data-formato-tipo="<?= htmlspecialchars($item['formato_tipo']) ?>">&times;</button>
                                     </td>
                                 </tr>

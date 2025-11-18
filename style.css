@@ -55,6 +55,12 @@ body.modal-open > footer {
     transition: filter 0.3s ease-in-out;
 }
 
+/* Trava o scroll do body quando o modal está aberto */
+body.modal-open {
+    overflow: hidden;
+}
+
+
 /* --- Cabeçalho e Pesquisa --- */
 header {
     display: flex;
@@ -144,6 +150,17 @@ header h1 {
     border: 2px solid transparent;
     text-align: center; /* Garante centralização em tela cheia (mobile) */
 }
+/* Estilo para ícones dentro dos botões */
+.btn-header svg {
+    display: none; /* Escondido por padrão no desktop */
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.btn-header.icon-only svg {
+    margin-right: 0;
+}
 
 .btn-header.btn-logout {
     background-color: transparent;
@@ -177,8 +194,8 @@ main {
 
 #album-grid {
     display: grid;
-    /* O minmax(220px, 1fr) já é inerentemente responsivo. */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* Garante no mínimo 2 colunas mesmo em telas pequenas (ex: 320px de largura) */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 2rem;
 }
 
@@ -296,12 +313,11 @@ main {
     width: 100%; /* Ocupa 100% do padding do overlay */
     max-width: 800px;
     max-height: 90vh;
-    overflow-y: auto;
+    overflow: hidden; /* Impede QUALQUER scroll no contêiner principal do modal */
     position: relative;
     z-index: 1;
     transform: scale(0.9);
     transition: transform 0.3s ease;
-    overflow: hidden; /* Essencial para conter os pseudo-elementos */
 }
 
 .modal-content::before {
@@ -324,7 +340,6 @@ main {
 /* Modais de formulário de adição */
 .add-modal .modal-content {
     max-width: 500px;
-    overflow-y: auto;
 }
 .add-modal .modal-content::before { display: none; }
 
@@ -351,6 +366,12 @@ main {
 .modal-body {
     display: flex;
     gap: 2rem;
+}
+
+/* Novo container para permitir o scroll interno do conteúdo do modal */
+.modal-body-scrollable {
+    overflow-y: auto;
+    max-height: calc(90vh - 4rem); /* (90vh do modal) - (padding do modal-content) */
 }
 
 .modal-body img {
@@ -410,7 +431,7 @@ main {
 .formato-acao-cliente {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 1rem; /* Aumenta o espaço entre o controle e o botão */
     margin-left: 1rem;
 }
 
@@ -967,6 +988,17 @@ input[type=number] {
     margin-top: -1rem; /* Puxa um pouco para cima */
 }
 
+/* --- Barra de Navegação Mobile --- */
+.mobile-nav {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--cor-superficie);
+    border-top: 1px solid var(--cor-borda);
+    z-index: 900;
+}
 
 
 /* --- Seção de Responsividade --- */
@@ -999,12 +1031,13 @@ input[type=number] {
     .header-user-actions {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.5rem;
+        gap: 1rem;
         width: 100%;
     }
 
     .btn-header {
         width: 100%; /* Botões ocupam largura total */
+        padding: 1rem 1.5rem;
     }
 
     .user-session {
@@ -1025,19 +1058,33 @@ input[type=number] {
 
 /* Celulares (até 768px) */
 @media (max-width: 768px) {
+
+    /* Ajusta o padding do body para não sobrepor o conteúdo com a nav-bar */
+    body {
+        padding-bottom: 80px; /* Espaço para a nav-bar */
+    }
+
     /* Modal */
     .modal-content {
         padding: 1.5rem;
     }
     .modal-body {
         flex-direction: column;
-        align-items: center;
+        align-items: center; /* Centraliza a imagem e os detalhes */
     }
     .modal-body img {
         width: 100%;
         max-width: 300px;
         height: auto;
+        margin: 0 auto; /* Garante a centralização */
         aspect-ratio: 1 / 1; /* Garante que a imagem seja quadrada */
+    }
+
+    /* Ajusta os modais de adição (gênero, artista, etc) */
+    .add-modal .modal-content {
+        max-width: 95%; /* Garante que o modal caiba na tela */
+        padding: 1.5rem; /* Adiciona padding interno */
+        max-height: 80vh; /* Garante que não fique muito alto */
     }
 
     /* Lista de formatos no modal (compra) */
@@ -1045,6 +1092,7 @@ input[type=number] {
         display: flex; /* Muda de grid para flex */
         flex-direction: column;
         align-items: stretch;
+        padding: 1rem; /* Adiciona padding interno para melhor espaçamento */
         gap: 1rem;
     }
 
@@ -1056,7 +1104,7 @@ input[type=number] {
 
     .formato-acao-cliente {
         margin-left: 0;
-        justify-content: flex-end; /* Alinha à direita */
+        justify-content: space-between; /* Espaça o controle e o botão */
     }
     
     /* Formulários */
@@ -1076,7 +1124,25 @@ input[type=number] {
     .checkbox-group-container {
         /* Colunas de 120px no mínimo, para caber mais */
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        padding: 1rem;
+    }
+    
+    /* Empilha os itens de formato no formulário */
+    .formato-item {
+        display: block; /* Muda de grid para block */
+    }
+    .formato-item > * { /* Faz todos os filhos diretos (inputs, selects, botões) ocuparem 100% da largura */
+        width: 100%;
+        margin-bottom: 10px; /* Adiciona um espaçamento entre os itens empilhados */
+    }
+    .formato-item > *:last-child {
+        margin-bottom: 0;
+    }
+    .remove-formato-btn {
+        height: 44px;
+    }
+
+    .form-group-inline .btn-add-related {
+        height: 48px;
     }
 }
 
@@ -1087,14 +1153,55 @@ input[type=number] {
         align-items: stretch;
     }
     
-    /* Empilha os itens de formato no formulário */
-    .formato-item {
-        grid-template-columns: 1fr; /* Uma coluna */
-        gap: 10px;
-    }
-    
     .remove-formato-btn {
         height: 44px; /* Altura fixa para o botão de remover */
+    }
+}
+
+/* Telas Muito Pequenas (até 450px) */
+@media (max-width: 450px) {
+    .form-container {
+        padding: 1.5rem 1rem; /* Padding menor para ganhar espaço */
+    }
+
+    .add-modal .modal-content {
+        padding: 1.5rem 1rem; /* Padding menor no modal de adição */
+    }
+}
+
+
+/* Tablets e Celulares (até 992px) - Unificação da Navegação Inferior */
+@media (max-width: 992px) {
+    /* Esconde as ações do usuário no cabeçalho para movê-las para a barra inferior */
+    header .header-user-actions {
+        display: none;
+    }
+
+    /* Exibe a barra de navegação inferior */
+    .mobile-nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 0.5rem 0;
+    }
+
+    /* Estilo dos botões na nav-bar inferior */
+    .mobile-nav .btn-header {
+        flex-direction: column;
+        background: none;
+        border: none;
+        color: var(--cor-texto-secundario);
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        width: auto;
+        border-radius: 8px;
+    }
+    .mobile-nav .btn-header:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--cor-texto-principal);
+    }
+    .mobile-nav .btn-header svg {
+        display: block;
+        margin: 0 auto 4px auto;
     }
 }
 

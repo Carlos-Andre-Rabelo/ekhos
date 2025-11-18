@@ -106,6 +106,14 @@ try {
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        /* Estilos para Celular (abaixo de 450px) */
+        @media (max-width: 450px) {
+            .address-form {
+                margin: 1rem auto;
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>

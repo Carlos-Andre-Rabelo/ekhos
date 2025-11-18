@@ -162,6 +162,25 @@ try {
             padding: 0.3rem 0.7rem;
             border-radius: 6px;
         }
+
+        /* Estilos para Tablet (abaixo de 950px) */
+        @media (max-width: 950px) {
+            .orders-page-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Estilos para Celular (abaixo de 450px) */
+        @media (max-width: 450px) {
+            .order-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .status-form, .order-status {
+                margin-top: 1rem;
+                align-self: flex-end;
+            }
+        }
     </style>
     <?php endif; ?>
 </head>
