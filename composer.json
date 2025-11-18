@@ -1,7 +1,19 @@
 {
+    "name": "ekhos/projeto",
+    "description": "Projeto EKHOS",
+    "type": "project",
     "require": {
         "php": "^8.2",
         "mongodb/mongodb": "^1.19",
         "ext-mongodb": "*"
+    },
+    "config": {
+        "platform-check": false,
+        "platform": {
+            "ext-mongodb": "1.21.0"
+        },
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     }
 }
