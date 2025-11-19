@@ -11,9 +11,6 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true
         },
-        "platform-check": false,
-        "platform": {
-            "ext-mongodb": "1.21.0"
-        }
+        "platform-check": false
     }
 }
