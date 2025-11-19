@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a83074184f621b5757610edcf11aa6cd",
+    "content-hash": "32d35effc959f1063fb954c923091129",
     "packages": [
         {
             "name": "mongodb/mongodb",
@@ -140,12 +140,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2",
+        "php": "8.1",
         "ext-mongodb": "*"
     },
     "platform-dev": {},
-    "platform-overrides": {
-        "ext-mongodb": "1.21.0"
-    },
     "plugin-api-version": "2.6.0"
 }

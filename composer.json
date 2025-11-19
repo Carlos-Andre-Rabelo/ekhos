@@ -3,17 +3,14 @@
     "description": "Projeto EKHOS",
     "type": "project",
     "require": {
-        "php": "^8.2",
-        "mongodb/mongodb": "^1.21",
+        "php": "8.1",
+        "mongodb/mongodb": "^1.16",
         "ext-mongodb": "*"
     },
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true
         },
-        "platform-check": false,
-        "platform": {
-            "ext-mongodb": "1.21.0"
-        }
+        "platform-check": false
     }
 }
