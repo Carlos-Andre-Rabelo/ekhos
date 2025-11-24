@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 session_start();
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Carrega o arquivo de conexão central
+require_once __DIR__ . '/../db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: login.php');
     exit;
 }
-
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
@@ -23,8 +21,9 @@ if (empty($email) || empty($password)) {
 }
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
+    // --- CORREÇÃO AQUI ---
+    // Apagamos a criação manual do client.
+    // Usamos direto a variável $database que veio do db_connect.php
     $collection = $database->selectCollection('clientes');
 
     $user = $collection->findOne(['email_cliente' => $email]);
@@ -35,21 +34,15 @@ try {
         exit;
     }
 
-    // Verifica a senha usando password_verify
     if (password_verify($password, (string)($user['senha_cliente'] ?? ''))) {
-        // Login bem-sucedido
         $_SESSION['user_id'] = (string)$user['_id'];
         $_SESSION['user_name'] = (string)$user['nome_cliente'];
 
-        // --- CORREÇÃO DA LÓGICA DE PAPEL ---
-        // Verifica se o campo 'adm' existe e é true. Se for, o papel é 'admin'.
-        // Caso contrário, o papel é 'client'.
         $isAdmin = isset($user['adm']) && $user['adm'] === true;
         $_SESSION['user_role'] = $isAdmin ? 'admin' : 'client';
 
-        $_SESSION['message'] = ['type' => 'success', 'text' => 'Login realizado com sucesso! Bem-vindo(a), ' . htmlspecialchars($user['nome_cliente']) . '!'];
+        $_SESSION['message'] = ['type' => 'success', 'text' => 'Login realizado com sucesso!'];
         
-        // Redireciona para a página principal do sistema
         header('Location: ../index.php');
         exit;
     } else {

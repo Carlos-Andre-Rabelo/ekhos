@@ -5,7 +5,7 @@ require_once __DIR__ . '/../login/sessao.php';
 
 // Protege a página: apenas clientes logados podem acessar o checkout.
 if (!is_client()) {
-    header('Location: /ekhos/login/login.php');
+    header('Location: ../login/login.php');
     exit;
 }
 
@@ -32,34 +32,14 @@ try {
     // Verifica se o endereço está cadastrado
     $endereco = $cliente['endereco'] ?? null;
     if (!$endereco || empty((array)$endereco)) {
-        header('Location: /ekhos/carrinho/cadastrar_endereco.php');
+        header('Location: ../carrinho/cadastrar_endereco.php');
         exit;
-    }
-
-    // Verifica se o cartão está cadastrado
-    $cartao = $cliente['cartao'] ?? null;
-    if (!$cartao || empty((array)$cartao) || !isset($cartao['nome_titular']) || empty($cartao['nome_titular'])) {
-        header('Location: /ekhos/carrinho/cadastrar_cartao.php');
-        exit;
-    }
-
-    // Decriptografa o número do cartão para exibir os últimos 4 dígitos
-    define('ENCRYPTION_KEY', 'e0d1f2c3b4a5968778695a4b3c2d1e0f1f2e3d4c5b6a798897a6b5c4d3e2f10e');
-    define('ENCRYPTION_CIPHER', 'aes-256-cbc');
-
-    try {
-        $encrypted_numero = base64_decode($cartao['numero_cartao_encrypted']);
-        $iv = substr($encrypted_numero, 0, openssl_cipher_iv_length(ENCRYPTION_CIPHER));
-        $numero_cartao_decrypted = openssl_decrypt(substr($encrypted_numero, openssl_cipher_iv_length(ENCRYPTION_CIPHER)), ENCRYPTION_CIPHER, ENCRYPTION_KEY, 0, $iv);
-        $last_four_digits = substr($numero_cartao_decrypted, -4);
-    } catch (Exception $e) {
-        $last_four_digits = "Erro";
     }
 
 
     // Se o carrinho estiver vazio, redireciona para o carrinho que mostrará a mensagem.
     if (empty($cliente['carrinho'])) {
-        header('Location: /ekhos/carrinho/carrinho.php');
+        header('Location: ../carrinho/carrinho.php');
         exit;
     }
 
@@ -185,18 +165,12 @@ try {
                         <a href="cadastrar_endereco.php?action=change" class="change-link">Alterar endereço</a>
                     </div>
 
-                    <h2>Cartão de Crédito</h2>
-                    <div class="payment-details">
-                        <p><strong>Nome no Cartão:</strong> <?= htmlspecialchars($cliente['cartao']['nome_titular'] ?? 'Não informado') ?></p>
-                        <p><strong>Final do Cartão:</strong> **** **** **** <?= htmlspecialchars($last_four_digits) ?></p>
-                        <a href="cadastrar_pagamento.php?action=change" class="change-link">Alterar cartão</a>
-                    </div>
-
-                    <form action="processa_compra.php" method="POST" style="margin-top: 2rem;">
-                        <button type="submit" class="btn-checkout">Confirmar e Pagar</button>
+                    <form action="criar_checkout_stripe.php" method="POST" style="margin-top: 2rem;">
+                        <button type="submit" class="btn-checkout">Pagar com Stripe</button>
                     </form>
+                    <p style="font-size: 0.8em; margin-top: 10px;">Você será redirecionado para o ambiente seguro do Stripe.</p>
                     
-                    <a href="/ekhos/carrinho/carrinho.php" class="continue-shopping-link">Voltar ao carrinho</a>
+                    <a href="../carrinho/carrinho.php" class="continue-shopping-link" style="margin-top: 1rem; display: inline-block;">Voltar ao carrinho</a>
                 </div>
 
                 <div class="order-summary-checkout">

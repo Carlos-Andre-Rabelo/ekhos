@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 session_start();
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Carrega a conexão central
+require_once __DIR__ . '/../db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: register.php');
     exit;
 }
-
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
 
 $name = $_POST['name'] ?? '';
 $email = $_POST['email'] ?? '';
@@ -30,8 +28,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
+    // --- CORREÇÃO AQUI ---
+    // Usamos direto a variável $database que veio do db_connect.php
     $collection = $database->selectCollection('clientes');
 
     // Verifica se o email já existe
@@ -53,7 +51,6 @@ try {
     // Criptografa a senha
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Cria o novo usuário com uma estrutura base completa, porém com campos vazios.
     $newUser = [
         '_id' => $newId,
         'nome_cliente' => $name,
@@ -61,9 +58,9 @@ try {
         'senha_cliente' => $hashedPassword,
         'telefones' => [],
         'compras' => [],
-        'endereco' => new stdClass(), // Cria um objeto JSON vazio: {}
+        'endereco' => new stdClass(), 
         'carrinho' => [],
-        'role' => 'client', // Adiciona o papel padrão para novos usuários
+        'role' => 'client', 
     ];
 
     $collection->insertOne($newUser);

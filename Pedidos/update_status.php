@@ -21,10 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $pedidoId = $_POST['pedido_id'] ?? null;
 $novoStatus = $_POST['status'] ?? null;
+$codigoRastreio = $_POST['codigo_rastreio'] ?? null; // Novo campo
 $validStatuses = ['processando', 'em preparação', 'pedido enviado'];
 
 if (!$pedidoId || !$novoStatus || !in_array($novoStatus, $validStatuses)) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Dados inválidos.']);
     exit;
 }
@@ -39,10 +40,23 @@ try {
     // Precisamos criar um objeto ObjectId a partir da string recebida.
     $objectId = new MongoDB\BSON\ObjectId($pedidoId);
 
+    // Prepara os dados para atualização.
+    $updateData = ['$set' => ['compras.$.status' => $novoStatus]];
+
+    // Se o novo status for 'pedido enviado', adiciona o código de rastreio.
+    if ($novoStatus === 'pedido enviado') {
+        if (empty($codigoRastreio)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Código de rastreio é obrigatório para enviar o pedido.']);
+            exit;
+        }
+        $updateData['$set']['compras.$.codigo_rastreio'] = $codigoRastreio;
+    }
+
     // Encontra o cliente que tem uma compra com o ID correspondente e atualiza o status APENAS dessa compra.
     $updateResult = $clientesCollection->updateOne(
-        ['compras._id' => $objectId], // Encontra o documento pelo _id dentro do array 'compras'
-        ['$set' => ['compras.$.status' => $novoStatus]] // Usa o operador posicional '$' para atualizar o item correto do array
+        ['compras._id' => $objectId],
+        $updateData
     );
 
     // Retorna sucesso se pelo menos um documento foi modificado.

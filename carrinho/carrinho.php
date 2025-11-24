@@ -5,7 +5,7 @@ require_once __DIR__ . '/../login/sessao.php';
 
 // Protege a página: apenas clientes logados podem ver o carrinho.
 if (!is_client()) {
-    header('Location: /ekhos/login/login.php');
+    header('Location: ../login/login.php');
     exit;
 }
 
@@ -116,7 +116,7 @@ try {
 <body data-user-role="client">
 
     <main class="cart-page-container">
-        <a href="/ekhos/index.php" class="back-link" title="Voltar para a Loja" style="position: absolute; top: 1.5rem; left: 1.5rem;"></a>
+        <a href="../index.php" class="back-link" title="Voltar para a Loja" style="position: absolute; top: 1.5rem; left: 1.5rem;"></a>
         <h1>Meu Carrinho</h1>
 
         <?php if ($checkoutError): ?>
@@ -128,7 +128,7 @@ try {
         <?php elseif (empty($cartItems)): ?>
             <div class="cart-empty">
                 <p>Seu carrinho está vazio.</p>
-                <a href="/ekhos/index.php" class="btn-header">Voltar para a loja</a>
+                <a href="../index.php" class="btn-header">Voltar para a loja</a>
             </div>
         <?php else: ?>
             <div class="cart-layout">
@@ -189,8 +189,8 @@ try {
                         <span>Total</span>
                         <span id="summary-total"><?= 'R$ ' . number_format($totalGeral, 2, ',', '.') ?></span>
                     </div>
-                    <a href="/ekhos/carrinho/cadastrar_pagamento.php" class="btn-checkout">Ir para o Pagamento</a>
-                    <a href="/ekhos/index.php" class="continue-shopping-link">Continuar comprando</a>
+                    <a href="../carrinho/checkout.php" class="btn-checkout">Ir para o Pagamento</a>
+                    <a href="../index.php" class="continue-shopping-link">Continuar comprando</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -259,7 +259,7 @@ try {
                 formData.append('quantidade', quantidade);
             }
 
-            fetch('/ekhos/carrinho/cart_actions.php', {
+            fetch('../carrinho/cart_actions.php', {
                 method: 'POST',
                 body: formData
             })

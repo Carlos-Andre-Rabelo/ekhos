@@ -13,9 +13,14 @@ $pedidos = [];
 $errorMessage = null;
 $isAdminView = is_admin();
 
+// Arrays para organizar os pedidos por status na visão do admin
+$pedidos_processando = [];
+$pedidos_em_preparacao = [];
+$pedidos_enviados = [];
+
 // Protege a página: apenas clientes ou administradores logados podem ver.
 if (!$isAdminView && !is_client()) {
-    header('Location: /ekhos/login/login.php');
+    header('Location: ../login/login.php');
     exit;
 }
 
@@ -42,7 +47,8 @@ try {
                     '_id' => '$compras._id', // Agrupa por ID da compra
                     'data_pedido' => ['$first' => '$compras.data_compra'],
                     'total_pedido' => ['$first' => '$compras.valor_total'],
-                    'status' => ['$first' => ['$ifNull' => ['$compras.status', 'processando']]],
+                    'codigo_rastreio' => ['$first' => '$compras.codigo_rastreio'],
+                    'status' => ['$first' => ['$ifNull' => ['$compras.status', 'processando']]], // 'processando' é o status inicial padrão
                     'endereco_entrega' => ['$first' => '$endereco'],
                     'cliente_info' => ['$first' => ['_id' => '$_id', 'nome_cliente' => '$nome_cliente']],
                     'itens' => [
@@ -82,7 +88,8 @@ try {
                     '_id' => '$compras._id', // Agrupa por ID da compra
                     'data_pedido' => ['$first' => '$compras.data_compra'],
                     'total_pedido' => ['$first' => '$compras.valor_total'],
-                    'status' => ['$first' => ['$ifNull' => ['$compras.status', 'processando']]],
+                    'codigo_rastreio' => ['$first' => '$compras.codigo_rastreio'],
+                    'status' => ['$first' => ['$ifNull' => ['$compras.status', 'processando']]], // 'processando' é o status inicial padrão
                     'endereco_entrega' => ['$first' => '$endereco'],
                     'itens' => [
                         '$push' => [
@@ -100,9 +107,69 @@ try {
         $cursor = $clientesCollection->aggregate($pipeline);
     }
 
-    $pedidos = $cursor->toArray();
+    $todos_pedidos = $cursor->toArray();
+
+    if ($isAdminView) {
+        foreach ($todos_pedidos as $pedido) {
+            if ($pedido['status'] === 'pedido enviado') $pedidos_enviados[] = $pedido;
+            elseif ($pedido['status'] === 'em preparação') $pedidos_em_preparacao[] = $pedido;
+            else $pedidos_processando[] = $pedido;
+        }
+    } else {
+        $pedidos = $todos_pedidos;
+    }
 } catch (Exception $e) {
     $errorMessage = "Erro ao carregar seus pedidos: " . $e->getMessage();
+}
+
+// Função para renderizar um card de pedido. Centraliza o HTML e evita repetição.
+function renderOrderCard($pedido, bool $isAdminView): void {
+    $pedidoId = htmlspecialchars((string)$pedido['_id']);
+    $status = htmlspecialchars($pedido['status']);
+    $dataPedido = htmlspecialchars($pedido['data_pedido']->toDateTime()->format('d/m/Y H:i'));
+    $nomeCliente = htmlspecialchars($pedido['cliente_info']['nome_cliente'] ?? 'Não encontrado');
+    $clienteId = htmlspecialchars((string)($pedido['cliente_info']['_id'] ?? ''));
+    $endereco = htmlspecialchars($pedido['endereco_entrega']['logradouro'] . ', ' . $pedido['endereco_entrega']['numero'] . ' - ' . $pedido['endereco_entrega']['nome_bairro']);
+    $totalPedido = 'R$ ' . number_format((float)$pedido['total_pedido'], 2, ',', '.');
+
+    echo "<div class='order-card' id='pedido-{$pedidoId}' data-status='{$status}'>";
+    echo "<div class='order-card-header'>";
+    echo "<div>";
+    echo "<h3>Pedido #{$pedidoId}</h3>";
+    echo "<p>Realizado em: {$dataPedido}</p>";
+    if ($isAdminView) {
+        echo "<div class='customer-info'><strong>Cliente:</strong> {$nomeCliente} (ID: {$clienteId})</div>";
+    }
+    echo "</div>";
+    
+    // Lógica de ação/status
+    echo "<div class='status-action-form'>";
+    if ($isAdminView) {
+        // Botões de ação para o Admin
+        if ($status === 'em preparação') {
+            echo "<form onsubmit=\"moveOrder(event, '{$pedidoId}', 'pedido enviado')\"><input type='text' name='codigo_rastreio' placeholder='Código de Rastreio' required><button type='submit' class='action-btn'>Enviar Pedido</button></form>";
+        } elseif ($status === 'pedido enviado' && !empty($pedido['codigo_rastreio'])) {
+            echo "<div class='order-status'><strong>Rastreio:</strong> " . htmlspecialchars($pedido['codigo_rastreio']) . "</div>";
+        } else { // Padrão para 'processando'
+            echo "<form onsubmit=\"moveOrder(event, '{$pedidoId}', 'em preparação')\"><button type='submit' class='action-btn'>Preparar Pedido</button></form>";
+        }
+    } else {
+        // Display de status para o Cliente
+        echo "<div class='order-status'><strong>Status:</strong> " . htmlspecialchars(ucfirst($status)) . "</div>";
+    }
+    echo "</div>"; // Fim de status-action-form
+
+    echo "</div>"; // Fim de order-card-header
+    echo "<div class='order-card-body'><h4>Itens do Pedido</h4><ul class='order-items-list'>";
+    foreach ($pedido['itens'] as $item) {
+        $subtotal = (float)($item['preco_unitario'] ?? 0) * (int)($item['quantidade'] ?? 0);
+        $tituloItem = htmlspecialchars($item['titulo'] ?? 'Título não encontrado');
+        $formatoItem = htmlspecialchars(ucfirst(str_replace('_', ' ', $item['tipo_formato'])));
+        echo "<li><span class='item-info' title='ID do Álbum: " . htmlspecialchars((string)($item['album_id'] ?? '')) . "'>{$tituloItem} - {$formatoItem} x " . htmlspecialchars((string)$item['quantidade']) . "</span><span class='item-subtotal'>" . 'R$ ' . number_format($subtotal, 2, ',', '.') . "</span></li>";
+    }
+    echo "</ul></div>"; // Fim de order-card-body
+    echo "<div class='order-card-footer'><div class='order-address'><strong>Endereço de Entrega:</strong><p>{$endereco}</p></div><div class='order-total'><strong>Total:</strong> {$totalPedido}</div></div>";
+    echo "</div>"; // Fim de order-card
 }
 ?>
 <!DOCTYPE html>
@@ -116,75 +183,12 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="stylepedidos.css">
-    <?php if ($isAdminView): ?>
-    <style>
-        /* Estilos específicos para a página de admin */
-        .order-card-header {
-            align-items: flex-start;
-        }
-        .status-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: flex-end;
-        }
-        .status-form select {
-            padding: 0.5rem;
-            border-radius: 6px;
-            border: 1px solid var(--cor-borda);
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto-principal);
-            font-size: 0.9rem;
-        }
-        .status-form .update-status-btn {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            background-color: var(--cor-primaria);
-            color: var(--cor-fundo);
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        .status-form .update-status-btn:hover {
-            background-color: rgba(var(--cor-primaria-rgb), 0.8);
-        }
-        .customer-info {
-            font-size: 0.9rem;
-            color: var(--cor-texto-secundario);
-            margin-top: 0.5rem;
-            background-color: rgba(0,0,0,0.2);
-            padding: 0.3rem 0.7rem;
-            border-radius: 6px;
-        }
-
-        /* Estilos para Tablet (abaixo de 950px) */
-        @media (max-width: 950px) {
-            .orders-page-container {
-                padding: 1rem;
-            }
-        }
-
-        /* Estilos para Celular (abaixo de 450px) */
-        @media (max-width: 450px) {
-            .order-card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .status-form, .order-status {
-                margin-top: 1rem;
-                align-self: flex-end;
-            }
-        }
-    </style>
-    <?php endif; ?>
 </head>
 <body>
 
     <main class="orders-page-container">
         <div class="orders-header">
-            <a href="/ekhos/index.php" class="back-link" title="Voltar para a Loja"></a>
+            <a href="../index.php" class="back-link" title="Voltar para a Loja"></a>
             <h1><?= $isAdminView ? 'Gerenciar Pedidos' : 'Meus Pedidos' ?></h1>
         </div>
 
@@ -192,68 +196,78 @@ try {
 
         <?php if ($errorMessage): ?>
             <div class="message error"><?= htmlspecialchars($errorMessage) ?></div>
-        <?php elseif (empty($pedidos)): ?>
+        <?php elseif ($isAdminView && empty($pedidos_processando) && empty($pedidos_em_preparacao) && empty($pedidos_enviados)): ?>
             <div class="orders-empty">
-                <p><?= $isAdminView ? 'Nenhum pedido foi realizado ainda.' : 'Você ainda não fez nenhum pedido.' ?></p>
-                <?php if (!$isAdminView): ?><a href="/ekhos/index.php" class="btn-header">Começar a comprar</a><?php endif; ?>
+                <p>Nenhum pedido foi realizado ainda.</p>
             </div>
+        <?php elseif (!$isAdminView && empty($pedidos)): ?>
+            <div class="orders-empty">
+                <p>Você ainda não fez nenhum pedido.</p>
+                <a href="../index.php" class="btn-header">Começar a comprar</a>
+            </div>
+        <?php elseif ($isAdminView): ?>
+            <!-- Navegação por Abas -->
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="processando">Novos Pedidos</button>
+                <button class="tab-btn" data-tab="em_preparação">Em Preparação</button>
+                <button class="tab-btn" data-tab="pedido_enviado">Enviados</button>
+            </nav>
+
+            <!-- Container dos Painéis de Abas -->
+            <div class="admin-orders-container">
+                <!-- Painel Novos Pedidos -->
+                <div id="tab-processando" class="tab-panel active">
+                    <div class="orders-list">
+                        <?php if (empty($pedidos_processando)): ?>
+                            <p class="empty-column-msg">Nenhum pedido novo.</p>
+                        <?php else: ?>
+                            <?php foreach ($pedidos_processando as $pedido): ?>
+                                <?php
+                                    renderOrderCard($pedido, $isAdminView);
+                                ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Painel Em Preparação -->
+                <div id="tab-em_preparação" class="tab-panel">
+                    <div class="orders-list">
+                        <?php if (empty($pedidos_em_preparacao)): ?>
+                            <p class="empty-column-msg">Nenhum pedido em preparação.</p>
+                        <?php else: ?>
+                            <?php foreach ($pedidos_em_preparacao as $pedido): ?>
+                                <?php
+                                    renderOrderCard($pedido, $isAdminView);
+                                ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Painel Enviados -->
+                <div id="tab-pedido_enviado" class="tab-panel">
+                    <div class="orders-list">
+                        <?php if (empty($pedidos_enviados)): ?>
+                            <p class="empty-column-msg">Nenhum pedido enviado.</p>
+                        <?php else: ?>
+                            <?php foreach ($pedidos_enviados as $pedido): ?>
+                                <?php
+                                    renderOrderCard($pedido, $isAdminView);
+                                ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- O template para JS não é mais necessário, pois o JS agora move os elementos existentes do DOM em vez de criar novos. -->
+
         <?php else: ?>
             <div class="orders-list">
-                <?php foreach ($pedidos as $pedido): ?>
-                    <div class="order-card" id="pedido-<?= htmlspecialchars((string)$pedido['_id']) ?>">
-                        <div class="order-card-header">
-                            <div>
-                                <h3>Pedido #<?= htmlspecialchars((string)$pedido['_id']) ?></h3>
-                                <p>Realizado em: <?= htmlspecialchars($pedido['data_pedido']->toDateTime()->format('d/m/Y H:i')) ?></p>
-                                <?php if ($isAdminView): ?>
-                                <div class="customer-info">
-                                    <strong>Cliente:</strong> <?= htmlspecialchars($pedido['cliente_info']['nome_cliente']) ?> (ID: <?= htmlspecialchars((string)$pedido['cliente_info']['_id']) ?>)
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php if ($isAdminView): ?>
-                            <form class="status-form" onsubmit="updateStatus(event)">
-                                <input type="hidden" name="pedido_id" value="<?= htmlspecialchars((string)$pedido['_id']) ?>">
-                                <select name="status">
-                                    <option value="processando" <?= $pedido['status'] === 'processando' ? 'selected' : '' ?>>Processando</option>
-                                    <option value="em preparação" <?= $pedido['status'] === 'em preparação' ? 'selected' : '' ?>>Em preparação</option>
-                                    <option value="pedido enviado" <?= $pedido['status'] === 'pedido enviado' ? 'selected' : '' ?>>Pedido Enviado</option>
-                                </select>
-                                <button type="submit" class="update-status-btn">Atualizar Status</button>
-                            </form>
-                            <?php else: ?>
-                            <div class="order-status">
-                                <strong>Status:</strong> <?= htmlspecialchars(ucfirst($pedido['status'])) ?>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="order-card-body">
-                            <h4>Itens do Pedido</h4>
-                            <ul class="order-items-list">
-                                <?php foreach ($pedido['itens'] as $item): ?>
-                                    <?php
-                                        // Calcula o subtotal dinamicamente, pois ele não existe no banco de dados.
-                                        $subtotal = (float)($item['preco_unitario'] ?? 0) * (int)($item['quantidade'] ?? 0);
-                                    ?>
-                                    <li>
-                                        <span class="item-info" title="ID do Álbum: <?= htmlspecialchars((string)($item['album_id'] ?? '')) ?>">
-                                            <?= htmlspecialchars($item['titulo'] ?? 'Título não encontrado') ?> - <?= htmlspecialchars(ucfirst(str_replace('_', ' ', $item['tipo_formato']))) ?> x <?= htmlspecialchars((string)$item['quantidade']) ?>
-                                        </span>
-                                        <span class="item-subtotal"><?= 'R$ ' . number_format($subtotal, 2, ',', '.') ?></span>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                        <div class="order-card-footer">
-                            <div class="order-address">
-                                <strong>Endereço de Entrega:</strong>
-                                <p><?= htmlspecialchars($pedido['endereco_entrega']['logradouro'] . ', ' . $pedido['endereco_entrega']['numero'] . ' - ' . $pedido['endereco_entrega']['nome_bairro']) ?></p>
-                            </div>
-                            <div class="order-total">
-                                <strong>Total:</strong> <?= 'R$ ' . number_format((float)$pedido['total_pedido'], 2, ',', '.') ?>
-                            </div>
-                        </div>
-                    </div>
+                <?php foreach ($pedidos as $pedido): 
+                    renderOrderCard($pedido, $isAdminView);
+                ?>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
@@ -262,29 +276,13 @@ try {
 <?php if ($isAdminView): ?>
 <script src="../script.js"></script> <!-- Reutiliza o script.js para a função de toast -->
 <script>
-    function updateStatus(event) {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-
-        fetch('update_status.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showToast(data.message, 'success');
-            } else {
-                showToast('Erro: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Erro na requisição:', error);
-            showToast('Ocorreu um erro de comunicação.', 'error');
-        });
-    }
+    // Define o caminho base para a API de forma relativa.
+    // Como 'scriptpedidos.js' e 'update_status.php' estão no mesmo diretório,
+    // um caminho relativo simples ou vazio funciona perfeitamente.
+    const API_BASE_URL = './';
 </script>
+<!-- O script foi movido para um arquivo externo -->
+<script src="scriptpedidos.js"></script>
 <?php endif; ?>
 </body>
 </html>

@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fetchCartState = async () => {
         if (userRole !== 'client') return;
         try {
-            const response = await fetch('/ekhos/carrinho/cart_actions.php', {
+            const response = await fetch('carrinho/cart_actions.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'action=get_cart_state'
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let actionHtml = '';
             if (userRole === 'guest') {
-                actionHtml = `<a href="/ekhos/login/login.php" class="btn-add-cart-login">Login para Comprar</a>`;
+                actionHtml = `<a href="login/login.php" class="btn-add-cart-login">Login para Comprar</a>`;
             } else if (userRole === 'client') {
                 if (isOutOfStock) {
                     actionHtml = `<span class="out-of-stock">Esgotado</span>`;
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('quantidade', quantidade);
 
             // **A CHAMADA CORRIGIDA**
-            fetch('/ekhos/carrinho/cart_actions.php', {
+            fetch('carrinho/cart_actions.php', {
                 method: 'POST',
                 body: formData
             })

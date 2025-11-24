@@ -167,7 +167,7 @@ try {
             <?php if (is_logged_in()): ?>
                 <?php if (is_admin()): ?>
                     <!--administrador-->
-                    <a href="/ekhos/Pedidos/pedidos.php" class="btn-header">Gerenciar Pedidos</a>
+                    <a href="Pedidos/pedidos.php" class="btn-header">Gerenciar Pedidos</a>
                     <a href="add_album.php" class="btn-header">Adicionar Álbum</a>
                 <?php else: ?>
                     <!--cliente -->
@@ -274,7 +274,7 @@ try {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     <span>Adicionar</span>
                 </a>
-                <a href="/ekhos/Pedidos/pedidos.php" class="btn-header">
+                <a href="Pedidos/pedidos.php" class="btn-header">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
                     <span>Pedidos</span>
                 </a>
