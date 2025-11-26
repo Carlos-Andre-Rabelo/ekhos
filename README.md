@@ -1,31 +1,48 @@
-# ēkhos - Gerenciador de Loja de Discos e CDs
+## ēkhos - Gerenciador de Loja de Discos e CDs
+**Desenvolvido por: Carlos André Barroso Rabelo**
 
-**ēkhos** é uma aplicação web para gerenciamento de uma loja de discos e CDs, construída com PHP e MongoDB. Ela oferece uma interface de administração para gerenciar o catálogo de produtos e uma área de cliente para visualização de produtos e um carrinho de compras funcional.
+Projeto desenvolvido para a disciplina de Programação para a Web do curso de Ciência da Computação da Universidade Federal do Oeste do Pará (UFOPA).
+
+**Acesse a aplicação em produção: [LINK PARA A APLICAÇÃO]**
+
+ēkhos é uma aplicação web robusta para gerenciamento de uma loja de discos e CDs. O sistema oferece uma interface administrativa completa para gestão de catálogo e uma área de cliente intuitiva para compras, focando em performance e experiência do usuário.
+
+### 🚀 Infraestrutura e Deploy
+
+Este projeto não é apenas uma aplicação local; ele foi configurado e publicado em um ambiente de produção próprio, demonstrando conhecimentos em DevOps e infraestrutura.
+As credenciais de acesso para a área administrativa são: **E-mail:** `adm@gmail.com` | **Senha:** `senha123`
+
+- **Servidor**: A aplicação roda em um servidor dedicado configurado com **Ubuntu Server**.
+- **Conectividade e Segurança**: O acesso externo é gerenciado via **Cloudflare Tunnel**, garantindo uma conexão segura e criptografada sem a necessidade de expor portas do servidor diretamente à internet pública.
+- **Banco de Dados em Nuvem**: Em produção, a persistência dos dados é realizada através do **MongoDB Atlas**, assegurando alta disponibilidade e escalabilidade, substituindo a instância local utilizada em desenvolvimento.
 
 ## Funcionalidades
 
 ### Para Clientes
 - **Visualização da Coleção**: Navegação por todos os álbuns em um grid responsivo.
-- **Busca Dinâmica**: Filtro de álbuns em tempo real por título, artista ou gênero.
-- **Detalhes do Álbum**: Visualização de informações detalhadas (gravadora, ano, formatos, preços) ao clicar em um álbum.
+- **Busca e Filtragem Dinâmica**: Filtro de álbuns em tempo real por título, artista ou gênero, com atualização instantânea da interface.
+- **Detalhes do Álbum**: Página dedicada para cada álbum, com informações detalhadas como gravadora, data de lançamento, lista de formatos disponíveis (CD, Vinil 7", 10", 12"), preços e estoque.
 - **Carrinho de Compras**:
-  - Adicionar itens ao carrinho.
-  - Visualizar todos os itens, com cálculo de subtotal por item e total do pedido.
-  - Atualizar a quantidade de itens diretamente no carrinho.
-  - Remover itens do carrinho.
-- **Autenticação**: Sistema de login e registro para clientes.
+  - **Adição Rápida**: Adicione itens ao carrinho diretamente da página principal ou da página de detalhes.
+  - **Gerenciamento Interativo**: Visualize todos os itens, com cálculo de subtotal por item e total do pedido. Atualize a quantidade ou remova itens com feedback visual imediato, sem recarregar a página.
+- **Autenticação Segura**: Sistema completo de login e registro para clientes, com proteção de rotas para áreas restritas como o carrinho de compras.
+- **Checkout de Pagamento**: Integração com a API do Stripe para um processo de pagamento seguro e simplificado.
 
 ### Para Administradores
-- **Gerenciamento de Catálogo**:
-  - **Adicionar Álbum**: Formulário completo para cadastrar novos álbuns, incluindo upload de imagem da capa e múltiplos formatos (ex: CD, Vinil) com preço e estoque individuais.
-  - **Editar Álbum**: Formulário para editar todas as informações de um álbum existente.
-  - **Remover Álbum**: Exclusão de álbuns do catálogo.
-- **Gerenciamento de Entidades Relacionadas**: Adição de novas gravadoras, artistas e gêneros diretamente pela página de adição de álbuns, sem interromper o fluxo de trabalho.
+- **Dashboard Centralizado**: Painel de controle exclusivo para administradores, dando acesso a todas as funcionalidades de gerenciamento.
+- **Gerenciamento Completo de Catálogo (CRUD)**:
+  - **Adicionar Álbum**: Formulário completo para cadastrar novos álbuns, incluindo upload de imagem da capa, múltiplos formatos (ex: CD, Vinil) com preço, estoque e fornecedores individuais.
+  - **Editar Álbum**: Modifique qualquer informação de um álbum existente, incluindo a adição ou remoção de formatos.
+- **Gerenciamento de Entidades Relacionadas**:
+  - **Criação "On-the-Fly"**: Adicione novas gravadoras, artistas e gêneros diretamente pela página de adição/edição de álbuns, sem interromper o fluxo de trabalho, através de modais interativos.
+  - **Gestão de Fornecedores**: Cadastre e associe fornecedores a formatos específicos de álbuns.
+- **Controle de Estoque**: Defina e atualize a quantidade de cada formato de mídia (CD, Vinil 10", etc.) para cada álbum.
 
 ### Arquitetura e Design
 - **Estrutura de Dados**: Utiliza agregações (`$lookup`) do MongoDB para juntar dados de coleções separadas (`albuns`, `artistas`, `generos_musicais`, `gravadoras`), otimizando consultas complexas.
 - **Interatividade**: Uso de JavaScript assíncrono (AJAX/Fetch API) para atualizar e remover itens do carrinho sem a necessidade de recarregar a página, proporcionando uma experiência de usuário fluida.
 - **Segurança**: Proteção de rotas para garantir que apenas usuários autenticados (clientes) possam acessar o carrinho e apenas administradores possam gerenciar o catálogo.
+- **Pagamentos**: Integração com a API do **Stripe** para processamento de pagamentos seguro e eficiente.
 
 ## Tecnologias Utilizadas
 
