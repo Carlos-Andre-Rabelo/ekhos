@@ -155,7 +155,13 @@ function renderOrderCard($pedido, bool $isAdminView): void {
         }
     } else {
         // Display de status para o Cliente
-        echo "<div class='order-status'><strong>Status:</strong> " . htmlspecialchars(ucfirst($status)) . "</div>";
+        if ($status === 'pedido enviado' && !empty($pedido['codigo_rastreio'])) {
+            // Se o pedido foi enviado e tem código, mostra o código com destaque.
+            echo "<div class='order-status client-status-highlight'><strong>Status:</strong> Pedido Enviado<br><strong>Rastreio:</strong> " . htmlspecialchars($pedido['codigo_rastreio']) . "</div>";
+        } else {
+            // Mostra o status com destaque.
+            echo "<div class='order-status client-status-highlight'><strong>Status:</strong> " . htmlspecialchars(ucfirst($status)) . "</div>";
+        }
     }
     echo "</div>"; // Fim de status-action-form
 

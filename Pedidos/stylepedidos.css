@@ -175,3 +175,13 @@
         padding-bottom: 1rem;
     }
 }
+
+/* Destaque para o status do pedido na visão do cliente */
+.client-status-highlight {
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo); /* Usando a cor de fundo para o texto, para melhor contraste */
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 600;
+}
