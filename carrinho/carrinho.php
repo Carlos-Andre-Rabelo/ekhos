@@ -340,6 +340,12 @@ try {
                     row.remove(); // Remove a linha da interface imediatamente
                     updateTotals(); // Recalcula os totais (correto)
                     handleCartAction('remove_item', albumId, formatoTipo);
+                    
+                    // Verifica se o carrinho ficou vazio
+                    const remainingRows = document.querySelectorAll('.cart-items-list tbody tr').length;
+                    if (remainingRows === 0) {
+                        location.reload(); // Recarrega para mostrar "carrinho vazio"
+                    }
                 }
             });
         });

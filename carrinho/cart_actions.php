@@ -24,8 +24,8 @@ $formatoTipo = filter_input(INPUT_POST, 'formato_tipo', FILTER_SANITIZE_STRING);
 $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
 $userId = (int)$_SESSION['user_id'];
 
-// Validação básica - ajustada para permitir 'get_cart_state' sem outros params
-if (!$action || ($action !== 'get_cart_state' && (!$albumId || !$formatoTipo))) {
+// Validação básica - ajustada para permitir 'get_cart_state' e 'count' sem outros params
+if (!$action || (!in_array($action, ['get_cart_state', 'count']) && (!$albumId || !$formatoTipo))) {
     http_response_code(400); // Bad Request
     echo json_encode(['status' => 'error', 'message' => 'Dados inválidos fornecidos.']);
     exit;
@@ -44,7 +44,16 @@ try {
     $albunsCollection = $database->selectCollection('albuns');
     $clientesCollection = $database->selectCollection('clientes');
 
-    if ($action === 'get_cart_state') {
+    if ($action === 'count') {
+        // Retorna apenas a contagem de itens no carrinho
+        $cliente = $clientesCollection->findOne(['_id' => $userId], ['projection' => ['carrinho' => 1]]);
+        $count = 0;
+        if ($cliente && !empty($cliente['carrinho'])) {
+            $count = count($cliente['carrinho']);
+        }
+        echo json_encode(['status' => 'success', 'count' => $count]);
+
+    } elseif ($action === 'get_cart_state') {
         $cliente = $clientesCollection->findOne(['_id' => $userId], ['projection' => ['carrinho' => 1]]);
         $cartState = [];
         if ($cliente && !empty($cliente['carrinho'])) {
