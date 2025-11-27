@@ -3,7 +3,7 @@
 
 Projeto desenvolvido para a disciplina de Programação para a Web do curso de Ciência da Computação da Universidade Federal do Oeste do Pará (UFOPA).
 
-**Acesse a aplicação em produção: [LINK PARA A APLICAÇÃO]**
+**Acesse a aplicação em produção: https://southampton-lyric-nelson-monkey.trycloudflare.com**
 
 ēkhos é uma aplicação web robusta para gerenciamento de uma loja de discos e CDs. O sistema oferece uma interface administrativa completa para gestão de catálogo e uma área de cliente intuitiva para compras, focando em performance e experiência do usuário.
 
@@ -15,6 +15,23 @@ As credenciais de acesso para a área administrativa são: **E-mail:** `adm@gmai
 - **Servidor**: A aplicação roda em um servidor dedicado configurado com **Ubuntu Server**.
 - **Conectividade e Segurança**: O acesso externo é gerenciado via **Cloudflare Tunnel**, garantindo uma conexão segura e criptografada sem a necessidade de expor portas do servidor diretamente à internet pública.
 - **Banco de Dados em Nuvem**: Em produção, a persistência dos dados é realizada através do **MongoDB Atlas**, assegurando alta disponibilidade e escalabilidade, substituindo a instância local utilizada em desenvolvimento.
+- **Processamento de Pagamentos**: A integração com o **Stripe** é utilizada para gerenciar transações de forma segura, operando em modo de teste (Sandbox) para demonstração.
+
+## 💳 Guia de Testes de Pagamento (Stripe Sandbox)
+
+O sistema de pagamentos está integrado com o Stripe em **modo de teste (Sandbox)**. Isso significa que nenhuma transação financeira real será processada. Para simular o fluxo de checkout, você pode usar os cartões de teste fornecidos pelo Stripe.
+
+Para acessar a área do cliente e testar o carrinho, você pode criar uma nova conta ou utilizar o seguinte usuário de teste já cadastrado:
+- **E-mail:** `carlosandrebr.6@gmail.com`
+- **Senha:** `senha123`
+
+Para todos os cartões abaixo, utilize **qualquer data de validade futura** (ex: 12/30) e **qualquer código CVC** de 3 dígitos (ex: 123).
+
+| Cenário | Número do Cartão de Teste |
+| :--- | :--- |
+| ✅ **Pagamento Bem-sucedido** | `4242 4242 4242 4242` |
+| ❌ **Pagamento Recusado (Genérico)** | `4000 0000 0000 0000` |
+| ❌ **Pagamento Recusado (Saldo Insuficiente)** | `4000 0000 0000 0002` |
 
 ## Funcionalidades
 
