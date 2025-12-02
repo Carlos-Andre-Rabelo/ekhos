@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-//inicia sessao e feedback
+// Inicia a sessão para poder ler as mensagens de feedback
 session_start();
 $message = $_SESSION['message'] ?? null;
 unset($_SESSION['message']);
@@ -13,25 +13,14 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-//define uri e nome do banco
-$mongoUri = "mongodb://127.0.0.1:27017";
-$dbName = "CDs_&_vinil";
+// Inclui o arquivo de conexão centralizado.
+// A variável $database já estará disponível para uso.
+require_once __DIR__ . '/db_connect.php';
+
 $albuns = [];
 $errorMessage = null;
 
 try {
-    //carrega autoloader do composer
-    require_once __DIR__ . '/vendor/autoload.php';
-
-    //verifica se o cliente mongodb existe
-    if (!class_exists('MongoDB\Client')) {
-        throw new Exception("Classe MongoDB\Client não encontrada. Verifique a extensão do MongoDB e o autoload do Composer.");
-    }
-
-    //conecta no mongodb
-    $client = new MongoDB\Client($mongoUri);
-    $database = $client->selectDatabase($dbName);
-
     //collection principal = albuns
     $albunsCollection = $database->selectCollection('albuns');
 
@@ -114,6 +103,46 @@ try {
 
     <!--estilos-->
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos para Tablet (abaixo de 950px) */
+        @media (max-width: 950px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+            }
+
+            .header-main, .header-user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-user-actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .modal-content {
+                width: 90%;
+                max-width: 600px;
+            }
+        }
+
+        /* Estilos para Celular (abaixo de 450px) */
+        @media (max-width: 450px) {
+            .header-main {
+                flex-direction: column;
+            }
+            .search-container {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .modal-body {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 
 <body data-user-role="<?php
@@ -138,10 +167,12 @@ try {
             <?php if (is_logged_in()): ?>
                 <?php if (is_admin()): ?>
                     <!--administrador-->
-                    <a href="add_album.php" class="btn-header">+ Adicionar Novo Álbum</a>
+                    <a href="Pedidos/pedidos.php" class="btn-header">Gerenciar Pedidos</a>
+                    <a href="add_album.php" class="btn-header">Adicionar Álbum</a>
                 <?php else: ?>
                     <!--cliente -->
-                    <a href="carrinho/carrinho.php" class="btn-header">Meu Carrinho</a>
+                    <a href="Pedidos/pedidos.php" class="btn-header">Meus Pedidos</a>
+                    <a href="carrinho/carrinho.php" class="btn-header btn-cart">Carrinho</a>
                 <?php endif; ?>
 
                 <!--info usuario e logout (para todos logados)-->
@@ -211,33 +242,109 @@ try {
     <div id="album-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <div class="modal-body">
-                <img id="modal-capa" src="" alt="Capa do álbum">
-                <div class="modal-details">
-                    <h2 id="modal-titulo"></h2>
-                    <p id="modal-artista"></p>
-                    <div class="modal-meta">
-                        <span><strong>Ano:</strong> <span id="modal-ano"></span></span>
-                        <span id="modal-genero-display"></span>
-                        <span><strong>Gravadora:</strong> <span id="modal-gravadora"></span></span>
-                        <span><strong>Duração:</strong> <span id="modal-duracao"></span></span>
+            <div class="modal-body-scrollable">
+                <div class="modal-body">
+                    <img id="modal-capa" src="" alt="Capa do álbum">
+                    <div class="modal-details">
+                        <h2 id="modal-titulo"></h2>
+                        <p id="modal-artista"></p>
+                        <div class="modal-meta">
+                            <span><strong>Ano:</strong> <span id="modal-ano"></span></span>
+                            <span id="modal-genero-display"></span>
+                            <span><strong>Gravadora:</strong> <span id="modal-gravadora"></span></span>
+                            <span><strong>Duração:</strong> <span id="modal-duracao"></span></span>
+                        </div>
+    
+                        <h3>Formatos Disponíveis:</h3>
+                        <ul id="modal-formatos"></ul>
+                        <?php if (is_client()): ?>
+                            <div id="client-actions" class="client-actions-container"></div>
+                        <?php endif; ?>
                     </div>
-
-                    <h3>Formatos Disponíveis:</h3>
-                    <ul id="modal-formatos"></ul>
-                    <?php if (is_client()): ?>
-                        <div id="client-actions" class="client-actions-container"></div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Barra de Navegação para Mobile -->
+    <nav class="mobile-nav">
+        <?php if (is_logged_in()): ?>
+            <?php if (is_admin()): ?>
+                <a href="add_album.php" class="btn-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Adicionar</span>
+                </a>
+                <a href="Pedidos/pedidos.php" class="btn-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    <span>Pedidos</span>
+                </a>
+            <?php else: ?>
+                <a href="Pedidos/pedidos.php" class="btn-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span>Pedidos</span>
+                </a>
+                <a href="carrinho/carrinho.php" class="btn-header btn-cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span>Carrinho</span>
+                </a>
+            <?php endif; ?>
+            <a href="login/logout.php" class="btn-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span>Sair</span>
+            </a>
+        <?php else: ?>
+            <a href="login/login.php" class="btn-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <span>Pedidos</span>
+            </a>
+            <a href="login/login.php" class="btn-header btn-cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <span>Carrinho</span>
+            </a>
+            <a href="login/login.php" class="btn-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                <span>Login</span>
+            </a>
+        <?php endif; ?>
+    </nav>
+
     <footer>
         <p>&copy; <?= date('Y') ?> ēkhos</p>
     </footer>
 
+    <!-- Contêiner para as notificações flutuantes (toasts) -->
+    <div id="toast-container"></div>
+
     <script src="script.js"></script>
 
+    <script>
+    // Adiciona a lógica de clique para administradores em dispositivos móveis
+    document.addEventListener('DOMContentLoaded', function() {
+        const isAdmin = document.body.getAttribute('data-user-role') === 'admin';
+        const isMobile = window.innerWidth < 768;
+
+        if (isAdmin && isMobile) {
+            const albumCards = document.querySelectorAll('.album-card');
+            albumCards.forEach(card => {
+                // Remove o listener que abre o modal para evitar conflito
+                const cardClone = card.cloneNode(true);
+                card.parentNode.replaceChild(cardClone, card);
+
+                // Adiciona o novo listener para redirecionar
+                cardClone.addEventListener('click', function(event) {
+                    // Impede que o clique em um link dentro do card (se houver) seja interceptado
+                    if (event.target.tagName.toLowerCase() === 'a') {
+                        return;
+                    }
+                    
+                    const albumId = this.dataset.id;
+                    if (albumId) {
+                        window.location.href = `edit_album.php?id=${albumId}`;
+                    }
+                });
+            });
+        }
+    });
+    </script>
 </body>
 </html>

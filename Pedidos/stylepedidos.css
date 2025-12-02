@@ -1,0 +1,187 @@
+/* --- Estilos Gerais da Página de Pedidos --- */
+.orders-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.orders-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 1.5rem;
+}
+
+.orders-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* --- Estilos para o sistema de Abas (Visão Admin) --- */
+.tab-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+.tab-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    background-color: transparent;
+    color: var(--cor-texto-secundario);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+.tab-btn.active {
+    color: var(--cor-primaria);
+    border-bottom-color: var(--cor-primaria);
+}
+.tab-panel {
+    display: none; /* Oculto por padrão */
+    background-color: rgba(var(--cor-fundo-rgb), 0.5);
+    border-radius: 12px;
+}
+.tab-panel.active {
+    display: block; /* Visível quando ativo */
+}
+
+/* --- Estilos dos Cards de Pedido (Unificado para Cliente e Admin) --- */
+.order-card {
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.5rem; /* Adiciona um pequeno padding para os cards não colarem nas bordas do painel */
+}
+.order-card-header { 
+    display: flex; /* ESSENCIAL: Ativa o layout flexível para alinhar os itens */
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.customer-info {
+    /* Garante que a informação do cliente não cause quebra de linha indesejada */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+    margin-top: 0.5rem;
+    background-color: rgba(0,0,0,0.1);
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+}
+.status-action-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+.status-action-form input[type="text"] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto-principal);
+}
+.status-action-form .action-btn {
+    padding: 0.6rem 1rem;
+    border-radius: 20px;
+    border: none; cursor: pointer;
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo);
+    font-weight: 600; transition: background-color 0.3s;
+}
+
+/* Estilos para o corpo do card (lista de itens) */
+.order-card-body {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.order-card-body h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+}
+
+.order-items-list {
+    list-style-type: none; /* Remove os "dots" */
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.order-items-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+/* Estilos para o rodapé do card */
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--cor-borda);
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Estilos para Tablet (abaixo de 950px) */
+@media (max-width: 950px) {
+    .orders-page-container {
+        padding: 1rem;
+    }
+
+    .tab-nav {
+        gap: 0;
+        justify-content: space-around;
+    }
+    .order-card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .status-action-form {
+        margin-top: 1rem;
+    }
+}
+
+/* Estilos para Celular (abaixo de 600px) */
+@media (max-width: 600px) {
+    .orders-header {
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+/* Destaque para o status do pedido na visão do cliente */
+.client-status-highlight {
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo); /* Usando a cor de fundo para o texto, para melhor contraste */
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 600;
+}
