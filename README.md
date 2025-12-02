@@ -3,7 +3,7 @@
 
 Projeto desenvolvido para a disciplina de Programação para a Web do curso de Ciência da Computação da Universidade Federal do Oeste do Pará (UFOPA).
 
-**Acesse a aplicação em produção: https://cedar-geometry-developing-household.trycloudflare.com**
+**Acesse a aplicação em produção: https://lion-survival-moment-globe.trycloudflare.com**
 
 ēkhos é uma aplicação web robusta para gerenciamento de uma loja de discos e CDs. O sistema oferece uma interface administrativa completa para gestão de catálogo e uma área de cliente intuitiva para compras, focando em performance e experiência do usuário.
 
