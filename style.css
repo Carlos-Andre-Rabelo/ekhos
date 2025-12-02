@@ -938,9 +938,6 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-input[type=number] {
-    -moz-appearance: textfield;
-}
 
 /* Mensagens de feedback */
 .message { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; color: #fff; }
