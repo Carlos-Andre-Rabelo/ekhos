@@ -267,7 +267,7 @@ try {
     </div>
 
     <!-- Barra de Navegação para Mobile -->
-    <nav class="mobile-nav">
+    <!--<nav class="mobile-nav">
         <?php if (is_logged_in()): ?>
             <?php if (is_admin()): ?>
                 <a href="add_album.php" class="btn-header">
@@ -306,7 +306,7 @@ try {
                 <span>Login</span>
             </a>
         <?php endif; ?>
-    </nav>
+    </nav>-->
 
     <footer>
         <p>&copy; <?= date('Y') ?> ēkhos</p>

@@ -1,3 +1,20 @@
+// --- Função para criar notificações Toast (movida para o escopo global) ---
+const showToast = (message, type = 'success') => {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    // Remove o toast após a animação terminar (4 segundos)
+    setTimeout(() => {
+        toast.remove();
+    }, 4000);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('album-modal');
     const modalClose = modal.querySelector('.modal-close');
@@ -6,34 +23,70 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const userRole = body.dataset.userRole;
 
-    //funcao pra auxiliar busca (vai pro escopo global)
+    // Função auxiliar para acionar a busca (movida para o escopo global do script)
     const triggerSearch = (term) => {
         closeModal();
         searchBar.value = term;
-        //dispara evento input
+        // Dispara o evento 'input' para que o listener da busca seja ativado
         searchBar.dispatchEvent(new Event('input', { bubbles: true }));
     };
 
-    //funcao abrir modal
+    // --- Lógica de verificação de estoque e carrinho ---
+    let userCart = {}; // Armazena o estado do carrinho do usuário
+
+    // Função para buscar o estado atual do carrinho do usuário via AJAX
+    const fetchCartState = async () => {
+        if (userRole !== 'client') return;
+        try {
+            const response = await fetch('carrinho/cart_actions.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=get_cart_state'
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                userCart = data.cart;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar estado do carrinho:', error);
+        }
+    };
+
+    // Função para atualizar o estado do botão de adicionar ao carrinho
+    const atualizarEstadoBotao = (li) => {
+        const addButton = li.querySelector('.btn-add-cart-icon');
+        const input = li.querySelector('.quantidade-input');
+        if (!addButton || !input) return;
+
+        const albumId = addButton.dataset.albumId;
+        const formatoTipo = addButton.dataset.formatoTipo;
+        const quantidadeDesejada = parseInt(input.value, 10);
+        const estoqueDisponivel = parseInt(input.max, 10);
+        const quantidadeNoCarrinho = userCart[`${albumId}-${formatoTipo}`] || 0;
+
+        addButton.disabled = (quantidadeNoCarrinho + quantidadeDesejada) > estoqueDisponivel;
+    };
+
+    // Função para abrir o modal
     const openModal = (card) => {
-        //preenche dados do modal
+        // Preenche os dados básicos do modal
         document.getElementById('modal-titulo').textContent = card.dataset.titulo;
         document.getElementById('modal-ano').textContent = card.dataset.ano;
         document.getElementById('modal-gravadora').textContent = card.dataset.gravadora;
         document.getElementById('modal-duracao').textContent = card.dataset.duracao;
         document.getElementById('modal-capa').src = card.dataset.capa;
 
-        //fundo desfocado
+        // Define a variável CSS para a imagem de fundo desfocada.
         modal.querySelector('.modal-content').style.setProperty('--modal-bg-image', `url('${card.dataset.capa}')`);
         
-        //artista clicavel
+        // Preenche o artista como um link clicável
         const modalArtista = document.getElementById('modal-artista');
         modalArtista.innerHTML = `<a href="#" class="modal-search-link" data-search-term="${card.dataset.artista}">${card.dataset.artista}</a>`;
 
-        //generos clicaveis
+        // Preenche os gêneros como links clicáveis
         const generos = card.dataset.genero.split(',').map(g => g.trim()).filter(g => g);
         const generoDisplay = document.getElementById('modal-genero-display');
-        generoDisplay.innerHTML = '<strong>Gêneros:</strong> '; //reinicia
+        generoDisplay.innerHTML = '<strong>Gêneros:</strong> '; // Limpa e reinicia
         generos.forEach((genero, index) => {
             generoDisplay.innerHTML += `<a href="#" class="modal-search-link" data-search-term="${genero}">${genero}</a>`;
             if (index < generos.length - 1) {
@@ -41,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        //limpa e preenche formatos disponiveis
+        // Limpa e preenche os formatos disponíveis
         const formatosList = document.getElementById('modal-formatos');
         formatosList.innerHTML = '';
         const formatos = JSON.parse(card.dataset.formatos);
@@ -54,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let actionHtml = '';
             if (userRole === 'guest') {
-                actionHtml = `<a href="/ekhos/login/login.php" class="btn-add-cart-login">Login para Comprar</a>`;
+                actionHtml = `<a href="login/login.php" class="btn-add-cart-login">Login para Comprar</a>`;
             } else if (userRole === 'client') {
                 if (isOutOfStock) {
                     actionHtml = `<span class="out-of-stock">Esgotado</span>`;
@@ -82,6 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${actionHtml}
             `;
             formatosList.appendChild(li);
+
+            if (userRole === 'client' && !isOutOfStock) {
+                atualizarEstadoBotao(li);
+            }
         });
 
         modal.style.display = 'flex';
@@ -92,7 +149,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
     };
 
-    //funcao fechar modal
+    // Busca o estado do carrinho assim que a página carrega, se for cliente
+    if (userRole === 'client') {
+        fetchCartState();
+    }
+
+    // Função para fechar o modal
     const closeModal = () => {
         modal.style.opacity = '0';
         modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
@@ -102,18 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     };
 
-    //listener abrir modal
+    // Event listener para abrir o modal
     if (albumGrid) {
         albumGrid.addEventListener('click', function(e) {
             const card = e.target.closest('.album-card');
-            //nao abre o modal se o clique foi no link de editar do admin
+            // Não abre o modal se o clique foi no link de editar do admin
             if (card && !e.target.closest('.edit-link')) {
                 openModal(card);
             }
         });
     }
 
-    //listener fechar modal
+    // Event listener para fechar o modal
     if (modalClose) {
         modalClose.addEventListener('click', closeModal);
     }
@@ -125,17 +187,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    //listener busca modal
+    // Event listener para os links de busca dentro do modal
     modal.addEventListener('click', function(e) {
         const searchLink = e.target.closest('.modal-search-link');
         if (searchLink) {
-            e.preventDefault();
+            e.preventDefault(); // Impede que o link '#' navegue
             const searchTerm = searchLink.dataset.searchTerm;
             triggerSearch(searchTerm);
         }
     });
 
-    //listener botoes quant modal
+    // Event listener para os botões de quantidade (+/-) no modal
     modal.addEventListener('click', function(e) {
         const minusBtn = e.target.closest('.quantity-minus');
         const plusBtn = e.target.closest('.quantity-plus');
@@ -155,11 +217,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (plusBtn && currentValue < max) {
             input.value = currentValue + 1;
         }
-        //change pra logicas dependentes funcionarem
-        input.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // Atualiza o estado do botão de adicionar ao carrinho
+        const li = e.target.closest('li');
+        if(li) atualizarEstadoBotao(li);
     });
 
-    //listener add carrinho
+    // Event listener para adicionar ao carrinho (delegação de evento)
     modal.addEventListener('click', function(e) {
         const addButton = e.target.closest('.btn-add-cart-icon');
         if (addButton) {
@@ -174,18 +238,24 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('formato_tipo', formatoTipo);
             formData.append('quantidade', quantidade);
 
-            //chamada carrinho
-            fetch('/ekhos/carrinho/cart_actions.php', {
+            // **A CHAMADA CORRIGIDA**
+            fetch('carrinho/cart_actions.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert(data.message);
-                    closeModal();
+                    // Exibe a notificação de sucesso sem fechar o modal
+                    showToast(data.message);
+                    // Atualiza o estado do carrinho local e o estado do botão
+                    fetchCartState().then(() => {
+                        const li = addButton.closest('li');
+                        if(li) atualizarEstadoBotao(li);
+                    });
                 } else {
-                    alert('Erro: ' + data.message);
+                    // Exibe a notificação de erro
+                    showToast('Erro: ' + data.message, 'error');
                 }
             })
             .catch(error => {
@@ -195,14 +265,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    //fechar modal esc
+    // Fechar modal com a tecla Esc
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && modal.style.display === 'flex') {
             closeModal();
         }
     });
 
-    //busca tempo real
+    // --- FUNCIONALIDADE DE BUSCA EM TEMPO REAL ---
     searchBar.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase().trim();
         const albumCards = albumGrid.querySelectorAll('.album-card');
@@ -213,9 +283,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const genre = card.dataset.genero.toLowerCase();
 
             if (title.includes(searchTerm) || artist.includes(searchTerm) || genre.includes(searchTerm)) {
-                card.style.display = 'block'; //mostra card
+                card.style.display = 'block'; // Mostra o card
             } else {
-                card.style.display = 'none'; //oculta card
+                card.style.display = 'none'; // Oculta o card
             }
         });
     });

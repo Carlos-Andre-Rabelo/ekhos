@@ -55,6 +55,11 @@ body.modal-open > footer {
     transition: filter 0.3s ease-in-out;
 }
 
+/* Trava o scroll do body quando o modal está aberto */
+body.modal-open {
+    overflow: hidden;
+}
+
 /* --- Cabeçalho e Pesquisa --- */
 header {
     display: flex;
@@ -131,7 +136,7 @@ header h1 {
     color: var(--cor-texto-secundario);
 }
 
-.btn-header {
+/*.btn-header {
     display: inline-block;
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
@@ -142,8 +147,8 @@ header h1 {
     color: #fff;
     font-weight: 500;
     border: 2px solid transparent;
-    text-align: center; /* Garante centralização em tela cheia (mobile) */
-}
+    text-align: center;  Garante centralização em tela cheia (mobile)
+}*/
 
 .btn-header.btn-logout {
     background-color: transparent;
